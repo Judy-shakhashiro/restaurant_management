@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../model/dish.dart';
 import '../model/favorite_model.dart';
 import 'api_service_base.dart';
@@ -12,7 +12,7 @@ class ApiService extends ApiBase {
   @override
   Future<List<Tag>> fetchTags() async {
     final resp = await http.get(
-      Uri.parse('$backUrl/tags'),
+      Uri.parse('${Linkapi.backUrl}/tags'),
       headers: {'Accept': 'application/json'},
     );
 
@@ -35,7 +35,7 @@ class ApiService extends ApiBase {
       tags += 'tag_ids[]=${t[i]}&';
     }
 
-    final url = '$backUrl/categories/$categoryId/products?$tags';
+    final url = '${Linkapi.backUrl}/categories/$categoryId/products?$tags';
     print(url);
 
     final resp = await http.get(

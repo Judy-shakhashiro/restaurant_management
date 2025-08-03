@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../config.dart';
+import '../core/static/config.dart';
 import '../controller/controller_cart.dart';
 import '../controller/get_addresses_controller.dart';
 import '../model/cart_model.dart';
@@ -229,7 +229,7 @@ class CartItemCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: Image.network(
-                    '$backUrl/images/${item.image}',
+                    '${Linkapi.backUrl}/images/${item.image}',
                     width: 150,
                     height: 150,
                     fit: BoxFit.cover,

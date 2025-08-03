@@ -25,7 +25,7 @@ Future <void> main() async {
   }
   runApp(MyApp());
 }
-
+//hasToken==true? const MyHomePage():SliderBeg()
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(scaffoldBackgroundColor: Colors.white),
             darkTheme: darkTheme,
             themeMode: controller.themeMode, // استخدام الثيم الحالي
-            home: hasToken==true? const MyHomePage():SliderBeg()
+            home:  MyHomePage()  
+
         );
       },
     );

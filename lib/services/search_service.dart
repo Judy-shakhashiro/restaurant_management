@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../model/dish.dart';
 
 class SearchService {
@@ -11,7 +11,7 @@ class SearchService {
   for (int i = 0; i < t.length; i++) {
     tags += 'tag_ids[]=${t[i]}&';
   }
-  final uri = Uri.parse('$backUrl/products/search?searched_text=$text&$tags');
+  final uri = Uri.parse('${Linkapi.backUrl}/products/search?searched_text=$text&$tags');
 
 
   final resp = await http.get(

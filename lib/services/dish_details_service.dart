@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../model/cart_model.dart';
 
 
 class DishDetailsService{
   Future<DishDetails> getDishDetails(int id ) async{
-    final url=Uri.parse('$backUrl/products/$id');
+    final url=Uri.parse('${Linkapi.backUrl}/products/$id');
     final response=await http.get(url,
     headers: {'Accept': 'application/json'},
     );

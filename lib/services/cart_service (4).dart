@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../model/cart_model.dart';
 
 class CartService extends GetxService {
@@ -22,10 +22,10 @@ class CartService extends GetxService {
     int? basicOptionId,
     List<int>? additionalOptionIds,
   }) async {
-    final url = Uri.parse('$backUrl/carts/items');
+    final url = Uri.parse('${Linkapi.backUrl}/carts/items');
     var request = http.MultipartRequest('POST', url);
     request.headers['Accept'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Authorization'] = 'Bearer ${Linkapi.token}';
 
     request.fields['product_id'] = productId.toString();
     request.fields['quantity'] = quantity.toString();
@@ -71,10 +71,10 @@ class CartService extends GetxService {
 
   Future<ShowCart> getCartItems() async { 
     try {
-      final url = Uri.parse('$backUrl/carts');
+      final url = Uri.parse('${Linkapi.backUrl}/carts');
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer $token',
+        'Authorization' : 'Bearer ${Linkapi.token}',
       });
 
      if (response.statusCode == 200) {
@@ -96,10 +96,10 @@ class CartService extends GetxService {
  
   Future<String> deleteCartItem(int itemId) async {
     try {
-      final url = Uri.parse('$backUrl/carts/items/$itemId');
+      final url = Uri.parse('${Linkapi.backUrl}/carts/items/$itemId');
       final response = await http.delete(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer $token',
+        'Authorization' : 'Bearer ${Linkapi.token }',
       });
 
       final Map<String, dynamic> decodedResponse = json.decode(response.body);
@@ -121,10 +121,10 @@ class CartService extends GetxService {
  
   Future<String> incrementCartItem(int itemId) async { 
     try {
-      final url = Uri.parse('$backUrl/carts/items/$itemId/increment');
+      final url = Uri.parse('${Linkapi.backUrl}/carts/items/$itemId/increment');
       final response = await http.patch(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer $token',
+        'Authorization' : 'Bearer ${Linkapi.token}',
       });
 
       final Map<String, dynamic> decodedResponse = json.decode(response.body);
@@ -146,11 +146,11 @@ class CartService extends GetxService {
  
   Future<String> decrementCartItem(int itemId) async { 
     try {
-      final url = Uri.parse('$backUrl/carts/items/$itemId/decrement');
+      final url = Uri.parse('${Linkapi.backUrl}/carts/items/$itemId/decrement');
       final response = await http.patch(url, headers: {
         'Accept': 'application/json',
 
-      'Authorization' : 'Bearer $token',
+      'Authorization' : 'Bearer ${Linkapi.token}',
 
       });
 
@@ -172,10 +172,10 @@ class CartService extends GetxService {
 
   Future<CartItemDetails> getCartItemDetails(int itemId) async {
     try {
-      final url = Uri.parse('$backUrl/carts/items/$itemId');
+      final url = Uri.parse('${Linkapi.backUrl}/carts/items/$itemId');
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer $token',
+        'Authorization' : 'Bearer ${Linkapi.token}',
       });
 
       if (response.statusCode == 200) {
@@ -198,10 +198,10 @@ class CartService extends GetxService {
     int? basicOptionId,
     List<int>? additionalOptionIds,
   }) async {
-    final url = Uri.parse('$backUrl/carts/items');
+    final url = Uri.parse('${Linkapi.backUrl}/carts/items');
     var request = http.MultipartRequest('POST', url);
     request.headers['Accept'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Authorization'] = 'Bearer ${Linkapi.token}';
 
     request.fields['quantity'] = quantity.toString();
 

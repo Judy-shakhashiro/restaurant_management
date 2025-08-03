@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../model/dish_details_mode.dart';
 
 
@@ -27,7 +27,7 @@ class WishlistController extends GetxController {
 
   Future<void> addToWishlist(int productId) async {
     final Dio dio = Dio();
-    String url = '$backUrl/wishlists/add-product';
+    String url = '${Linkapi.backUrl}/wishlists/add-product';
 
     try {
       final response = await dio.post(
@@ -62,7 +62,7 @@ class WishlistController extends GetxController {
 
   Future<void> removeFromWishlist(int productId) async {
     final Dio dio = Dio();
-     String url = '$backUrl/wishlists/remove-product';
+     String url = '${Linkapi.backUrl}/wishlists/remove-product';
 
     try {
       final response = await dio.post(
@@ -97,7 +97,7 @@ class WishlistController extends GetxController {
 
   Future<void> loadFavorites() async {
     final Dio dio = Dio();
-     String url = '$backUrl/wishlists';
+     String url = '${Linkapi.backUrl}/wishlists';
 
     try {
       final response = await dio.get(

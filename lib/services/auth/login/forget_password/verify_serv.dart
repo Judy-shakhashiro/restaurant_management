@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../../../core/static/global_serv.dart';
-import '../../../../core/static/linkapi.dart';
+import '../../../../core/static/config.dart';
 import '../../../../model/auth/login/forget_password/verify_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';

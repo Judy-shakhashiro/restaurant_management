@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../config.dart';
+import '../../core/static/config.dart';
 import '../../model/dish.dart';
 class DishItemTile extends StatefulWidget {
   final Dish dish;
@@ -44,7 +44,7 @@ class _DishItemTileState extends State<DishItemTile> with SingleTickerProviderSt
     final image = Image.network(
       widget.dish.image.startsWith('http')
           ? widget.dish.image
-          : '$backUrl/images/${widget.dish.image}',
+          : '${Linkapi.backUrl}/images/${widget.dish.image}',
     ).image;
 
     image.resolve(const ImageConfiguration()).addListener(
@@ -90,7 +90,7 @@ class _DishItemTileState extends State<DishItemTile> with SingleTickerProviderSt
     final dish = widget.dish;
     final fullUrl = dish.image.startsWith('http')
         ? dish.image
-        : '$backUrl/images/${dish.image}';
+        : '${Linkapi.backUrl}/images/${dish.image}';
 
     if (!_imageLoaded) {
       // Show shimmer while loading

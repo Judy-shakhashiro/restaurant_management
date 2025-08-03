@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../config.dart';
+
+import '../core/static/config.dart';
 import '../controller/menu_controller.dart';
 import '../globals.dart';
 import '../model/favorite_model.dart';
@@ -126,7 +127,7 @@ class _MenuPageState extends State<MenuPage> {
                                       child: ClipRRect(
                                           borderRadius: BorderRadius.circular(38),
                                           // Ensure backUrl is correctly provided by config.dart
-                                          child: Image.network("$backUrl/images/${cat.image}",
+                                          child: Image.network("${Linkapi.backUrl}/images/${cat.image}",
                                             fit: BoxFit.cover, // Ensure image covers the circle
                                             errorBuilder: (context, error, stackTrace) =>
                                             const Icon(Icons.broken_image, color: Colors.grey), // Fallback for image load error

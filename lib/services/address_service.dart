@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
-import '../config.dart';
+import '../core/static/config.dart';
 
 class Address{
   final int id;
@@ -56,13 +56,13 @@ class AddressInShort{
 }
 class AddressService extends GetxService {
   Future<List<AddressInShort>?> getAddresses() async{
-    final url = Uri.parse('$backUrl/addresses');
+    final url = Uri.parse('${Linkapi.backUrl}/addresses');
     final Map<String, String> headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if (token.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
+    if ({Linkapi.token}.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${Linkapi.token}';
     }
     try{
       final response=await http.get(url,headers:headers);
@@ -86,13 +86,13 @@ class AddressService extends GetxService {
 
   }
   Future<Address?> getAddressById(int id) async{
-    final url = Uri.parse('$backUrl/addresses/$id');
+    final url = Uri.parse('${Linkapi.backUrl}/addresses/$id');
     final Map<String, String> headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if (token.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
+    if ({Linkapi.token}.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${Linkapi.token}';
     }
     try{
       final response=await http.get(url,headers:headers);
@@ -117,13 +117,13 @@ class AddressService extends GetxService {
 
   }
   Future<bool?> deleteAddress(int id) async{
-    final url = Uri.parse('$backUrl/addresses/$id');
+    final url = Uri.parse('${Linkapi.backUrl}/addresses/$id');
     final Map<String, String> headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if (token.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
+    if ({Linkapi.token}.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${Linkapi.token}';
     }
     try{
       final response=await http.delete(url,headers:headers);
@@ -155,7 +155,7 @@ class AddressService extends GetxService {
     String? additionalDetails,
 
   }) async {
-    final url = Uri.parse('$backUrl/addresses');
+    final url = Uri.parse('${Linkapi.backUrl}/addresses');
 
     final Map<String, dynamic> data = {
       'latitude': latitude,
@@ -176,8 +176,8 @@ class AddressService extends GetxService {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if (token.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
+    if ({Linkapi.token}.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${Linkapi.token}';
     }
 
     // Convert the map to URL-encoded string for the body

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../controller/controller_cart.dart';
 
 class Order {
@@ -200,7 +200,7 @@ class OrderService { // Consider creating a separate OrderService
     List<String>? orderNotes,
     required int addressId,
   }) async {
-    final uri = Uri.parse('$backUrl/orders');
+    final uri = Uri.parse('${Linkapi.backUrl}/orders');
 
     // Create a Map for the form data
     final Map<String, String> fields = {
@@ -214,7 +214,7 @@ class OrderService { // Consider creating a separate OrderService
     // but for arrays like order_notes[], a multipart request is more robust.
     var request = http.MultipartRequest('POST', uri);
     request.headers['Accept'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Authorization'] = 'Bearer ${Linkapi.token}';
     fields.forEach((key, value) {
       request.fields[key] = value;
     });
@@ -248,9 +248,9 @@ class OrderService { // Consider creating a separate OrderService
   }
 
   Future<List<Order>?> getOrders() async {
-    final uri = Uri.parse('$backUrl/orders');
+    final uri = Uri.parse('${Linkapi.backUrl}/orders');
 
-    if (token == null) {
+    if ({Linkapi.token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -267,7 +267,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $token', // Add the Bearer Token
+          'Authorization': 'Bearer ${Linkapi.token}', // Add the Bearer Token
         },
       );
 
@@ -306,9 +306,9 @@ class OrderService { // Consider creating a separate OrderService
   }
   // NEW: getOrderDetail method
   Future<OrderDetail?> getOrderDetail(int orderId) async {
-    final uri = Uri.parse('$backUrl/orders/$orderId');
+    final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
-    if (token == null) {
+    if ({Linkapi.token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -325,7 +325,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${Linkapi.token}',
         },
       );
 
@@ -365,9 +365,9 @@ class OrderService { // Consider creating a separate OrderService
   }
 
   Future<bool> cancelOrder(int orderId) async {
-    final uri = Uri.parse('$backUrl/orders/$orderId');
+    final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
-    if (token == null) {
+    if ({Linkapi.token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -387,7 +387,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${Linkapi.token}',
         },
         // body: json.encode({'status': 'canceled'}), // Example if API requires body
       );
@@ -440,10 +440,10 @@ class OrderService { // Consider creating a separate OrderService
 
   // NEW: Delete Order (DELETE request)
   Future<bool> deleteOrder(int orderId) async {
-    final uri = Uri.parse('$backUrl/orders/$orderId');
+    final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
 
-    if (token == null) {
+    if ({Linkapi.token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -460,7 +460,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${Linkapi.token}',
         },
       );
 

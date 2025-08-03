@@ -1,9 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
-import '../config.dart';
+import '../core/static/config.dart';
 import '../controller/contr_fav.dart';
 import '../controller/home_controller.dart';
 import '../model/cat_model.dart';
@@ -11,6 +11,7 @@ import '../model/home_page_model.dart';
 import 'cart.dart';
 import 'delivery_location.dart';
 import 'dish_details.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class Homepage extends StatelessWidget {
   Homepage({super.key});
@@ -20,7 +21,7 @@ class Homepage extends StatelessWidget {
   final List<Map<String, dynamic>> deliveryCategories = [
     {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>DeliveryLocationPage()},
     const {'title': 'take away', 'icon': Icons.takeout_dining_outlined},
-    const {'title': 'in restaurant', 'icon': Icons.table_bar_sharp},
+    {'title': 'in restaurant', 'icon': Icons.table_bar_sharp,'page':ReservationScreen()},
   ];
 
   @override
@@ -318,7 +319,7 @@ class Homepage extends StatelessWidget {
                   ),
                   child: CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage('$backUrl/images/${c.image}'),
+                    backgroundImage: NetworkImage('${Linkapi.backUrl}l/images/${c.image}'),
                     backgroundColor: Colors.transparent,
                   ),
                 ),
@@ -384,7 +385,7 @@ class Homepage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.network(
-                  '$backUrl/images/${product.image}',
+                  '${Linkapi.backUrl}/images/${product.image}',
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,

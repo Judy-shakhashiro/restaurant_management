@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../model/cat_model.dart';
 import '../model/home_page_model.dart';
 
 class HomeServ {
   Future<HomeModel> fetchHomeData() async {
-    final response = await http.get(Uri.parse('$backUrl/products/home'));
+    final response = await http.get(Uri.parse('${Linkapi.backUrl}/products/home'));
 
     if (response.statusCode == 200) {
       return HomeModel.fromJson(json.decode(response.body));
@@ -17,7 +17,7 @@ class HomeServ {
   }
 
 Future<CategoriesResponse> fetchCategories() async {
-  final response = await http.get(Uri.parse('$backUrl/categories'));
+  final response = await http.get(Uri.parse('${Linkapi.backUrl}/categories'));
 
   if (response.statusCode == 200) {
     return CategoriesResponse.fromJson(json.decode(response.body));

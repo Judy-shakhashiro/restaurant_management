@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/widgets/dish_item.dart';
 import 'package:get/get.dart';
 
-import '../config.dart';
+import '../core/static/config.dart';
 import '../controller/search_controller.dart';
 import '../globals.dart';
 import '../model/favorite_model.dart';
@@ -155,7 +155,7 @@ class SearchPage extends StatelessWidget {
                                 decoration: BoxDecoration( borderRadius: BorderRadius.circular(30),),
                                 child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),
-                              child: Image.network('$backUrl/images/${item
+                              child: Image.network('${Linkapi.backUrl}/images/${item
                                   .image}',fit: BoxFit.cover,),
                             )),
                             onTap: () {

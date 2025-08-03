@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/theme_controller.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/slider/slider.dart';
+import 'package:flutter_application_restaurant/view/reservations_page.dart';
 import 'package:flutter_application_restaurant/view/widgets/home/theme.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -25,7 +26,7 @@ Future <void> main() async {
   }
   runApp(MyApp());
 }
-//hasToken==true? const MyHomePage():SliderBeg()
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -36,11 +37,11 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
             title: 'GetX Theme App',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+            theme: ThemeData(scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white)),
             darkTheme: darkTheme,
             themeMode: controller.themeMode, // استخدام الثيم الحالي
-            home:  MyHomePage()  
-
+            home: ReservationsView()
+            //hasToken==true? const MyHomePage():SliderBeg()
         );
       },
     );

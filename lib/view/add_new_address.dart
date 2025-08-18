@@ -43,17 +43,15 @@ class _AddNewAddressPageState extends State<AddNewAddressPage> {
   void initState() {
     super.initState();
     _addressController = TextEditingController(
-      text: 'full address'
-       // text: widget.selectedAddress
+        text: widget.selectedAddress
     );
     _labelController = TextEditingController(); // Initialize label controller
     _cityController = TextEditingController(
-       // text: widget.initialCity
-      text: 'damascus'
+        text: widget.initialCity
+     // text: 'damascus'
     ); // Pre-fill with locality
     _areaController = TextEditingController(
-      text: 'kafarsosa'
-        //text: widget.initialArea
+        text: widget.initialArea
     ); // Pre-fill with sublocality
     _streetController = TextEditingController(); // Street is now manually filled
     _addressDetailsController = TextEditingController(

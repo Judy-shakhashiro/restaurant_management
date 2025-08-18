@@ -2,7 +2,6 @@ import 'package:flutter_application_restaurant/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GlobalServ {
-      late String token;
 
   Future<void> saveToken(String token) async {
     SharedPreferences? sharedPreferences= await SharedPreferences.getInstance();

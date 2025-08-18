@@ -152,61 +152,93 @@ class DeliveryController extends GetxController {
     }
   }
 
-  Future<void> _getAddressFromLatLng(LatLng latLng) async {
+  Future<void> getAddressFromLatLng(LatLng latLng) async {
     isFetchingAddress.value = true;
+    hasDetailedAddress.value = false;
+    selectedAddress.value = 'Fetching address...';
+
+    final url =
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.latitude},${latLng.longitude}&key=$googlePlacesApiKey';
+
     try {
-      await checkZoomLevel();
+      print(url);
+      final response = await http.get(Uri.parse(url));
 
-      if (!isZoomedEnough.value) {
-        selectedAddress.value = 'Zoom in for address details.';
-        hasDetailedAddress.value = false;
-        _fetchedArea = '';
-        _fetchedLocality = ''; // Clear locality too
-        return;
-      }
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
 
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        latLng.latitude,
-        latLng.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks[0];
-        String address = [
-          place.street,
-          place.subLocality,
-          place.locality,
-          place.administrativeArea,
-          place.postalCode,
-          place.country
-        ].where((element) => element != null && element.isNotEmpty).join(', ');
-        selectedAddress.value = address;
-
-        _fetchedLocality = place.locality ?? ''; // Locality for city field
-        _fetchedArea = place.subLocality ?? ''; // Sublocality for area field
-        // Street will be manual, so we don't fetch/store it here for auto-fill
-
-        hasDetailedAddress.value = _fetchedLocality.isNotEmpty || _fetchedArea.isNotEmpty; // Check for locality/area
-        if (!hasDetailedAddress.value) {
-          selectedAddress.value = 'Address details limited. You may need to manually fill.';
-          zoomLevelMessage.value = 'Precise address not found. Please fill manually.';
+        // Check if the API call was successful and has results.
+        if (data['status'] == 'OK' && data['results'] != null && data['results'].isNotEmpty) {
+          // Get the first result's formatted address.
+          final formattedAddress = data['results'][0]['formatted_address'];
+          selectedAddress.value = formattedAddress ?? 'Address not found';
+          hasDetailedAddress.value = formattedAddress != null;
+        } else {
+          // If no results or status is not 'OK', set a default message.
+          selectedAddress.value = 'No address found for this location.';
+          hasDetailedAddress.value = false;
         }
-
       } else {
-        selectedAddress.value = "Unknown Location";
-        _fetchedLocality = '';
-        _fetchedArea = '';
+        // Handle server errors.
+        selectedAddress.value = 'Failed to fetch address. Server error.';
         hasDetailedAddress.value = false;
       }
     } catch (e) {
-      selectedAddress.value = "Error fetching address";
-      _fetchedLocality = '';
-      _fetchedArea = '';
+      // Handle network or parsing errors.
+      selectedAddress.value = 'Failed to fetch address. Check network connection.';
       hasDetailedAddress.value = false;
-      print("Error fetching address: $e");
+      print('Error fetching address: $e');
     } finally {
       isFetchingAddress.value = false;
     }
+  }
+
+  void confirmLocation() {
+    if (!isZoomedEnough.value) {
+      Get.snackbar(
+        'Zoom In Required',
+        'Please zoom in closer on the map to get precise address details.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (!isLocationCovered.value) {
+      Get.snackbar(
+        'Delivery Not Available',
+        'The chosen location is outside our service area.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (selectedMapLocation.value == null) {
+      Get.snackbar('Error', 'Please select a valid location first.');
+      return;
+    }
+
+    // No longer block based on hasDetailedAddress.value.
+    // Instead, issue a warning and proceed, letting AddNewAddressPage handle manual input.
+    if (!hasDetailedAddress.value) {
+      Get.snackbar(
+        'Address Details Missing',
+        'Could not get precise address details automatically. Please fill them manually.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+    }
+
+    Get.to(() => AddNewAddressPage(
+      selectedLocation: selectedMapLocation.value,
+      selectedAddress: selectedAddress.value, initialArea: '', initialCity: '',
+      // initialArea: fetchedArea, // Commented out as these were not used
+      // initialCity: fetchedLocality, // Commented out as these were not used
+    ));
   }
 
   // Changed _fetchedStreet to _fetchedLocality
@@ -218,7 +250,7 @@ class DeliveryController extends GetxController {
 
   void updateSelectedLocation(LatLng latLng) {
     selectedMapLocation.value = latLng;
-    _getAddressFromLatLng(latLng);
+    getAddressFromLatLng(latLng);
     checkLocationCoverage(latLng);
   }
 
@@ -315,51 +347,5 @@ class DeliveryController extends GetxController {
         : 'Delivery is not available in this area.';
   }
 
-  void confirmLocation() {
-    if (!isZoomedEnough.value) {
-      Get.snackbar(
-        'Zoom In Required',
-        'Please zoom in closer on the map to get precise address details.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-      return;
-    }
 
-    if (!isLocationCovered.value) {
-      Get.snackbar(
-        'Delivery Not Available',
-        'The chosen location is outside our service area.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    if (selectedMapLocation.value == null) {
-      Get.snackbar('Error', 'Please select a valid location first.');
-      return;
-    }
-
-    // No longer block based on hasDetailedAddress.value.
-    // Instead, issue a warning and proceed, letting AddNewAddressPage handle manual input.
-    if (!hasDetailedAddress.value) {
-      Get.snackbar(
-        'Address Details Missing',
-        'Could not get precise address details automatically. Please fill them manually.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-    }
-
-    Get.to(() => AddNewAddressPage(
-      selectedLocation: selectedMapLocation.value,
-      selectedAddress: selectedAddress.value,
-      initialArea: fetchedArea,
-      initialCity: fetchedLocality, // Pass locality as city
-    ));
-  }
 }

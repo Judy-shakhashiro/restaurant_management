@@ -1,14 +1,19 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/view/reservation/confirm_reservation_screen.dart';
+import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart'; // A dependency for a nice loading spinner
-import '../controller/reservations_controller.dart';
+import 'package:http/http.dart' as http;
+import '../controller/reservations_list_controller.dart';
+import '../core/static/config.dart';
+import '../main.dart';
 import '../model/reservations_model.dart';
-class ReservationsView extends StatelessWidget {
-  // Instantiate the controller. GetX will manage its lifecycle.
+class ReservationsListView extends StatelessWidget {
   final ReservationsController controller = Get.put(ReservationsController());
 
-  ReservationsView({super.key});
+  ReservationsListView({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +40,10 @@ class ReservationsView extends StatelessWidget {
           if (controller.isLoading.value) {
             // Show a loading spinner while data is being fetched.
             return const Center(
-              child: SpinKitFadingCube(
-                color: Colors.deepOrange,
-                size: 50.0,
-              ),
+              child: CircularProgressIndicator(color: Colors.deepOrange,),
             );
           } else if (controller.errorMessage.isNotEmpty) {
-            // Show an error message if something went wrong.
+
             return Center(
               child: Text(
                 controller.errorMessage.value,
@@ -66,7 +68,7 @@ class ReservationsView extends StatelessWidget {
                   itemCount: controller.categorizedReservations['Upcoming Reservations']?.length ?? 0,
                   itemBuilder: (context, index) {
                     final reservation = controller.categorizedReservations['Upcoming Reservations']![index];
-                    return ReservationCard(reservation: reservation);
+                    return ReservationCard(reservation: reservation, controller: controller,);
                   },
                 ),
                 // Past Reservations Tab
@@ -75,7 +77,7 @@ class ReservationsView extends StatelessWidget {
                   itemCount: controller.categorizedReservations['Past Reservations']?.length ?? 0,
                   itemBuilder: (context, index) {
                     final reservation = controller.categorizedReservations['Past Reservations']![index];
-                    return ReservationCard(reservation: reservation);
+                    return ReservationCard(reservation: reservation,controller:controller);
                   },
                 ),
               ],
@@ -89,7 +91,8 @@ class ReservationsView extends StatelessWidget {
 
 class ReservationCard extends StatelessWidget {
   final Reservation reservation;
-  const ReservationCard({super.key, required this.reservation});
+  final ReservationsController controller;
+  const ReservationCard({super.key, required this.reservation, required this.controller});
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
@@ -105,7 +108,47 @@ class ReservationCard extends StatelessWidget {
         return Colors.grey;
     }
   }
+  Future<void> fetchAndNavigateToModifyScreen(int reservationId) async {
+    // Show a loading indicator while fetching data
+    Get.dialog(
+      const Center(child: CircularProgressIndicator(color: Colors.deepOrange,)),
+      barrierDismissible: false,
+    );
 
+    try {
+      final String url = '${Linkapi.backUrl}/reservations/$reservationId/edit';
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+print(' link is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
+      if (response.statusCode == 200) {
+        print(' success is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
+        final data = json.decode(response.body)['data'];
+        Get.back();
+        Get.to(() => ReservationsView(initialData: data));
+      } else {
+        Get.back(); // Close the loading dialog
+        Get.snackbar(
+          'Error',
+          'Failed to fetch reservation details. Status Code: ${response.statusCode}',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.back(); // Close the loading dialog
+      Get.snackbar(
+        'Error',
+        'An error occurred: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -262,10 +305,9 @@ class ReservationCard extends StatelessWidget {
                                   middleText: "Are you sure you want to modify reservation #${reservation.id}?",
                                   confirm: TextButton(
                                     onPressed: () {
-                                      Get.back(); // Close the dialog
-                                      // In a real app, you would call a modify API here
-                                      Get.snackbar('Success', 'Your reservation has been modified successfully.', backgroundColor: Colors.green, colorText: Colors.white);
-                                    },
+                                      Get.back();
+                                      fetchAndNavigateToModifyScreen(reservation.id);
+                                     },
                                     child: const Text("Yes", style: TextStyle(color: Colors.deepOrange)),
                                   ),
                                   cancel: TextButton(
@@ -342,9 +384,23 @@ class ReservationCard extends StatelessWidget {
                         if (reservation.status == 'not_confirmed')
                           ElevatedButton(
                             onPressed: () {
-                              // This would navigate to a confirmation page in a real app.
-                              Get.snackbar('Confirming...', 'Redirecting to confirmation page...', backgroundColor: Colors.blueGrey, colorText: Colors.white);
-                            },
+                              controller.fetchSingleReservation(reservation.id);
+                              var reserve=controller.selectedReservation.value;
+                              // ReservationConfirmationScreen(
+                              //   selectedDate: reserve!.revsDate.substring(0, 10),
+                              //   guestsCount: reserve.guestsCount,
+                              //   revsDuration: reserve.revsDuration,
+                              //   selectedSlot: reserve.revsTime,
+                              //   type: reserve.type,
+                              //   explanatoryNotes: reserve.note??'',
+                              //   confirmationTime: reserve.,
+                              //   depositValue: reservation.depositValue?.toInt()??0,
+                              //   tablesCount: reservation.tablesCount,
+                              //   cancellationInabilityHours: reservation.cancellationInabilityHours?.toDouble()??0,
+                              //   modificationInabilityHours: reservation.modificationInabilityHours?.toDouble()??0,
+                              //   revsId: reservation.id,
+                              // );
+                              },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,

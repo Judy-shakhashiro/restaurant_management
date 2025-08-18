@@ -21,7 +21,7 @@ class Homepage extends StatelessWidget {
   final List<Map<String, dynamic>> deliveryCategories = [
     {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>DeliveryLocationPage()},
     const {'title': 'take away', 'icon': Icons.takeout_dining_outlined},
-    {'title': 'in restaurant', 'icon': Icons.table_bar_sharp,'page':ReservationScreen()},
+    {'title': 'in restaurant', 'icon': Icons.table_bar_sharp,'page':const ReservationsView()},
   ];
 
   @override

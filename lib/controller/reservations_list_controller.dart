@@ -1,25 +1,20 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/config.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:http/http.dart' as http;
-
+import '../core/static/config.dart';
+import '../main.dart';
 import '../model/reservations_model.dart';
+
 class ReservationsController extends GetxController {
   final RxMap<String, List<Reservation>> categorizedReservations = <String, List<Reservation>>{}.obs;
-
   final RxBool isLoading = true.obs;
-
   final RxString errorMessage = ''.obs;
-
   final Rx<Reservation?> selectedReservation = Rx<Reservation?>(null);
-
-
   @override
   void onInit() {
     super.onInit();
@@ -31,7 +26,7 @@ class ReservationsController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      final Uri uri = Uri.parse('$backUrl/reservations');
+      final Uri uri = Uri.parse('${Linkapi.backUrl}/reservations');
       final response = await http.get(
         uri,
         headers: {
@@ -90,7 +85,7 @@ class ReservationsController extends GetxController {
       errorMessage.value = '';
 
 
-      final Uri uri = Uri.parse('$backUrl/reservations/$id');
+      final Uri uri = Uri.parse('${Linkapi.backUrl}/reservations/$id');
       final response = await http.get(
         uri,
         headers: {
@@ -123,7 +118,7 @@ class ReservationsController extends GetxController {
       errorMessage.value = '';
 
       // Construct the real API URL dynamically for cancellation.
-      final Uri uri = Uri.parse('$backUrl/reservations/$id/cancel');
+      final Uri uri = Uri.parse('${Linkapi.backUrl}/reservations/$id/cancel');
       final response = await http.patch(
         uri,
         headers: {

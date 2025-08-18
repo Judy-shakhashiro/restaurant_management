@@ -12,7 +12,6 @@ class Reservation {
   final bool? cancellabilityNow;
   final bool? acceptedModifiability;
   final bool? modifiabilityNow;
-  // New attributes for detailed reservation view
   final String? depositStatus;
   final String? note;
   final String? createdAt;

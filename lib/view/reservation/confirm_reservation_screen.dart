@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../main.dart';
+
 class ReservationConfirmationScreen extends StatefulWidget {
  final String selectedDate;
  final int guestsCount;
@@ -90,7 +92,7 @@ class _ReservationConfirmationScreenState
 
   Future<void> _saveNotes() async {
     final String apiUrl =
-        '${Linkapi.saveNotes}${widget.revsId}'; 
+        '${Linkapi.saveNotes}/${widget.revsId}';
     final String userNotes = _notesController.text.trim();
     final Map<String, dynamic> body =
         userNotes.isNotEmpty ? {'user_notes': userNotes} : {};
@@ -105,14 +107,16 @@ class _ReservationConfirmationScreenState
         Uri.parse(apiUrl),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${myServices.getToken()}',
+          'Authorization': 'Bearer $token',
         },
         body: jsonEncode(body.isNotEmpty ? body : null),
       );
 
       if (kDebugMode) {
         print('Response status: ${response.statusCode}'); 
-        print('Response body: ${response.body}'); 
+        print('Response body: ${response.body}');
+        print('r is $token');
+        print('url is $apiUrl');
       }
 
       if (response.statusCode == 200) {

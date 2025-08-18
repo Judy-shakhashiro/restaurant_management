@@ -1,8 +1,7 @@
 
 class Linkapi{
 static bool useMockApi = false;
-static const String backUrl = 'http://192.168.1.106:8000/api';
-static String token='1|pD8S7CNps0H5e32wQJR7HGbV7ddr5H9a80nbskIUc7f9be35';
+static const String backUrl = 'http://10.37.13.12:8000/api';
 
 static const String LoginApi ='$backUrl/login';
   static const String ForgetPasswordApi='$backUrl/passwords/email';

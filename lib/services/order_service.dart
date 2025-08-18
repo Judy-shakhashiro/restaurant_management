@@ -1,5 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
@@ -214,7 +223,7 @@ class OrderService { // Consider creating a separate OrderService
     // but for arrays like order_notes[], a multipart request is more robust.
     var request = http.MultipartRequest('POST', uri);
     request.headers['Accept'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer ${Linkapi.token}';
+    request.headers['Authorization'] = 'Bearer ${token}';
     fields.forEach((key, value) {
       request.fields[key] = value;
     });
@@ -250,7 +259,7 @@ class OrderService { // Consider creating a separate OrderService
   Future<List<Order>?> getOrders() async {
     final uri = Uri.parse('${Linkapi.backUrl}/orders');
 
-    if ({Linkapi.token} == null) {
+    if ({token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -267,7 +276,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${Linkapi.token}', // Add the Bearer Token
+          'Authorization': 'Bearer ${token}', // Add the Bearer Token
         },
       );
 
@@ -308,7 +317,7 @@ class OrderService { // Consider creating a separate OrderService
   Future<OrderDetail?> getOrderDetail(int orderId) async {
     final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
-    if ({Linkapi.token} == null) {
+    if ({token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -325,7 +334,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${Linkapi.token}',
+          'Authorization': 'Bearer ${token}',
         },
       );
 
@@ -367,7 +376,7 @@ class OrderService { // Consider creating a separate OrderService
   Future<bool> cancelOrder(int orderId) async {
     final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
-    if ({Linkapi.token} == null) {
+    if ({token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -387,7 +396,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${Linkapi.token}',
+          'Authorization': 'Bearer ${token}',
         },
         // body: json.encode({'status': 'canceled'}), // Example if API requires body
       );
@@ -443,7 +452,7 @@ class OrderService { // Consider creating a separate OrderService
     final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
 
-    if ({Linkapi.token} == null) {
+    if ({token} == null) {
       Get.snackbar(
         'Authentication Error',
         'User not authenticated. Please log in.',
@@ -460,7 +469,7 @@ class OrderService { // Consider creating a separate OrderService
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${Linkapi.token}',
+          'Authorization': 'Bearer ${token}',
         },
       );
 

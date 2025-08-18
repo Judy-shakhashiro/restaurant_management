@@ -2,6 +2,13 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
@@ -61,8 +68,8 @@ class AddressService extends GetxService {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if ({Linkapi.token}.isNotEmpty) {
-      headers['Authorization'] = 'Bearer ${Linkapi.token}';
+    if ({token}.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${token}';
     }
     try{
       final response=await http.get(url,headers:headers);
@@ -91,8 +98,8 @@ class AddressService extends GetxService {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if ({Linkapi.token}.isNotEmpty) {
-      headers['Authorization'] = 'Bearer ${Linkapi.token}';
+    if ({token}.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${token}';
     }
     try{
       final response=await http.get(url,headers:headers);
@@ -122,8 +129,8 @@ class AddressService extends GetxService {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if ({Linkapi.token}.isNotEmpty) {
-      headers['Authorization'] = 'Bearer ${Linkapi.token}';
+    if (token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${token}';
     }
     try{
       final response=await http.delete(url,headers:headers);
@@ -176,8 +183,8 @@ class AddressService extends GetxService {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if ({Linkapi.token}.isNotEmpty) {
-      headers['Authorization'] = 'Bearer ${Linkapi.token}';
+    if ({token}.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${token}';
     }
 
     // Convert the map to URL-encoded string for the body

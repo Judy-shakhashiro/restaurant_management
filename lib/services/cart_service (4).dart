@@ -2,6 +2,13 @@
 
 
 
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
+import 'package:flutter_application_restaurant/main.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,7 +32,7 @@ class CartService extends GetxService {
     final url = Uri.parse('${Linkapi.backUrl}/carts/items');
     var request = http.MultipartRequest('POST', url);
     request.headers['Accept'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer ${Linkapi.token}';
+    request.headers['Authorization'] = 'Bearer ${token}';
 
     request.fields['product_id'] = productId.toString();
     request.fields['quantity'] = quantity.toString();
@@ -74,7 +81,7 @@ class CartService extends GetxService {
       final url = Uri.parse('${Linkapi.backUrl}/carts');
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer ${Linkapi.token}',
+        'Authorization' : 'Bearer ${token}',
       });
 
      if (response.statusCode == 200) {
@@ -99,7 +106,7 @@ class CartService extends GetxService {
       final url = Uri.parse('${Linkapi.backUrl}/carts/items/$itemId');
       final response = await http.delete(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer ${Linkapi.token }',
+        'Authorization' : 'Bearer ${token }',
       });
 
       final Map<String, dynamic> decodedResponse = json.decode(response.body);
@@ -124,7 +131,7 @@ class CartService extends GetxService {
       final url = Uri.parse('${Linkapi.backUrl}/carts/items/$itemId/increment');
       final response = await http.patch(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer ${Linkapi.token}',
+        'Authorization' : 'Bearer ${token}',
       });
 
       final Map<String, dynamic> decodedResponse = json.decode(response.body);
@@ -150,7 +157,7 @@ class CartService extends GetxService {
       final response = await http.patch(url, headers: {
         'Accept': 'application/json',
 
-      'Authorization' : 'Bearer ${Linkapi.token}',
+      'Authorization' : 'Bearer ${token}',
 
       });
 
@@ -175,7 +182,7 @@ class CartService extends GetxService {
       final url = Uri.parse('${Linkapi.backUrl}/carts/items/$itemId');
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
-        'Authorization' : 'Bearer ${Linkapi.token}',
+        'Authorization' : 'Bearer ${token}',
       });
 
       if (response.statusCode == 200) {
@@ -201,7 +208,7 @@ class CartService extends GetxService {
     final url = Uri.parse('${Linkapi.backUrl}/carts/items');
     var request = http.MultipartRequest('POST', url);
     request.headers['Accept'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer ${Linkapi.token}';
+    request.headers['Authorization'] = 'Bearer ${token}';
 
     request.fields['quantity'] = quantity.toString();
 

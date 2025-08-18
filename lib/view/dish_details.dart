@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/core/static/config.dart';
 import 'package:get/get.dart';
 
 import '../controller/contr_fav.dart';
@@ -213,7 +214,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(12), 
                                 child: Image.network(
-                                  'http://192.168.175.173:8000/api/images/${product.image}',
+                                  '${Linkapi.backUrl}/images/${product.image}',
                                   height: 200,
                                   width: 400, 
                                   fit: BoxFit.cover,

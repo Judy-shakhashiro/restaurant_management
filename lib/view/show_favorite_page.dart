@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controller/contr_fav.dart';
-import '../model/dish_details_mode.dart';
+import '../controller/favourite_controller.dart';
+import '../model/dish_details_model.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});

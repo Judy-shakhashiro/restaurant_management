@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/widgets/dish_item.dart';
 import 'package:get/get.dart';
 
-import '../core/static/config.dart';
+import '../core/static/routes.dart';
 import '../controller/search_controller.dart';
 import '../globals.dart';
 import '../model/favorite_model.dart';

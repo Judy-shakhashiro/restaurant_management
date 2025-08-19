@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../controller/delivery_controller.dart';
+import '../../controller/orders/delivery_controller.dart';
 
 final DeliveryController controller = Get.put(DeliveryController());
 
@@ -320,7 +320,7 @@ class _DeliveryLocationPageState extends State<DeliveryLocationPage> {
 
   Widget _buildBottomSection() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

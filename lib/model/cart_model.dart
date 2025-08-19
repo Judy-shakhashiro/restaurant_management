@@ -1,8 +1,6 @@
 
-
-
-
 import 'package:get/get.dart';
+import 'dish_details_model.dart';
 
 class ShowCart {
   final bool status;
@@ -63,8 +61,8 @@ class CartItem {
   final int isSimple;
   final int isRecommended;
   final String basePrice;
-  final String extraPrice;
-  final String totalPrice;
+  final int extraPrice;
+  final int totalPrice;
    RxInt quantity; 
   final CartItemAttributes selectedAttributes;
 
@@ -94,8 +92,8 @@ class CartItem {
     isSimple: json['is_simple'] is int ? json['is_simple'] as int : 0,
     isRecommended: json['is_recommended'] is int ? json['is_recommended'] as int : 0,
     basePrice: json['base_price'] as String? ?? '0.00',
-    extraPrice: json['extra_price'] as String? ?? '0.00',
-    totalPrice: json['total_price'] as String? ?? '0.00',
+    extraPrice: json['extra_price'] as int? ?? 0,
+    totalPrice: json['total_price'] as int? ?? 0,
     initialQuantity: json['quantity'] is int ? json['quantity'] as int : 1,
     selectedAttributes: CartItemAttributes.fromJson(
       attributesJson as Map<String, dynamic>? ?? {},
@@ -187,30 +185,31 @@ class CartItemDetails {
     );
   }
 }
-class DishDetails {
-  final int id;
-  final String name;
-  final String description;
-  final String image;
-  final String price;
 
-
-  DishDetails({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.image,
-    required this.price,
-  });
-
-  factory DishDetails.fromJson(Map<String, dynamic> json) {
-    return DishDetails(
-      id: json['id'] is int ? json['id'] as int : 0,
-      name: json['name'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      image: json['image'] as String? ?? '',
-      price: json['price'] as String? ?? '0.00',
-    );
-  }
-}
+// class DishDetails {
+//   final int id;
+//   final String name;
+//   final String description;
+//   final String image;
+//   final String price;
+//
+//
+//   DishDetails({
+//     required this.id,
+//     required this.name,
+//     required this.description,
+//     required this.image,
+//     required this.price,
+//   });
+//
+//   factory DishDetails.fromJson(Map<String, dynamic> json) {
+//     return DishDetails(
+//       id: json['id'] is int ? json['id'] as int : 0,
+//       name: json['name'] as String? ?? '',
+//       description: json['description'] as String? ?? '',
+//       image: json['image'] as String? ?? '',
+//       price: json['price'] as String? ?? '0.00',
+//     );
+//   }
+// }
 

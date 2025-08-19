@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import '../model/dish_details_mode.dart';
-import '../services/cart_service (4).dart';
+import '../model/dish_details_model.dart';
+import '../services/cart_service.dart';
 import '../services/dish_details_service.dart';
 
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/static/global_serv.dart';
-import '../../../core/static/config.dart';
+import '../../../core/static/global_service.dart';
+import '../../../core/static/routes.dart';
 import '../../../model/auth/login/login_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;

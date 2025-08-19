@@ -30,10 +30,10 @@ class CategoryR {
   final int productsCount;
 
   CategoryR({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.productsCount,
+    this.id=0,
+    this.name='',
+    this.image='',
+    this.productsCount=0,
   });
 
   factory CategoryR.fromJson(Map<String, dynamic> json) {

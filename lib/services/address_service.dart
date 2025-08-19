@@ -12,7 +12,7 @@ import 'package:flutter_application_restaurant/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
-import '../core/static/config.dart';
+import '../core/static/routes.dart';
 
 class Address{
   final int id;
@@ -201,13 +201,6 @@ class AddressService extends GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('Address posted successfully: ${response.body}');
-        Get.snackbar(
-          'Success',
-          'Address saved successfully!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
         return true;
       } else {
         print('Failed to post address. Status: ${response.statusCode}, Body: ${response.body}');

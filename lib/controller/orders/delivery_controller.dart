@@ -1,14 +1,11 @@
-
-import 'package:geocoding/geocoding.dart';
+import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-
-import '../view/add_new_address.dart';
+import '../../view/orders/add_new_address.dart';
 
 const String googlePlacesApiKey = 'AIzaSyD9zQQNoowad3i_Fycd6YrfbR2mfysHtnQ';
 const double minZoomLevelForAddress = 16.0;
@@ -41,22 +38,7 @@ class DeliveryController extends GetxController {
     {'icon': Icons.restaurant_menu, 'title': 'Dine-in'},
   ];
 
-  final List<List<LatLng>> _serviceAreaBoundaries = [
-    [
-      const LatLng(33.3, 36),
-      const LatLng(33.512802, 36.4),
-      const LatLng(33.512802, 36.8),
-      const LatLng(33.8, 36.8),
-      const LatLng(34, 35.8),
-    ],
-    [
-      const LatLng(34.040, -118.260),
-      const LatLng(34.040, -118.230),
-      const LatLng(34.060, -118.230),
-      const LatLng(34.060, -118.260),
-    ],
-  ];
-
+  late List<List<LatLng>> _serviceAreaBoundaries ;
   Set<Polygon> get serviceAreaPolygons {
     return _serviceAreaBoundaries.asMap().entries.map((entry) {
       int index = entry.key;
@@ -76,8 +58,35 @@ class DeliveryController extends GetxController {
   void onInit() {
     super.onInit();
     _determinePosition();
+    checkLocationCoverage(currentLocation.value);
+    getDeliveryZones();
   }
-
+  void getDeliveryZones()async{
+    var url='${Linkapi.backUrl}/zones';
+    var response=await http.get(Uri.parse(url),
+    headers: <String,String>{
+      'Accept': 'application/json',
+      'Content-Type':'application/json'
+    });
+    if (response.statusCode == 200) {
+      final parsed = jsonDecode(response.body);
+      final List<dynamic> deliveryZones = parsed['delivery_zones'];
+      List<List<LatLng>> newBoundaries = [];
+      for (var zone in deliveryZones) {
+        List<LatLng> zoneCoordinates = [];
+        List<dynamic> coordinates = zone['coordinates'];
+        for (var coord in coordinates) {
+          zoneCoordinates.add(LatLng(coord['lat'], coord['lng']));
+        }
+        newBoundaries.add(zoneCoordinates);
+      }
+      _serviceAreaBoundaries = newBoundaries;
+      print("Service areas updated successfully.");
+      print(_serviceAreaBoundaries);
+    } else {
+      throw Exception('Failed to load dishes');
+    }
+  }
   void selectDeliveryCategory(int index) {
     selectedDeliveryIndex.value = index;
     if (deliveryCategories[index]['title'] != 'Delivery') {
@@ -101,7 +110,9 @@ class DeliveryController extends GetxController {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        Get.snackbar('Location Permission Denied', 'Location permissions are denied. Please grant permission in app settings.');
+        Get.snackbar(
+          snackPosition: SnackPosition.BOTTOM,
+            'Location Permission Denied', 'Location permissions are denied. Please grant permission in app settings.');
         isLoadingLocation.value = false;
         return Future.error('Location permissions are denied');
       }
@@ -152,11 +163,16 @@ class DeliveryController extends GetxController {
     }
   }
 
+  // New `getAddressFromLatLng` using the Google Geocoding API.
   Future<void> getAddressFromLatLng(LatLng latLng) async {
     isFetchingAddress.value = true;
     hasDetailedAddress.value = false;
     selectedAddress.value = 'Fetching address...';
+    _fetchedStreet = '';
+    _fetchedArea = '';
+    _fetchedLocality = '';
 
+    // Construct the API URL with the provided latLng and API key.
     final url =
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.latitude},${latLng.longitude}&key=$googlePlacesApiKey';
 
@@ -169,10 +185,31 @@ class DeliveryController extends GetxController {
 
         // Check if the API call was successful and has results.
         if (data['status'] == 'OK' && data['results'] != null && data['results'].isNotEmpty) {
-          // Get the first result's formatted address.
-          final formattedAddress = data['results'][0]['formatted_address'];
-          selectedAddress.value = formattedAddress ?? 'Address not found';
-          hasDetailedAddress.value = formattedAddress != null;
+          final components = data['results'][0]['address_components'] as List;
+
+          // Loop through the address components to find street, city, and area.
+          for (var component in components) {
+            final types = component['types'] as List;
+            if (types.contains('route')) {
+              _fetchedStreet = component['long_name'];
+            }
+            if (types.contains('sublocality_level_1')) {
+              _fetchedArea = component['long_name'];
+            }
+            if (types.contains('locality')) {
+              _fetchedLocality = component['long_name'];
+            }
+          }
+
+          // Construct a full address string from the extracted components.
+          final fullAddress = [
+            _fetchedStreet,
+            _fetchedArea,
+            _fetchedLocality,
+          ].where((s) => s.isNotEmpty).join(', ');
+
+          selectedAddress.value = fullAddress.isNotEmpty ? fullAddress : 'Address not found.';
+          hasDetailedAddress.value = fullAddress.isNotEmpty;
         } else {
           // If no results or status is not 'OK', set a default message.
           selectedAddress.value = 'No address found for this location.';
@@ -235,18 +272,19 @@ class DeliveryController extends GetxController {
 
     Get.to(() => AddNewAddressPage(
       selectedLocation: selectedMapLocation.value,
-      selectedAddress: selectedAddress.value, initialArea: '', initialCity: '',
-      // initialArea: fetchedArea, // Commented out as these were not used
-      // initialCity: fetchedLocality, // Commented out as these were not used
+      selectedAddress: selectedAddress.value,
+      street: fetchedStreet,
+      initialArea: fetchedArea,
+      initialCity: fetchedLocality,
     ));
   }
-
-  // Changed _fetchedStreet to _fetchedLocality
   String _fetchedLocality = '';
   String _fetchedArea = '';
+  String _fetchedStreet = '';
 
   String get fetchedLocality => _fetchedLocality; // New getter for locality (city)
   String get fetchedArea => _fetchedArea; // Area (sublocality)
+  String get fetchedStreet => _fetchedStreet;
 
   void updateSelectedLocation(LatLng latLng) {
     selectedMapLocation.value = latLng;
@@ -333,12 +371,14 @@ class DeliveryController extends GetxController {
     return isInside;
   }
 
-  void checkLocationCoverage(LatLng location) {
+  void checkLocationCoverage(LatLng? location) {
     bool covered = false;
-    for (var polygonPoints in _serviceAreaBoundaries) {
-      if (_isPointInPolygon(location, polygonPoints)) {
-        covered = true;
-        break;
+    if(location!=null){
+      for (var polygonPoints in _serviceAreaBoundaries) {
+        if (_isPointInPolygon(location, polygonPoints)) {
+          covered = true;
+          break;
+        }
       }
     }
     isLocationCovered.value = covered;

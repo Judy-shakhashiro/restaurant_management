@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../core/static/config.dart';
+import '../core/static/routes.dart';
 import '../model/cart_model.dart';
+import '../model/dish_details_model.dart';
 
 
 class DishDetailsService{

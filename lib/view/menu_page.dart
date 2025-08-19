@@ -5,7 +5,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shimmer/shimmer.dart';
 
 
-import '../core/static/config.dart';
+import '../core/static/routes.dart';
 import '../controller/menu_controller.dart';
 import '../globals.dart';
 import '../model/favorite_model.dart';

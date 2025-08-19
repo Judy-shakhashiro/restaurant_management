@@ -3,7 +3,7 @@ import 'package:flutter_application_restaurant/controller/dish_details_controlle
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-import '../model/category.dart';
+import '../model/category_model.dart';
 import '../model/favorite_model.dart';
 import '../model/menu_item.dart';
 import '../services/api_service.dart';
@@ -11,9 +11,9 @@ import '../services/category_service.dart';
 
 class MyMenuController extends GetxController {
   // Observables for UI
-  final categories = <CategoryMenu>[].obs;
+  final categories = <CategoryR>[].obs;
   final menuItems = <MenuItem>[].obs; // The flattened list of menu items (headers, dishes, loading)
-  final selectedCat = CategoryMenu().obs; // For the highlighted category in the horizontal list
+  final selectedCat = CategoryR().obs; // For the highlighted category in the horizontal list
   final selectedTagIds = <int>[].obs;// For active tags
   final tags = <Tag>[].obs;
 
@@ -78,9 +78,7 @@ class MyMenuController extends GetxController {
     }
     print('All category headers and dish placeholders added. Total items: ${menuItems.length}');
   }
-
-  // --- Core Logic for Fetching Dishes for a Specific Category ---
-  Future<void> _loadDishesForCategory(CategoryMenu categoryToLoad) async {
+  Future<void> _loadDishesForCategory(CategoryR categoryToLoad) async {
     if (_isLoadingCategoryDishes.value) {
       print('Already loading dishes. Skipping request for ${categoryToLoad.name}.');
       return;
@@ -193,7 +191,7 @@ class MyMenuController extends GetxController {
 
     if (firstVisibleCategoryHeaderPosition != null) {
       final CategoryHeaderItem currentHeader = menuItems[firstVisibleCategoryHeaderPosition.index] as CategoryHeaderItem;
-      final CategoryMenu? currentCategory = categories.firstWhereOrNull((cat) => cat.id == currentHeader.categoryId);
+      final CategoryR? currentCategory = categories.firstWhereOrNull((cat) => cat.id == currentHeader.categoryId);
 
       if (currentCategory != null && selectedCat.value != currentCategory) {
         selectedCat.value = currentCategory;
@@ -215,7 +213,7 @@ class MyMenuController extends GetxController {
 
       if (highestVisibleCategoryHeaderPosition != null) {
         final CategoryHeaderItem currentHeader = menuItems[highestVisibleCategoryHeaderPosition.index] as CategoryHeaderItem;
-        final CategoryMenu? currentCategory = categories.firstWhereOrNull((cat) => cat.id == currentHeader.categoryId);
+        final CategoryR? currentCategory = categories.firstWhereOrNull((cat) => cat.id == currentHeader.categoryId);
         if (currentCategory != null && selectedCat.value != currentCategory) {
           selectedCat.value = currentCategory;
           print('Selected category updated to: ${currentCategory.name} (fallback from highest visible header)');
@@ -240,12 +238,12 @@ class MyMenuController extends GetxController {
     final Iterable<ItemPosition> visiblePositions = itemPositionsListener.itemPositions.value
         .where((position) => position.itemTrailingEdge > 0 && position.itemLeadingEdge < 1);
 
-    CategoryMenu? categoryToFetchByVisibility;
+    CategoryR? categoryToFetchByVisibility;
 
     for (final position in visiblePositions) {
       if (position.index < menuItems.length) {
         final item = menuItems[position.index];
-        CategoryMenu? identifiedCategory;
+        CategoryR? identifiedCategory;
 
         if (item is CategoryHeaderItem) {
           identifiedCategory = categories.firstWhereOrNull((cat) => cat.id == item.categoryId);
@@ -322,7 +320,7 @@ class MyMenuController extends GetxController {
   }
 
   // --- Jump to Specific Category Logic (`scrollToCategory`) ---
-  void scrollToCategory(CategoryMenu category) async {
+  void scrollToCategory(CategoryR category) async {
     print('Attempting to scroll to category: ${category.name}');
 
     _isProgrammaticScrolling.value = true;

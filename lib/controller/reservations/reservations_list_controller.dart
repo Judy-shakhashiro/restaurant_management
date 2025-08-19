@@ -6,9 +6,9 @@ import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:http/http.dart' as http;
-import '../core/static/config.dart';
-import '../main.dart';
-import '../model/reservations_model.dart';
+import '../../core/static/routes.dart';
+import '../../main.dart';
+import '../../model/reservation/reservations_list_model.dart';
 
 class ReservationsController extends GetxController {
   final RxMap<String, List<Reservation>> categorizedReservations = <String, List<Reservation>>{}.obs;

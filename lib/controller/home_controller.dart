@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
-import '../model/cat_model.dart';
+import '../model/category_model.dart';
 import '../model/home_page_model.dart';
-import '../services/home-serv.dart'; // Import for video controller
+import '../services/home_service.dart'; // Import for video controller
 
 class HomeController extends GetxController {
   // Reactive variables for UI state

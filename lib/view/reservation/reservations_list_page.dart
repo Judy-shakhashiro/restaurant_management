@@ -6,10 +6,10 @@ import 'package:flutter_application_restaurant/view/reservation/reservations_scr
 import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart'; // A dependency for a nice loading spinner
 import 'package:http/http.dart' as http;
-import '../controller/reservations_list_controller.dart';
-import '../core/static/config.dart';
-import '../main.dart';
-import '../model/reservations_model.dart';
+import '../../controller/reservations/reservations_list_controller.dart';
+import '../../core/static/routes.dart';
+import '../../main.dart';
+import '../../model/reservation/reservations_list_model.dart';
 class ReservationsListView extends StatelessWidget {
   final ReservationsController controller = Get.put(ReservationsController());
 

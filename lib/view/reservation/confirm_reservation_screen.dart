@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/core/static/config.dart';
-import 'package:flutter_application_restaurant/core/static/global_serv.dart';
+import 'package:flutter_application_restaurant/core/static/routes.dart';
+import 'package:flutter_application_restaurant/core/static/global_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

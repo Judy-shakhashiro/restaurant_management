@@ -4,7 +4,7 @@ import 'package:flutter_application_restaurant/view/auth/widget/auth/login/butto
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
 import '../../controller/auth/login_controller.dart';
 import '../../core/functions/validation.dart';
-import '../../core/static/global_serv.dart';
+import '../../core/static/global_service.dart';
 import '../../services/auth/login/login_serv.dart';
 import 'forget_password/forget_password.dart';
 import 'package:get/get.dart';

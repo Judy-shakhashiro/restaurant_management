@@ -1,8 +1,8 @@
 // lib/view/my_orders.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/order_controller.dart';
-import '../services/order_service.dart';
+import '../../controller/orders/order_controller.dart';
+import '../../services/order_service.dart';
 import 'order_details_page.dart';
 
 class OrdersPage extends StatelessWidget {

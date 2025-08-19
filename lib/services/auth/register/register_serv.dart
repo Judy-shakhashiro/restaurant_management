@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/static/config.dart';
+import '../../../core/static/routes.dart';
 import '../../../model/auth/register/register_model.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';

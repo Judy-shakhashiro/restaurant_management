@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/core/static/config.dart';
+import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:flutter_application_restaurant/view/reservation/confirm_reservation_screen.dart';
-import 'package:flutter_application_restaurant/view/reservations_list_page.dart';
+import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../controller/reserve_controller.dart';
+import '../../controller/reservations/reservation_controller.dart';
 import '../../main.dart';
 
 class ReservationsView extends StatelessWidget {

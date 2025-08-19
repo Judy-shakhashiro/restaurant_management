@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
-import '../core/static/config.dart';
-import '../controller/contr_fav.dart';
+import '../core/static/routes.dart';
+import '../controller/favourite_controller.dart';
 import '../controller/home_controller.dart';
-import '../model/cat_model.dart';
+import '../model/category_model.dart';
 import '../model/home_page_model.dart';
 import 'cart.dart';
-import 'delivery_location.dart';
+import 'orders/delivery_location.dart';
 import 'dish_details.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 

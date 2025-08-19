@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:latlong2/latlong.dart' as lat_long2;
 
-import '../controller/order_details_controller.dart';
-import '../services/order_service.dart';
+import '../../controller/orders/order_details_controller.dart';
+import '../../services/order_service.dart';
 
 class OrderDetailPage extends StatelessWidget {
   final int orderId;

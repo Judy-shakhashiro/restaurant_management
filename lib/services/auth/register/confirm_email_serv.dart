@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../../../core/static/global_serv.dart';
-import '../../../core/static/config.dart';
+import '../../../core/static/global_service.dart';
+import '../../../core/static/routes.dart';
 import '../../../model/auth/register/confirn_email_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';

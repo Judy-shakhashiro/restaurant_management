@@ -41,7 +41,6 @@ class Reservation {
     this.autoNoShowMinutes,
   });
 
-  // A factory constructor to create a Reservation object from JSON data.
   factory Reservation.fromJson(Map<String, dynamic> json) {
     return Reservation(
       id: json['id'] as int,

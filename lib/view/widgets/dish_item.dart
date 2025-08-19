@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../core/static/config.dart';
+import '../../core/static/routes.dart';
 import '../../model/dish.dart';
 class DishItemTile extends StatefulWidget {
   final Dish dish;

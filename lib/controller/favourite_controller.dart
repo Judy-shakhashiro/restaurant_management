@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../core/static/config.dart';
-import '../model/dish_details_mode.dart';
+import '../core/static/routes.dart';
+import '../model/dish_details_model.dart';
 
 
 

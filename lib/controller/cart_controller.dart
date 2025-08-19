@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../model/cart_model.dart';
-import '../services/cart_service (4).dart';
+import '../services/cart_service.dart';
 
 class CartController extends GetxController {
   final CartService _cartService = Get.put(CartService());
@@ -201,7 +201,7 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
                 children: [
                   Expanded(
                     child: Text(
-                      details.cartItem.name,
+                      details.cartItem.product.name,
                       style: const TextStyle(
                         fontSize: 22, // خط أكبر
                         fontWeight: FontWeight.bold,
@@ -213,7 +213,7 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
                   ),
                   const SizedBox(width: 15),
                   Text(
-                     '${(double.parse(cartItem.totalPrice)).toStringAsFixed(2)} EGP',
+                     '${cartItem.totalPrice.toStringAsFixed(2)} EGP',
                     style: const TextStyle(
                       fontSize: 20, 
                     //  fontWeight: FontWeight.bold,
@@ -230,12 +230,9 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
                   padding: const EdgeInsets.only(right: 200),
                   child: const Divider(thickness: 2, color: Colors.deepOrange),
                 ),
-              
               const SizedBox(height: 5),
-              
-               
               Text(
-                details.cartItem.description,
+                details.cartItem.product.name,
                 style: const TextStyle(fontSize: 16, color: Color(0xFFE65100)),
               ),
               
@@ -397,7 +394,7 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
   void updateTotalPrice() {
     double total = 0.0;
     for (var item in cartItems) {
-      total += double.parse(item.totalPrice) * item.quantity.value;
+      total += item.totalPrice * item.quantity.value;
     }
     totalCartPrice.value = total;
   }

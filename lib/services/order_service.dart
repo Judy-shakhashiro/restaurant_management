@@ -15,8 +15,8 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
-import '../core/static/config.dart';
-import '../controller/controller_cart.dart';
+import '../core/static/routes.dart';
+import '../controller/cart_controller.dart';
 
 class Order {
   final int id;

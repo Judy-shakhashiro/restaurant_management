@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
-import '../core/static/config.dart';
+import '../core/static/routes.dart';
 import '../model/cart_model.dart';
 
 class CartService extends GetxService {
@@ -76,8 +76,7 @@ class CartService extends GetxService {
   }
 
 
-  Future<ShowCart> getCartItems() async { 
-    try {
+  Future<ShowCart> getCartItems() async {
       final url = Uri.parse('${Linkapi.backUrl}/carts');
       final response = await http.get(url, headers: {
         'Accept': 'application/json',
@@ -94,10 +93,7 @@ class CartService extends GetxService {
         throw Exception(
             'Failed to load cart: ${response.statusCode} - ${response.body}');
       }
-    } catch (e) {
-      print('Error getting cart: $e');
-      throw Exception('Error getting cart: $e');
-    }
+
   }
 
  

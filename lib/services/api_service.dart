@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../core/static/config.dart';
+import '../core/static/routes.dart';
 import '../model/dish.dart';
 import '../model/favorite_model.dart';
 import 'api_service_base.dart';

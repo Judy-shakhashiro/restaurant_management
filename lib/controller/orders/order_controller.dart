@@ -1,51 +1,45 @@
-// lib/controller/order_detail_controller.dart
+// lib/controller/order_controller.dart
 import 'package:get/get.dart';
-
 import 'package:flutter/material.dart';
 
-import '../services/order_service.dart';
-import 'order_controller.dart';
+import '../../services/order_service.dart';
 
-class OrderDetailController extends GetxController {
+class OrderController extends GetxController {
   final OrderService _orderService = OrderService();
 
-  final Rx<OrderDetail?> orderDetail = Rx<OrderDetail?>(null);
+  final RxList<Order> orders = <Order>[].obs;
   final RxBool isLoading = true.obs;
   final RxBool hasError = false.obs;
-
-  final int orderId;
-
-  OrderDetailController({required this.orderId});
 
   @override
   void onInit() {
     super.onInit();
-    fetchOrderDetail(orderId);
+    fetchOrders();
   }
 
-  Future<void> fetchOrderDetail(int id) async {
+  Future<void> fetchOrders() async {
     isLoading.value = true;
     hasError.value = false;
     try {
-      final OrderDetail? fetchedDetail = await _orderService.getOrderDetail(id);
-      if (fetchedDetail != null) {
-        orderDetail.value = fetchedDetail;
+      final List<Order>? fetchedOrders = await _orderService.getOrders();
+      if (fetchedOrders != null) {
+        orders.assignAll(fetchedOrders);
       } else {
         hasError.value = true;
       }
-    }
-    catch (e) {
+    } catch (e) {
       hasError.value = true;
-      print('Error in controller fetching order details: $e');
-    }
-    finally {
+      print('Error in controller fetching orders: $e');
+    } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> cancelCurrentOrder() async {
-    if (orderDetail.value == null) return;
+  Future<void> refreshOrders() async {
+    await fetchOrders();
+  }
 
+  Future<void> cancelOrder(int orderId) async {
     Get.dialog(
       AlertDialog(
         title: const Text('Confirm Cancellation'),
@@ -59,12 +53,9 @@ class OrderDetailController extends GetxController {
             onPressed: () async {
               Get.back();
               isLoading.value = true;
-              final bool success = await _orderService.cancelOrder(orderDetail.value!.id);
+              final bool success = await _orderService.cancelOrder(orderId);
               if (success) {
-                await fetchOrderDetail(orderDetail.value!.id);
-                if (Get.isRegistered<OrderController>()) {
-                  Get.find<OrderController>().fetchOrders();
-                }
+                await fetchOrders();
               }
               isLoading.value = false;
             },
@@ -76,9 +67,7 @@ class OrderDetailController extends GetxController {
     );
   }
 
-  Future<void> deleteCurrentOrder() async {
-    if (orderDetail.value == null) return;
-
+  Future<void> deleteOrder(int orderId) async {
     Get.dialog(
       AlertDialog(
         title: const Text('Confirm Deletion'),
@@ -92,12 +81,9 @@ class OrderDetailController extends GetxController {
             onPressed: () async {
               Get.back();
               isLoading.value = true;
-              final bool success = await _orderService.deleteOrder(orderDetail.value!.id);
+              final bool success = await _orderService.deleteOrder(orderId);
               if (success) {
-                Get.back();
-                if (Get.isRegistered<OrderController>()) {
-                  Get.find<OrderController>().fetchOrders();
-                }
+                orders.removeWhere((order) => order.id == orderId);
               }
               isLoading.value = false;
             },
@@ -109,5 +95,5 @@ class OrderDetailController extends GetxController {
     );
   }
 
-// reorderCurrentOrder method removed
+// reorderOrder method removed
 }

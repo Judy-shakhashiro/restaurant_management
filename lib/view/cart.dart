@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../core/static/config.dart';
-import '../controller/controller_cart.dart';
-import '../controller/get_addresses_controller.dart';
+import '../core/static/routes.dart';
+import '../controller/cart_controller.dart';
+import '../controller/orders/get_addresses_controller.dart';
 import '../model/cart_model.dart';
-import '../services/cart_service (4).dart';
-import 'create_order_page.dart';
-import 'delivery_location.dart';
+import '../services/cart_service.dart';
+import 'orders/create_order_page.dart';
+import 'orders/delivery_location.dart';
 
 
 class CartScreen extends StatelessWidget {
@@ -27,10 +27,9 @@ class CartScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'My Cart ',
+          'My Cart',
           style: const TextStyle(
             color: Colors.black,
-            fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
@@ -137,14 +136,15 @@ class CartScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
+                      controller.cartItems.length==1?  '${controller.cartItems.length} item ':
                       '${controller.cartItems.length} items ',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Continue',
                       style: TextStyle(
                         fontSize: 18,
@@ -152,7 +152,7 @@ class CartScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    Text(
+                    const Text(
                       '        ',
                       style: TextStyle(
                         fontSize: 18,
@@ -260,9 +260,9 @@ class CartItemCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          '${(double.parse(item.totalPrice)).toStringAsFixed(2)} EGP',
+                          '${item.totalPrice.toStringAsFixed(2)} EGP',
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             //   fontWeight: FontWeight.bold,
                             color: Colors.deepOrange,
                           ),
@@ -318,7 +318,7 @@ class CartItemCard extends StatelessWidget {
                                 child: const Text(
                                   'Details',
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 14,
                                     color: Colors.deepOrange,
                                     fontWeight: FontWeight.w600,
                                   ),

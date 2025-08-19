@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_application_restaurant/core/static/config.dart';
-import 'package:flutter_application_restaurant/core/static/global_serv.dart';
+import 'package:flutter_application_restaurant/core/static/routes.dart';
+import 'package:flutter_application_restaurant/core/static/global_service.dart';
 import 'package:flutter_application_restaurant/model/reservation/available-days_model.dart';
 import 'package:flutter_application_restaurant/model/reservation/temporery_model.dart';
 import 'package:flutter_application_restaurant/model/reservation/time_model.dart';
-import '../main.dart';
-import '../model/reservation/modify_model.dart';
+import '../../main.dart';
+import '../../model/reservation/modify_model.dart';
 
 class ReserveController extends GetxController {
 

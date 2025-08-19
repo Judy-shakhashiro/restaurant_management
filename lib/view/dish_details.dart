@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/core/static/config.dart';
+import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:get/get.dart';
 
-import '../controller/contr_fav.dart';
+import '../controller/favourite_controller.dart';
 import '../controller/dish_details_controller.dart';
-import '../model/dish_details_mode.dart';
+import '../model/dish_details_model.dart';
 class DishDetailsPage extends StatefulWidget {
   final int productId;
   const DishDetailsPage({super.key, required this.productId});

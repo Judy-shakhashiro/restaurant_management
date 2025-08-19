@@ -1,6 +1,4 @@
-import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 
 class DishDetails {
   final bool status;
@@ -104,11 +102,6 @@ class Attributes {
       additional: json['additional']!=null? AdditionalAttributes.fromJson(json['additional']):null,
     );
   }
-
-  // Map<String, dynamic> toJson() => {
-  //   'basic': basic.toJson(),
-  //   'additional': additional.toJson(),
-  // };
 }
 
 class BasicAttributes {

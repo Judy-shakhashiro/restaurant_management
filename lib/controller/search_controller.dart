@@ -11,7 +11,7 @@ class MySearchController extends GetxController {
   final tags = <Tag>[].obs;
 
   Future<void> _loadTags() async {
-    tags.value = await ApiService().fetchTags();}
+    tags.value = (await ApiService().fetchTags());}
 
   // Text editing
   final searchText = TextEditingController();

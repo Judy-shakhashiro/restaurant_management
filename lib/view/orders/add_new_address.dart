@@ -4,7 +4,7 @@ import 'package:flutter_application_restaurant/view/homepage_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../home_screen.dart';
+import '../../navigation_bar.dart';
 import '../../services/address_service.dart';
 
 class AddNewAddressPage extends StatefulWidget {

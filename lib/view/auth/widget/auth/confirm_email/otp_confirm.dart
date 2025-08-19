@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/home_screen.dart';
+import 'package:flutter_application_restaurant/navigation_bar.dart';
 import 'package:flutter_application_restaurant/services/auth/register/confirm_email_serv.dart';
 import '../../../../../controller/auth/register_controller.dart';
 import '../../../forget_password/forget_password.dart';

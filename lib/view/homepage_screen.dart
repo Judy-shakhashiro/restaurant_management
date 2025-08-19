@@ -29,6 +29,8 @@ class Homepage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        shadowColor: Colors.white,
+        surfaceTintColor: Colors.white,
         title: InkWell(
           child: Container(
             padding: const EdgeInsets.all(8),
@@ -42,8 +44,8 @@ class Homepage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "you have 500 points",
-                    style: TextStyle(color: Colors.grey),
+                    "Babbila , Damascus",
+                    style: TextStyle(color: Colors.grey,fontSize: 18),
                   ),
                 ),
 
@@ -94,20 +96,13 @@ class Homepage extends StatelessWidget {
           );
         }
 
-        // Data is ready, build the main content.
-        // No need for another Obx here, as homeData and categoriesResponse
-        // won't change after initial load (unless you explicitly set them to .obs in controller)
-        // They are read only once here.
         final HomeModel? homeData = controller.homeData.value;
         final CategoriesResponse? categoriesResponse = controller.categoriesData.value;
 
         if (homeData == null || categoriesResponse == null) {
           return const Center(child: Text('No data available.'));
         }
-
-        // The SingleChildScrollView and its children now contain the actual content,
-        // with Obx only around the parts that need to react to changes.
-        return SingleChildScrollView(
+    return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Column(
@@ -148,19 +143,20 @@ class Homepage extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     Container(
-                                      width: 70,
-                                      height: 70,
+                                      width: 55,
+                                      height: 55,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        gradient: const LinearGradient(
-                                          colors: [Color(0xFFFFE082), Color(0xFFFF7043)],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
+                                        color: Colors.grey.shade100,
+                                        // gradient:  LinearGradient(
+                                        //   colors: [Colors.deepOrange,Colors.red.shade100],
+                                        //   begin: Alignment.topLeft,
+                                        //   end: Alignment.bottomRight,
+                                        // ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: isSelected ? Colors.deepOrange.withOpacity(0.6) : Colors.black26,
-                                            blurRadius: isSelected ? 10 : 6,
+                                            color: isSelected ? Colors.deepOrange.withOpacity(0.6) : Colors.grey.shade300,
+                                            blurRadius: isSelected ? 6 : 4,
                                             offset: const Offset(2, 4),
                                           ),
                                         ],
@@ -168,7 +164,7 @@ class Homepage extends StatelessWidget {
                                       ),
                                       child: Icon(
                                         category['icon'],
-                                        color: Colors.white,
+                                        color: Colors.deepOrange,
                                         size: 32,
                                       ),
                                     ),
@@ -238,7 +234,7 @@ class Homepage extends StatelessWidget {
                   },
                   child: sectionTitle("Menu"),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 SizedBox(
                   height: 150,
                  child:  ListView.builder(
@@ -251,17 +247,16 @@ class Homepage extends StatelessWidget {
                     )
                  ,
                 ),
-                const SizedBox(height: 20),
                 sectionTitle("Most purchased"),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                productList(homeData.data.mostOrderedProducts),
                 const SizedBox(height: 20),
                 sectionTitle("Latest offers"),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                productList(homeData.data.latestProducts),
                 const SizedBox(height: 20),
                 sectionTitle("Best choices"),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
               productList(homeData.data.recommendedProducts),
                 const SizedBox(height: 30),
               ],
@@ -281,7 +276,7 @@ class Homepage extends StatelessWidget {
             ColorizeAnimatedText(
               title,
               textStyle: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-              colors: [Colors.black, Colors.orangeAccent, Colors.orange],
+              colors: [Colors.black, Colors.deepOrangeAccent, Colors.deepOrange],
             )
           ],
           isRepeatingAnimation: true,
@@ -309,17 +304,16 @@ class Homepage extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 4)],
                     border: Border.all(
-                        color: isSelected ? Colors.deepOrange : Colors.orange, width: 3),
-                    color: isSelected ? Colors.orange.shade50 : Colors.white,
+                        color: isSelected ? Colors.deepOrange : Colors.deepOrange, width: 3),
+                    color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
                   ),
                   child: CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage('${Linkapi.backUrl}l/images/${c.image}'),
+                    backgroundImage: NetworkImage('${Linkapi.backUrl}/images/${c.image}'),
                     backgroundColor: Colors.transparent,
                   ),
                 ),
@@ -361,161 +355,154 @@ class Homepage extends StatelessWidget {
     final WishlistController controller = Get.put(WishlistController());
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(5.0),
       child: Container(
         width: 260,
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [BoxShadow(color: Colors.deepOrangeAccent, blurRadius: 10)],
+          boxShadow:  [BoxShadow(color: Colors.grey, blurRadius: 8,)],
           color: Colors.white,
         ),
         child: InkWell(
           onTap: () {
             Get.to(DishDetailsPage(productId: product.id));
           },
-          child: Card(
-            elevation: 8,
-            // margin: const EdgeInsets.all(12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
                   '${Linkapi.backUrl}/images/${product.image}',
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            product.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Obx(() {
-                            bool isFav = controller.isFavorite(product.id);
-                            return IconButton(
-                              icon: Icon(
-                                isFav ? Icons.favorite : Icons.favorite_border,
-                                color: isFav ? Colors.red : Colors.grey,
-                              ),
-                              onPressed: () async {
-                                await controller.toggleFavorite(product.id);
-                              },
-                            );
-                          }),
-
-
-                        ])
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 80),
-                  child: Divider(thickness: 2,color: Colors.orange,),
-                ),
-
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                //   child: AnimatedCrossFade(
-                //     firstChild: Text(
-                //       product.description.length > 30
-                //           ? product.description.substring(0, 30) + '...'
-                //           : product.description,
-                //       style: const TextStyle(fontSize: 15, color: Colors.black87),
-                //     ),
-                //     secondChild: Text(
-                //       product.description,
-                //       style: const TextStyle(fontSize: 16, color: Colors.black87),
-                //     ),
-                //     crossFadeState: isExpanded
-                //         ? CrossFadeState.showSecond
-                //         : CrossFadeState.showFirst,
-                //     duration: const Duration(milliseconds: 300),
-                //   ),
-                // ),
-                // if (product.description.length > 30)
-                //   Padding(
-                //     padding: const EdgeInsets.only(left: 20, top: 5),
-                //     child: TextButton(
-                //       onPressed: () {
-                //         setState(() {
-                //           isExpanded = !isExpanded;
-                //         });
-                //       },
-                //       child: Text(
-                //         isExpanded ? "عرض أقل" : "عرض المزيد",
-                //         style: const TextStyle(color: Colors.black),
-                //       ),
-                //     ),
-                //   ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15, top: 10),
+              ),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "${product.price} \$",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Get.to(DishDetailsPage(productId: product.id));
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        splashColor: Colors.orange.withOpacity(0.3),
-                        highlightColor: Colors.orange.withOpacity(0.1),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.orange, width: 1.5),
-                            borderRadius: BorderRadius.circular(8),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          product.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
-                          child: const Row(
-                            children: [
-                              Text(
-                                "View",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 16,
+                        ),
+                        const SizedBox(width: 10),
+                        Obx(() {
+                          bool isFav = controller.isFavorite(product.id);
+                          return IconButton(
+                            icon: Icon(
+                              isFav ? Icons.favorite : Icons.favorite_border,
+                              color: isFav ? Colors.red : Colors.grey,
+                            ),
+                            onPressed: () async {
+                              await controller.toggleFavorite(product.id);
+                            },
+                          );
+                        }),
+
+
+                      ])
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 10, right: 80),
+                child: Divider(thickness: 2,color: Colors.deepOrange,),
+              ),
+
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 10),
+              //   child: AnimatedCrossFade(
+              //     firstChild: Text(
+              //       product.description.length > 30
+              //           ? product.description.substring(0, 30) + '...'
+              //           : product.description,
+              //       style: const TextStyle(fontSize: 15, color: Colors.black87),
+              //     ),
+              //     secondChild: Text(
+              //       product.description,
+              //       style: const TextStyle(fontSize: 16, color: Colors.black87),
+              //     ),
+              //     crossFadeState: isExpanded
+              //         ? CrossFadeState.showSecond
+              //         : CrossFadeState.showFirst,
+              //     duration: const Duration(milliseconds: 300),
+              //   ),
+              // ),
+              // if (product.description.length > 30)
+              //   Padding(
+              //     padding: const EdgeInsets.only(left: 20, top: 5),
+              //     child: TextButton(
+              //       onPressed: () {
+              //         setState(() {
+              //           isExpanded = !isExpanded;
+              //         });
+              //       },
+              //       child: Text(
+              //         isExpanded ? "عرض أقل" : "عرض المزيد",
+              //         style: const TextStyle(color: Colors.black),
+              //       ),
+              //     ),
+              //   ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${product.price} \$",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(DishDetailsPage(productId: product.id));
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      splashColor: Colors.deepOrange.withOpacity(0.3),
+                      highlightColor: Colors.deepOrange.withOpacity(0.1),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.deepOrange, width: 1.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Row(
+                          children: [
+                            Text(
+                              "View",
+                              style: TextStyle(
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                              color: Colors.black,
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
-
-
-
     );
 
 

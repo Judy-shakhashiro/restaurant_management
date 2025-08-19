@@ -13,7 +13,8 @@ class ApiService extends ApiBase {
   Future<List<Tag>> fetchTags() async {
     final resp = await http.get(
       Uri.parse('${Linkapi.backUrl}/tags'),
-      headers: {'Accept': 'application/json'},
+      headers: {'Accept': 'application/json',
+      'Content-Type':'application/json'},
     );
 
     if (resp.statusCode == 200) {
@@ -23,6 +24,9 @@ class ApiService extends ApiBase {
           .toList();
       return result;
     } else {
+      print(resp.body);
+      print(resp.statusCode);
+      print(resp.reasonPhrase);
       throw Exception('Failed to load tags');
     }
   }

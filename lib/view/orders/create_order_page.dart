@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../controller/orders/get_addresses_controller.dart';
-import '../../home_screen.dart';
+import '../../navigation_bar.dart';
 import '../../services/address_service.dart';
 import '../../services/order_service.dart';
 import 'delivery_location.dart';

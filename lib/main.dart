@@ -1,20 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/slider/slider.dart';
-import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
-import 'package:flutter_application_restaurant/view/widgets/home/theme.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'core/static/global_service.dart';
-import 'home_screen.dart';
+import 'navigation_bar.dart';
 
 var service;
 bool? hasToken;
 late String token;
 Future <void> main() async {
 
+  WidgetsFlutterBinding.ensureInitialized();
   service = Get.put(GlobalServ());
-  WidgetsFlutterBinding.ensureInitialized(); // لتشغيل async في main
+  await service.saveToken('1|a2MMtM5qrTSwUzkuR83qIRoAHeqK582oH1RvhPvKc974b515');
   if( await service.getToken()!=null) {
     hasToken=true;
     print('token is${await service.getToken()}');
@@ -22,30 +19,23 @@ Future <void> main() async {
   else {
     hasToken = false;
   }
-  runApp(MyApp());
+  runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      builder: (controller)  {
-        return GetMaterialApp(
-            title: 'GetX Theme App',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
-            darkTheme: darkTheme,
-            home:
-          //  ReservationsListView()
-           hasToken==true? const MyHomePage():SliderBeg()
-        );
-      },
+    return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            fontFamily: 'Georgia',
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+            useMaterial3: true,
+            scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
+        home:
+        //  ReservationsListView()
+        hasToken==true? const MyHomePage():SliderBeg()
     );
   }
 }
-
-
-
-

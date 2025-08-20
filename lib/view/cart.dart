@@ -135,13 +135,15 @@ class CartScreen extends StatelessWidget {
                 child:  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      controller.cartItems.length==1?  '${controller.cartItems.length} item ':
-                      '${controller.cartItems.length} items ',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    Obx(()=>
+                       Text(
+                        controller.cartItems.length==1?  '${controller.cartItems.length} item ':
+                        '${controller.cartItems.length} items ',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     const Text(
@@ -318,7 +320,7 @@ class CartItemCard extends StatelessWidget {
                                 child: const Text(
                                   'Details',
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     color: Colors.deepOrange,
                                     fontWeight: FontWeight.w600,
                                   ),

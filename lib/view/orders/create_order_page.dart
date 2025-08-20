@@ -78,273 +78,293 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: const Text('Checkout'),
       ),
       body: Stack(
-        children:[ ListView(
-          children: [
-            Container(
-              color: Colors.grey.withAlpha(80),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: const Text(
-                'Order type',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.deepOrange, width: 1),
-                    ),
-                    child: DropdownButton<String>(
-                      dropdownColor: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      value: _selectedOrderType,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      hint: const Text('Delivery', style: TextStyle(fontSize: 20, color: Colors.deepOrange)),
-                      items: _orderTypes.map<DropdownMenuItem<String>>((String type) {
-                        return DropdownMenuItem<String>(
-                          value: type,
-                          child: Text(
-                            type,
-                            style: TextStyle(fontSize: 20, color: _selectedOrderType == type ? Colors.deepOrange : Colors.black87),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedOrderType = newValue!;
-                        });
-                        // You can add additional logic here
-                      },
-                      icon: const Icon(Icons.arrow_drop_down, color: Colors.deepOrange),
-                      style: const TextStyle(color: Colors.black),
-                    ),
+        children:[ Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView(
+            children: [
+              Container(
+               decoration:  BoxDecoration(
+                 color: Colors.grey.withAlpha(40),
+                   borderRadius: BorderRadius.circular(10),
                   ),
-                ],
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: const Text(
+                  'Order type',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                ),
               ),
-            ),
-            Container(
-              color: Colors.grey.withAlpha(80),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: const Text(
-                'Address',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.deepOrange, width: 1),
-                    ),
-                    child: Obx(
-                          () => DropdownButton<AddressInShort>( // Dropdown for saved addresses
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all( width: 1,color: Colors.grey.shade300),
+                      ),
+                      child: DropdownButton<String>(
                         dropdownColor: Colors.white,
                         borderRadius: BorderRadius.circular(12),
-                        value: adController.selectedAddress.value, // Use reactive value from controller
+                        value: _selectedOrderType,
                         underline: const SizedBox(),
                         isExpanded: true,
-                        hint:  Text('${adController.selectedAddress.value?.name ?? 'Select Address'}', style: TextStyle(fontSize: 20, color: Colors.deepOrange)), // Safely access name
-                        items: adController.addresses.map<DropdownMenuItem<AddressInShort>>((AddressInShort address) {
-                          return DropdownMenuItem<AddressInShort>(
-                            value: address,
+                        hint: const Text('Delivery', style: TextStyle(fontSize: 20)),
+                        items: _orderTypes.map<DropdownMenuItem<String>>((String type) {
+                          return DropdownMenuItem<String>(
+                            value: type,
                             child: Text(
-                              address.name, // Use helper for display
-                              style: TextStyle(fontSize: 20, color: adController.selectedAddress.value == address ? Colors.deepOrange : Colors.black87),
+                              type,
+                              style: TextStyle(fontSize: 20, color:  Colors.black87),
                             ),
                           );
                         }).toList(),
-                        onChanged: (AddressInShort? newValue) {
-                          if (newValue != null) { // Only update if newValue is not null
-                            adController.selectedAddress.value = newValue; // Update controller's selected address
-                            adController.fetchSelectedAddressDetails(newValue.id);
-                          }
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedOrderType = newValue!;
+                          });
+                          // You can add additional logic here
                         },
-                        icon: const Icon(Icons.arrow_drop_down, color: Colors.deepOrange),
+                        icon: const Icon(Icons.arrow_drop_down),
                         style: const TextStyle(color: Colors.black),
                       ),
                     ),
-                  ),
-                  // Display currently selected address details (optional)
-                  Obx(() {
-                    final selectedAddressData = adController.selectedAddress.value;
-                    final selectedDetails = adController.selectedAddressDetails.value;
-
-                    if (selectedAddressData != null && selectedDetails != null) {
-                      final double latitude = double.tryParse(selectedDetails.latitude) ?? 0.0;
-                      final double longitude = double.tryParse(selectedDetails.longitude) ?? 0.0;
-                      final LatLng mapCenter = LatLng(latitude, longitude);
-
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded( // Use Expanded to prevent overflow
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Text(
-                                'Label: ${selectedDetails.label}\n'
-                                    'City: ${selectedAddressData.city}\n'
-                                    'Area: ${selectedAddressData.area}\n'
-                                    'Street: ${selectedAddressData.street}\n'
-                                    'Additional details: ${selectedDetails.additionalDetails ?? 'لا يوجد'}\n',
-                                style: const TextStyle(fontSize: 16, color: Colors.black54),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height:140,
-                            width:180,
-                            child: GoogleMap(
-                              key: ValueKey(mapCenter), // Use a key to force rebuild
-                              markers: {
-                                Marker(
-                                  markerId: MarkerId('1'),
-                                  position: mapCenter,
-                                )
-                              },
-                              initialCameraPosition: CameraPosition(
-                                zoom: 17.0,
-                                target: mapCenter,
-                              ),
-                            ),
-                          )
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  }),
-                  SizedBox(height: 10,),
-                  GestureDetector(
-                    onTap: (){Get.to(()=>DeliveryLocationPage());},
-                    child: Text('Choose a new address',style: TextStyle(fontSize: 20,color: Colors.deepOrange),),)
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.grey.withAlpha(80),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Notes', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
-                  IconButton(icon:Icon(Icons.edit,color: Colors.deepOrange,), onPressed: () {
-                    showDeliveryInstructionsBottomSheet(
-                      context: context,
-                      // Pass initial values from _deliveryInstructions map
-                      initialCallMe: _deliveryInstructions['call_me_when_reach'] ?? true,
-                      initialNoDoorbell: _deliveryInstructions['do_not_ring_doorbell'] ?? false,
-                      initialLeaveAtDoor: _deliveryInstructions['leave_order_at_door'] ?? false,
-                      initialNote: _deliveryInstructions['additional_note'] ?? '',
-                      onSubmit: (Map<String, dynamic> instructions) {
-                        setState(() {
-                          _deliveryInstructions.value = instructions; // Update state in parent widget
-                        });
-                        print('Final Delivery Instructions: $_deliveryInstructions');
-                      },
-                    );
-                  }),
-                ],
-              ),
-            ),
-            // Display the selected delivery instructions as chips/tags
-            Obx(() { // Use Obx if _deliveryInstructions were in a GetX controller
-              // For now, assuming _deliveryInstructions is local state, no Obx needed here.
-              // If it's a global Map, you'd need a way to rebuild, or move it to a controller.
-              final List<Widget> instructionChips = [];
-              if (_deliveryInstructions['call_me_when_reach'] == true) {
-                instructionChips.add(_buildInstructionChip('Call me when you reach'));
-              }
-              if (_deliveryInstructions['do_not_ring_doorbell'] == true) {
-                instructionChips.add(_buildInstructionChip('Please don\'t ring the doorbell'));
-              }
-              if (_deliveryInstructions['leave_order_at_door'] == true) {
-                instructionChips.add(_buildInstructionChip('Leave the order in front of the door'));
-              }
-              if (_deliveryInstructions['additional_note'] != null && _deliveryInstructions['additional_note'].isNotEmpty) {
-                instructionChips.add(_buildInstructionChip('Note: ${_deliveryInstructions['additional_note']}'));
-              }
-
-              if (instructionChips.isNotEmpty) {
-                return
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: Wrap(
-                      spacing: 8.0, // gap between adjacent chips
-                      runSpacing: 4.0, // gap between lines
-                      children: instructionChips,
-                    ),
-                  );
-              }
-              return const SizedBox.shrink();
-            }),
-            Container(
-              color: Colors.grey.withAlpha(80),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: const Text('Pay With', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
-            ),
-            Row(children: [Obx(()=>
-                GestureDetector(
-                  onTap: (){
-
-                    if(isCash.value!=true){
-                      isCash.value=true;
-                    }},
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    width: MediaQuery.of(context).size.width/2-20,
-                    height: 110,
-                    margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: isCash.value?Colors.deepOrange:Colors.transparent ),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: const [
-                        BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-                      ],
-                    ),
-                    child: Image.asset('images/cash.png',width: 80,),
-                  ),
+                  ],
                 ),
-            ),
-              Obx(()=>
+              ),
+              Container(
+                decoration:  BoxDecoration(
+                  color: Colors.grey.withAlpha(40),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: const Text(
+                  'Address',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all( width: 1,color: Colors.grey.shade300),
+                      ),
+                      child: Obx(
+                            () => DropdownButton<AddressInShort>( // Dropdown for saved addresses
+                          dropdownColor: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          value: adController.selectedAddress.value, // Use reactive value from controller
+                          underline: const SizedBox(),
+                          isExpanded: true,
+                          hint:  Text('${adController.selectedAddress.value?.name ?? 'Select Address'}', style: TextStyle(fontSize: 20)), // Safely access name
+                          items: adController.addresses.map<DropdownMenuItem<AddressInShort>>((AddressInShort address) {
+                            return DropdownMenuItem<AddressInShort>(
+                              value: address,
+                              child: Text(
+                                address.name, // Use helper for display
+                                style: TextStyle(fontSize: 20, color:  Colors.black87),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (AddressInShort? newValue) {
+                            if (newValue != null) { // Only update if newValue is not null
+                              adController.selectedAddress.value = newValue; // Update controller's selected address
+                              adController.fetchSelectedAddressDetails(newValue.id);
+                            }
+                          },
+                          icon: const Icon(Icons.arrow_drop_down),
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    // Display currently selected address details (optional)
+                    Obx(() {
+                      final selectedAddressData = adController.selectedAddress.value;
+                      final selectedDetails = adController.selectedAddressDetails.value;
+
+                      if (selectedAddressData != null && selectedDetails != null) {
+                        final double latitude = double.tryParse(selectedDetails.latitude) ?? 0.0;
+                        final double longitude = double.tryParse(selectedDetails.longitude) ?? 0.0;
+                        final LatLng mapCenter = LatLng(latitude, longitude);
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded( // Use Expanded to prevent overflow
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: Text(
+                                  'Label: ${selectedDetails.label}\n'
+                                      'City: ${selectedAddressData.city}\n'
+                                      'Area: ${selectedAddressData.area}\n'
+                                      'Street: ${selectedAddressData.street}\n'
+                                      'Additional details: ${selectedDetails.additionalDetails ?? 'لا يوجد'}\n',
+                                  style: const TextStyle(fontSize: 16, color: Colors.black54),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height:140,
+                              width:180,
+                              child: GoogleMap(
+                                key: ValueKey(mapCenter), // Use a key to force rebuild
+                                markers: {
+                                  Marker(
+                                    markerId: MarkerId('1'),
+                                    position: mapCenter,
+                                  )
+                                },
+                                initialCameraPosition: CameraPosition(
+                                  zoom: 17.0,
+                                  target: mapCenter,
+                                ),
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                    SizedBox(height: 10,),
+                    GestureDetector(
+                      onTap: (){Get.to(()=>DeliveryLocationPage());},
+                      child: Text('Choose a new address',style: TextStyle(fontSize: 20,color: Colors.deepOrange),),)
+                  ],
+                ),
+              ),
+              Container(
+                decoration:  BoxDecoration(
+                  color: Colors.grey.withAlpha(40),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Notes', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
+                    IconButton(icon:Icon(Icons.edit,color: Colors.deepOrange,), onPressed: () {
+                      showDeliveryInstructionsBottomSheet(
+                        context: context,
+                        // Pass initial values from _deliveryInstructions map
+                        initialCallMe: _deliveryInstructions['call_me_when_reach'] ?? true,
+                        initialNoDoorbell: _deliveryInstructions['do_not_ring_doorbell'] ?? false,
+                        initialLeaveAtDoor: _deliveryInstructions['leave_order_at_door'] ?? false,
+                        initialNote: _deliveryInstructions['additional_note'] ?? '',
+                        onSubmit: (Map<String, dynamic> instructions) {
+                          setState(() {
+                            _deliveryInstructions.value = instructions; // Update state in parent widget
+                          });
+                          print('Final Delivery Instructions: $_deliveryInstructions');
+                        },
+                      );
+                    }),
+                  ],
+                ),
+
+              ),
+              // Display the selected delivery instructions as chips/tags
+              Obx(() { // Use Obx if _deliveryInstructions were in a GetX controller
+                // For now, assuming _deliveryInstructions is local state, no Obx needed here.
+                // If it's a global Map, you'd need a way to rebuild, or move it to a controller.
+                final List<Widget> instructionChips = [];
+                if (_deliveryInstructions['call_me_when_reach'] == true) {
+                  instructionChips.add(_buildInstructionChip('Call me when you reach'));
+                }
+                if (_deliveryInstructions['do_not_ring_doorbell'] == true) {
+                  instructionChips.add(_buildInstructionChip('Please don\'t ring the doorbell'));
+                }
+                if (_deliveryInstructions['leave_order_at_door'] == true) {
+                  instructionChips.add(_buildInstructionChip('Leave the order in front of the door'));
+                }
+                if (_deliveryInstructions['additional_note'] != null && _deliveryInstructions['additional_note'].isNotEmpty) {
+                  instructionChips.add(_buildInstructionChip('Note: ${_deliveryInstructions['additional_note']}'));
+                }
+
+                if (instructionChips.isNotEmpty) {
+                  return
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      child: Wrap(
+                        spacing: 8.0, // gap between adjacent chips
+                        runSpacing: 4.0, // gap between lines
+                        children: instructionChips,
+                      ),
+                    );
+                }
+                return const SizedBox.shrink();
+              }),
+              const SizedBox(
+              height: 20,
+              ),
+              Container(
+                decoration:  BoxDecoration(
+                  color: Colors.grey.withAlpha(40),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: const Text('Pay With', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [Obx(()=>
                   GestureDetector(
                     onTap: (){
-                      if(isCash.value!=false){
-                        isCash.value=false;
-                      }
-                    },
+
+                      if(isCash.value!=true){
+                        isCash.value=true;
+                      }},
                     child: Container(
                       padding: EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width/2-20,
+                      width: MediaQuery.of(context).size.width/2-40,
                       height: 110,
                       margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
                       decoration: BoxDecoration(
-                        border: Border.all(color: !isCash.value?Colors.deepOrange:Colors.transparent ),
+                        border: Border.all(color: isCash.value?Colors.deepOrange:Colors.transparent ),
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: const [
                           BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
                         ],
                       ),
-                      child: Image.asset('images/ewallet.png'),
+                      child: Image.asset('assets/cash.png',width: 80,),
                     ),
                   ),
-              )],), SizedBox(height: 100,),
-          ],
+              ),
+                Obx(()=>
+                    GestureDetector(
+                      onTap: (){
+                        if(isCash.value!=false){
+                          isCash.value=false;
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        width: MediaQuery.of(context).size.width/2-40,
+                        height: 110,
+                        margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: !isCash.value?Colors.deepOrange:Colors.transparent ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+                          ],
+                        ),
+                        child: Image.asset('assets/ewallet.png'),
+                      ),
+                    ),
+                )],), SizedBox(height: 100,),
+            ],
+          ),
         ),
           Positioned(
             bottom: 0,

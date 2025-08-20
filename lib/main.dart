@@ -29,6 +29,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          appBarTheme: AppBarTheme( backgroundColor:Colors.grey.shade100 ,
+            shadowColor: Colors.grey.shade300,
+            surfaceTintColor: Colors.grey.shade300,),
             fontFamily: 'Georgia',
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
             useMaterial3: true,

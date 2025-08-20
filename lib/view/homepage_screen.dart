@@ -29,8 +29,6 @@ class Homepage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        shadowColor: Colors.white,
-        surfaceTintColor: Colors.white,
         title: InkWell(
           child: Container(
             padding: const EdgeInsets.all(8),

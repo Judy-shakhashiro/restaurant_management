@@ -205,8 +205,7 @@ class _MenuPageState extends State<MenuPage> {
             // --- The interleaved ScrollablePositionedList ──────────────────────────
             Expanded(
             child:  ScrollablePositionedList.builder(
-                // Use ItemScrollController and ItemPositionsListener from the controller
-                itemScrollController: c.itemScrollController,
+                  itemScrollController: c.itemScrollController,
                 itemPositionsListener: c.itemPositionsListener,
                 itemCount: c.menuItems.length,
                 itemBuilder: (context, i) {

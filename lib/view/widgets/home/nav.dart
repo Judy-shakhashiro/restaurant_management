@@ -13,7 +13,7 @@ class ListPages {
      MenuPage(),
     OrdersPage(),
      Homepage(),
-    FavoritesPage(),
+    CartScreen(),
      SearchPage()
   ];
 

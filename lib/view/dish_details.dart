@@ -186,7 +186,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
               onPressed: controller.resetSelections, 
               child: const Text(
                 'RESET',
-                style: TextStyle(color: Colors.deepOrange,fontSize: 15),
+                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),
               ),
             ),
             const SizedBox(width: 8),
@@ -568,7 +568,8 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                 backgroundColor: Colors.deepOrange,
                 foregroundColor: Colors.white,
                 minimumSize: const Size(60, 30),
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
               ),
               child: const Text('ADD'),
             ),
@@ -622,13 +623,13 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
   icon: const Icon(Icons.shopping_cart, color: Colors.black),
   label: const Text(
     'ADD TO CART',
-    style: TextStyle(color: Colors.black,fontSize: 15,),
+    style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),
   ),
   style: ElevatedButton.styleFrom(
     backgroundColor: Colors.white,
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(50),
     ),
   ),
 ),

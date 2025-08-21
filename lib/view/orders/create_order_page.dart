@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../controller/orders/checkout_controller.dart';
 import '../../controller/orders/get_addresses_controller.dart';
 import '../../navigation_bar.dart';
 import '../../services/address_service.dart';
@@ -18,61 +19,12 @@ class CreateOrderPage extends StatefulWidget {
 
 class _CreateOrderPageState extends State<CreateOrderPage> {
 
-  final GetAddressesController adController = Get.put(GetAddressesController()); // Initialize or find the controller
-  RxBool isCash=true.obs;
-  final RxMap _deliveryInstructions = {}.obs;
-  final List<String> _orderTypes = [
-    'Delivery',
-    'Pick Up',
-    'In Restaurant',
-  ];
-  late String _selectedOrderType;
-  OrderService _orderService=OrderService();
-  Future<void> _placeOrder() async {
-    // You'll need to gather the actual values from your UI state
-    final String receivingMethod = _selectedOrderType; // 'Delivery' or 'Pick Up'
-    final String paymentMethod = isCash.value ? 'cash' : 'wallet'; // Based on your RxBool
-    final int? addressId = adController.selectedAddress.value?.id; // Get ID from selected address
+  final CheckoutController controller = Get.put(CheckoutController()); // Initialize or find the controller
 
-    List<String> notes = [];
-    if (_deliveryInstructions['call_me_when_reach'] == true) {
-      notes.add('اتصل عندما تصل');
-    }
-    if (_deliveryInstructions['do_not_ring_doorbell'] == true) {
-      notes.add('لا تقرع الجرس عند الوصول');
-    }
-    if (_deliveryInstructions['additional_note'] != null && _deliveryInstructions['additional_note'].isNotEmpty) {
-      notes.add(_deliveryInstructions['additional_note']);
-    }
-
-    if (receivingMethod == 'Delivery' && addressId == null) {
-      Get.snackbar('Error', 'Please select an address for delivery.', snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
-
-    bool success = await _orderService.createOrder(
-      receivingMethod: receivingMethod.toLowerCase(), // Ensure 'delivery' or 'pick_up'
-      paymentMethod: paymentMethod,
-      orderNotes: notes.isEmpty ? null : notes, // Pass null if no notes, or the list
-      addressId: addressId!, // Ensure it's not null if receivingMethod is 'delivery'
-    );
-
-    if (success) {
-      Get.snackbar('Success', 'Order created successfully!', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
-      // Navigate to order confirmation page or clear cart
-    } else {
-      Get.snackbar('Error', 'Failed to create order. Please try again.', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
-    }
-  }
   @override
   void initState() {
     super.initState();
-    _selectedOrderType = _orderTypes[0]; // Set default order type
-    // Load previously saved instructions for the bottom sheet
    }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +62,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                       child: DropdownButton<String>(
                         dropdownColor: Colors.white,
                         borderRadius: BorderRadius.circular(12),
-                        value: _selectedOrderType,
+                        value: controller.selectedOrderType.value,
                         underline: const SizedBox(),
                         isExpanded: true,
                         hint: const Text('Delivery', style: TextStyle(fontSize: 20)),
-                        items: _orderTypes.map<DropdownMenuItem<String>>((String type) {
+                        items: controller.orderTypes.map<DropdownMenuItem<String>>((String type) {
                           return DropdownMenuItem<String>(
                             value: type,
                             child: Text(
@@ -125,7 +77,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
-                            _selectedOrderType = newValue!;
+                            controller.selectedOrderType.value = newValue!;
                           });
                           // You can add additional logic here
                         },
@@ -162,11 +114,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                             () => DropdownButton<AddressInShort>( // Dropdown for saved addresses
                           dropdownColor: Colors.white,
                           borderRadius: BorderRadius.circular(12),
-                          value: adController.selectedAddress.value, // Use reactive value from controller
+                          value: controller.adController.selectedAddress.value, // Use reactive value from controller
                           underline: const SizedBox(),
                           isExpanded: true,
-                          hint:  Text('${adController.selectedAddress.value?.name ?? 'Select Address'}', style: TextStyle(fontSize: 20)), // Safely access name
-                          items: adController.addresses.map<DropdownMenuItem<AddressInShort>>((AddressInShort address) {
+                          hint:  Text('${controller.adController.selectedAddress.value?.name ?? 'Select Address'}', style: TextStyle(fontSize: 20)), // Safely access name
+                          items: controller.adController.addresses.map<DropdownMenuItem<AddressInShort>>((AddressInShort address) {
                             return DropdownMenuItem<AddressInShort>(
                               value: address,
                               child: Text(
@@ -176,9 +128,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                             );
                           }).toList(),
                           onChanged: (AddressInShort? newValue) {
-                            if (newValue != null) { // Only update if newValue is not null
-                              adController.selectedAddress.value = newValue; // Update controller's selected address
-                              adController.fetchSelectedAddressDetails(newValue.id);
+                            if (newValue != null) {
+                              controller.adController.selectedAddress.value = newValue;
+                              controller.adController.fetchSelectedAddressDetails(newValue.id);
                             }
                           },
                           icon: const Icon(Icons.arrow_drop_down),
@@ -188,8 +140,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     ),
                     // Display currently selected address details (optional)
                     Obx(() {
-                      final selectedAddressData = adController.selectedAddress.value;
-                      final selectedDetails = adController.selectedAddressDetails.value;
+                      final selectedAddressData = controller.adController.selectedAddress.value;
+                      final selectedDetails = controller.adController.selectedAddressDetails.value;
 
                       if (selectedAddressData != null && selectedDetails != null) {
                         final double latitude = double.tryParse(selectedDetails.latitude) ?? 0.0;
@@ -255,15 +207,15 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                       showDeliveryInstructionsBottomSheet(
                         context: context,
                         // Pass initial values from _deliveryInstructions map
-                        initialCallMe: _deliveryInstructions['call_me_when_reach'] ?? true,
-                        initialNoDoorbell: _deliveryInstructions['do_not_ring_doorbell'] ?? false,
-                        initialLeaveAtDoor: _deliveryInstructions['leave_order_at_door'] ?? false,
-                        initialNote: _deliveryInstructions['additional_note'] ?? '',
+                        initialCallMe: controller.deliveryInstructions['call_me_when_reach'] ?? true,
+                        initialNoDoorbell: controller.deliveryInstructions['do_not_ring_doorbell'] ?? false,
+                        initialLeaveAtDoor: controller.deliveryInstructions['leave_order_at_door'] ?? false,
+                        initialNote: controller.deliveryInstructions['additional_note'] ?? '',
                         onSubmit: (Map<String, dynamic> instructions) {
                           setState(() {
-                            _deliveryInstructions.value = instructions; // Update state in parent widget
+                            controller.deliveryInstructions.value = instructions; // Update state in parent widget
                           });
-                          print('Final Delivery Instructions: $_deliveryInstructions');
+                          print('Final Delivery Instructions: $controller.deliveryInstructions');
                         },
                       );
                     }),
@@ -271,22 +223,19 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                 ),
 
               ),
-              // Display the selected delivery instructions as chips/tags
-              Obx(() { // Use Obx if _deliveryInstructions were in a GetX controller
-                // For now, assuming _deliveryInstructions is local state, no Obx needed here.
-                // If it's a global Map, you'd need a way to rebuild, or move it to a controller.
-                final List<Widget> instructionChips = [];
-                if (_deliveryInstructions['call_me_when_reach'] == true) {
+              Obx(() {
+               final List<Widget> instructionChips = [];
+                if (controller.deliveryInstructions['call_me_when_reach'] == true) {
                   instructionChips.add(_buildInstructionChip('Call me when you reach'));
                 }
-                if (_deliveryInstructions['do_not_ring_doorbell'] == true) {
+                if (controller.deliveryInstructions['do_not_ring_doorbell'] == true) {
                   instructionChips.add(_buildInstructionChip('Please don\'t ring the doorbell'));
                 }
-                if (_deliveryInstructions['leave_order_at_door'] == true) {
+                if (controller.deliveryInstructions['leave_order_at_door'] == true) {
                   instructionChips.add(_buildInstructionChip('Leave the order in front of the door'));
                 }
-                if (_deliveryInstructions['additional_note'] != null && _deliveryInstructions['additional_note'].isNotEmpty) {
-                  instructionChips.add(_buildInstructionChip('Note: ${_deliveryInstructions['additional_note']}'));
+                if (controller.deliveryInstructions['additional_note'] != null &&controller.deliveryInstructions['additional_note'].isNotEmpty) {
+                  instructionChips.add(_buildInstructionChip('Note: ${controller.deliveryInstructions['additional_note']}'));
                 }
 
                 if (instructionChips.isNotEmpty) {
@@ -319,8 +268,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   GestureDetector(
                     onTap: (){
 
-                      if(isCash.value!=true){
-                        isCash.value=true;
+                      if(controller.isCash.value!=true){
+                        controller.isCash.value=true;
                       }},
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -328,7 +277,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                       height: 110,
                       margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
                       decoration: BoxDecoration(
-                        border: Border.all(color: isCash.value?Colors.deepOrange:Colors.transparent ),
+                        border: Border.all(color: controller.isCash.value?Colors.deepOrange:Colors.transparent ),
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: const [
@@ -342,8 +291,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                 Obx(()=>
                     GestureDetector(
                       onTap: (){
-                        if(isCash.value!=false){
-                          isCash.value=false;
+                        if(controller.isCash.value!=false){
+                          controller.isCash.value=false;
                         }
                       },
                       child: Container(
@@ -352,7 +301,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         height: 110,
                         margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
                         decoration: BoxDecoration(
-                          border: Border.all(color: !isCash.value?Colors.deepOrange:Colors.transparent ),
+                          border: Border.all(color: !controller.isCash.value?Colors.deepOrange:Colors.transparent ),
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: const [
@@ -362,7 +311,42 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         child: Image.asset('assets/ewallet.png'),
                       ),
                     ),
-                )],), SizedBox(height: 100,),
+                )],),
+              SizedBox(height: 20,),
+              Container(
+                decoration:  BoxDecoration(
+                  color: Colors.grey.withAlpha(40),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: const Text('Checkout', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
+              ),
+              Obx(() {
+                if (controller.checkoutDetails.value == null) {
+                  return const Center(child: CircularProgressIndicator()); // Show loading indicator
+                }
+                return Card(
+                  margin: const EdgeInsets.all(12.0),
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        _buildRow("Items", "${controller.checkoutDetails.value!.itemsCount}"),
+                        _buildRow("Price", "\$${controller.checkoutDetails.value!.price}"),
+                        controller.checkoutDetails.value!.distance!=null?_buildRow("Distance", controller.checkoutDetails.value!.distance!):const SizedBox.shrink(),
+                        _buildRow("Delivery Fees", "\$${controller.checkoutDetails.value!.deliveryFees}"),
+                        controller.checkoutDetails.value!.estimatedDeliveryTime!=null?_buildRow("Estimated Time", controller.checkoutDetails.value!.estimatedDeliveryTime!):SizedBox.shrink(),
+                        _buildRow("Discount", "-\$${controller.checkoutDetails.value!.discount}"),
+                        const Divider(),
+                        _buildRow("Total", "\$${controller.checkoutDetails.value!.totalPrice}", highlight: true),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              SizedBox(height: 50,),
             ],
           ),
         ),
@@ -375,27 +359,23 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
               color: Colors.white,
               child: ElevatedButton(
                 onPressed: () {
-           _placeOrder();
+                  controller.placeOrder();
            Get.off(()=>MyHomePage());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepOrange,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  elevation: 5,
+                  elevation: 6,
                 ),
-                child:  Row(
+                child:  const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
                       'Place Order',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20)
                     ),
                   ],
                 ),
@@ -422,7 +402,6 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     );
   }
 
-  // Helper widget to build a consistent checkbox row
   Widget _buildCheckbox({
     required String text,
     required bool value,
@@ -438,9 +417,6 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     );
   }
 
-  /// Shows a modal bottom sheet for delivery instructions.
-  /// Moved inside _CreateOrderPageState to access its StateSetter implicitly
-  /// and manage its own state correctly.
   void showDeliveryInstructionsBottomSheet({
     required BuildContext context,
     bool initialCallMe = false,
@@ -449,9 +425,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     String initialNote = '',
     required Function(Map<String, dynamic>) onSubmit,
   }) {
-    // These variables will now persist their state across rebuilds
-    // within the StatefulBuilder's scope, as they are not re-initialized
-    // on every `builder` call.
+
     bool _callMe = initialCallMe;
     bool _noDoorbell = initialNoDoorbell;
     bool _leaveAtDoor = initialLeaveAtDoor;
@@ -480,7 +454,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
+                      const Align(
                         alignment: Alignment.center,
                         child: Text(
                           'Add Delivery Instructions',
@@ -578,6 +552,25 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
           },
         );
       },
+    );
+  }
+  Widget _buildRow(String label, String value, {bool highlight = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: highlight ? FontWeight.bold : FontWeight.w500)),
+          Text(value,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
+                  color: highlight ? Colors.green : Colors.black)),
+        ],
+      ),
     );
   }
 }

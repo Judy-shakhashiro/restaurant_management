@@ -112,25 +112,21 @@ class CartScreen extends StatelessWidget {
               color: Colors.white,
               child: ElevatedButton(
                 onPressed: () {
-                  //
                   if(adController.addresses.value.isNotEmpty) {
-                    Get.to(() => CreateOrderPage());
+                    Get.to(() => const CreateOrderPage());
                   }
 
                   else{
-                    //ToDo here check if there are addresses in database
-                    // ,if so add them to local storage
-                    //else
-                    Get.to(DeliveryLocationPage());
+                    Get.to( ()=>const DeliveryLocationPage());
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepOrange,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  elevation: 5,
+                  elevation: 6,
                 ),
                 child:  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -139,11 +135,7 @@ class CartScreen extends StatelessWidget {
                        Text(
                         controller.cartItems.length==1?  '${controller.cartItems.length} item ':
                         '${controller.cartItems.length} items ',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20)
                       ),
                     ),
                     const Text(

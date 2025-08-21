@@ -22,12 +22,10 @@ class ReservationsListView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('My Reservations'),
-          centerTitle: true,
-          backgroundColor: Colors.deepOrange,
           bottom: const TabBar(
-            indicatorColor: Colors.white,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
+            indicatorColor: Colors.deepOrange,
+            labelColor: Colors.deepOrange,
+            unselectedLabelColor: Colors.grey,
             tabs: [
               Tab(text: 'Upcoming'),
               Tab(text: 'Past'),
@@ -158,7 +156,6 @@ print(' link is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
         Get.to(() => const ReservationDetailsView());
       },
       child: Card(
-        color: Colors.white,
         elevation: 4.0,
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         shape: RoundedRectangleBorder(
@@ -334,8 +331,9 @@ print(' link is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepOrange,
                               foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(vertical: 16)
                             ),
-                            child: const Text('Modify'),
+                            child: const Text('Modify',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),),
                           ),
                         if (reservation.acceptedCancellability == true)
                           ElevatedButton(
@@ -378,8 +376,9 @@ print(' link is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white38,
                               foregroundColor: Colors.black54,
+                              padding: const EdgeInsets.symmetric(vertical: 16)
                             ),
-                            child: const Text('Cancel'),
+                            child: const Text('Cancel',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),),
                           ),
                         if (reservation.status == 'not_confirmed')
                           ElevatedButton(
@@ -404,8 +403,9 @@ print(' link is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16)
                             ),
-                            child: const Text('Confirm'),
+                            child: const Text('Confirm',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),),
                           ),
                       ],
                     ),
@@ -444,7 +444,6 @@ class ReservationDetailsView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(
-                color: Colors.white,
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: Padding(
@@ -475,7 +474,6 @@ class ReservationDetailsView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Card(
-                color: Colors.white,
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: Padding(

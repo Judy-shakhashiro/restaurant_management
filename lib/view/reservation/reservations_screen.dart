@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:flutter_application_restaurant/view/reservation/confirm_reservation_screen.dart';
-import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../controller/reservations/reservation_controller.dart';
-import '../../main.dart';
+
 
 class ReservationsView extends StatelessWidget {
   // Optional parameter to pass initial reservation data for modification
@@ -431,17 +430,17 @@ class ReservationsView extends StatelessWidget {
                           }
                               : null,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor,
+                            backgroundColor: Colors.deepOrange,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            elevation: 4,
+                            elevation: 6,
                             disabledBackgroundColor: disabledColor,
                           ),
                           icon: const Icon(Icons.check_circle_outline),
                           label: const Text(
                             'Confirm',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Georgia'),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Georgia'),
                           ),
                         ),
                       ),

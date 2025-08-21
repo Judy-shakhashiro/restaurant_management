@@ -57,7 +57,7 @@ class Order {
     };
   }
 }
-// lib/models/order_item.dart
+
 
 class OrderItem {
   final String name;
@@ -189,12 +189,37 @@ class OrderAddress {
     };
   }
 }
-class OrderService { // Consider creating a separate OrderService
+class CheckoutDetails{
+  final int itemsCount;
+  final int price;
+  final String? distance;
+  final int deliveryFees;
+  final String? estimatedDeliveryTime;
+  final int discount;
+  final int totalPrice;
+  CheckoutDetails({
+    required this.itemsCount,
+    required this.price,
+    required this.distance,
+    required this.deliveryFees,
+    required this.estimatedDeliveryTime,
+    required this.discount,
+    required this.totalPrice,
+  });
+  factory CheckoutDetails.fromJson(Map<String,dynamic> json){
+    return CheckoutDetails(
+        itemsCount: json['items_count'],
+        price: json['total_price'],
+        discount: json['discount'],
+        deliveryFees: json['delivery_fee'],
+        estimatedDeliveryTime: json['estimated_delivery_driver_time'],
+        distance: json['distance'],
+        totalPrice:json['final_price']
+    );
+  }
+}
+class OrderService {
   final CartController cartController = Get.put(CartController());
-  // You might want to get this from a configuration or environment variable
-
-
-
   Future<bool> createOrder({
     required String receivingMethod,
     required String paymentMethod,
@@ -203,17 +228,13 @@ class OrderService { // Consider creating a separate OrderService
   }) async {
     final uri = Uri.parse('${Linkapi.backUrl}/orders');
 
-    // Create a Map for the form data
     final Map<String, String> fields = {
       'receiving_method': receivingMethod,
       'payment_method': paymentMethod,
       'address_id': addressId.toString(),
     };
 
-    // Prepare for multipart request for form-data, especially for arrays
-    // For simple text fields, you could also use http.post with body: fields directly
-    // but for arrays like order_notes[], a multipart request is more robust.
-    var request = http.MultipartRequest('POST', uri);
+   var request = http.MultipartRequest('POST', uri);
     request.headers['Accept'] = 'application/json';
     request.headers['Authorization'] = 'Bearer ${token}';
     fields.forEach((key, value) {
@@ -235,8 +256,7 @@ class OrderService { // Consider creating a separate OrderService
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('Order created successfully: $responseBody');
         cartController.cartItems.clear();
-        // Optionally parse the responseBody if your API returns order details
-        return true;
+       return true;
       } else {
         print('Failed to create order. Status code: ${response.statusCode}');
         print('Response body: $responseBody');
@@ -244,6 +264,13 @@ class OrderService { // Consider creating a separate OrderService
       }
     } catch (e) {
       print('Error creating order: $e');
+      Get.snackbar(
+        'Error',
+        'Error creating order: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return false;
     }
   }
@@ -297,7 +324,7 @@ class OrderService { // Consider creating a separate OrderService
       print('Error fetching orders: $e');
       Get.snackbar(
         'Error',
-        'Network error: $e',
+        'Error fetching orders: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -305,7 +332,7 @@ class OrderService { // Consider creating a separate OrderService
       return null;
     }
   }
-  // NEW: getOrderDetail method
+
   Future<OrderDetail?> getOrderDetail(int orderId) async {
     final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
@@ -355,7 +382,7 @@ class OrderService { // Consider creating a separate OrderService
       print('Error fetching order details: $e');
       Get.snackbar(
         'Error',
-        'Network error: $e',
+        'Error fetching order details: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -396,13 +423,6 @@ class OrderService { // Consider creating a separate OrderService
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         if (jsonResponse['status'] == true) {
-          Get.snackbar(
-            'Success',
-            jsonResponse['message'] ?? 'Order cancelled successfully!',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-          );
           return true;
         } else {
           Get.snackbar(
@@ -430,7 +450,7 @@ class OrderService { // Consider creating a separate OrderService
       print('Error cancelling order: $e');
       Get.snackbar(
         'Error',
-        'Network error: $e',
+        'Error cancelling order: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -438,8 +458,6 @@ class OrderService { // Consider creating a separate OrderService
       return false;
     }
   }
-
-  // NEW: Delete Order (DELETE request)
   Future<bool> deleteOrder(int orderId) async {
     final uri = Uri.parse('${Linkapi.backUrl}/orders/$orderId');
 
@@ -468,13 +486,6 @@ class OrderService { // Consider creating a separate OrderService
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         if (jsonResponse['status'] == true) {
-          Get.snackbar(
-            'Success',
-            jsonResponse['message'] ?? 'Order deleted successfully!',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-          );
           return true;
         } else {
           Get.snackbar(
@@ -502,12 +513,46 @@ class OrderService { // Consider creating a separate OrderService
       print('Error deleting order: $e');
       Get.snackbar(
         'Error',
-        'Network error: $e',
+        'Error deleting order: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
       return false;
     }
+  }
+  Future<CheckoutDetails?> getCheckoutDetails(String receivingMethod,int addressId) async {
+    String url='';
+    if(receivingMethod=='Delivery'){
+      receivingMethod='delivery';
+      url='${Linkapi.backUrl}/orders/creating-details?receiving_method=$receivingMethod&address_id=$addressId';
+    }
+    else if (receivingMethod=='Pick Up'){
+      receivingMethod='pick_up';
+      url='${Linkapi.backUrl}/orders/creating-details?receiving_method=$receivingMethod';
+
+    }
+  // try{
+  print(url);
+      final response = await http.get(Uri.parse(url), headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return CheckoutDetails.fromJson(jsonResponse['details']); }
+    // }
+    // catch(e){
+    //   print('Error getting checkout details: $e');
+    //   Get.snackbar(
+    //     'Error',
+    //     'Error getting checkout details: $e',
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    // }
+  return null;
   }
 }

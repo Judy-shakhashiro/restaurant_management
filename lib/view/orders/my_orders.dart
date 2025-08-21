@@ -1,7 +1,7 @@
 // lib/view/my_orders.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controller/orders/order_controller.dart';
+import '../../controller/orders/order_list_controller.dart';
 import '../../services/order_service.dart';
 import 'order_details_page.dart';
 
@@ -15,8 +15,6 @@ class OrdersPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Orders'),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
       ),
       body: Obx(() {
         if (orderController.isLoading.value) {
@@ -58,13 +56,11 @@ class OrdersPage extends StatelessWidget {
                 print(isCanceled);
                 print('rtttttattata');
                 bool isPending = order.status.toLowerCase() == 'pending';
-
                 return GestureDetector(
                   onTap: () {
                     Get.to(() => OrderDetailPage(orderId: order.id)); // Pass the order ID
                   },
                   child: Card(
-                    color: Colors.white,
                     margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     elevation: 4,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -104,7 +100,8 @@ class OrdersPage extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(
-                                    child: ElevatedButton.icon(
+                                    child:
+                                    ElevatedButton.icon(
                                       onPressed: () {
                                       },
                                       icon: const Icon(Icons.refresh),

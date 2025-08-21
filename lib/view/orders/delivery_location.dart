@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../controller/orders/delivery_controller.dart';
 
-final DeliveryController controller = Get.put(DeliveryController());
+final DeliveryController controller = Get.put(DeliveryController(),permanent: true);
 
 class DeliveryLocationPage extends StatefulWidget {
-  const DeliveryLocationPage({Key? key}) : super(key: key);
+  const DeliveryLocationPage({super.key});
 
   @override
   _DeliveryLocationPageState createState() => _DeliveryLocationPageState();
@@ -195,7 +195,7 @@ class _DeliveryLocationPageState extends State<DeliveryLocationPage> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.only(top: 20, left: 5, right: 5),
             itemCount: controller.deliveryCategories.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            separatorBuilder: (_, __) => const SizedBox(width: 20),
             itemBuilder: (context, index) {
               final category = controller.deliveryCategories[index];
               return Obx(() {
@@ -219,23 +219,19 @@ class _DeliveryLocationPageState extends State<DeliveryLocationPage> {
                       child: Column(
                         children: [
                           Container(
-                            width: 60,
-                            height: 60,
+                            width: 55,
+                            height: 55,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.white,
+                              color: Colors.grey.shade100,
                               boxShadow: [
                                 BoxShadow(
-                                  color: isSelected
-                                      ? Colors.deepOrange.withOpacity(0.6)
-                                      : Colors.black26,
-                                  blurRadius: isSelected ? 10 : 6,
+                                  color: isSelected ? Colors.deepOrange.withOpacity(0.6) : Colors.grey.shade300,
+                                  blurRadius: isSelected ? 6 : 4,
                                   offset: const Offset(2, 4),
                                 ),
                               ],
-                              border: isSelected
-                                  ? Border.all(color: Colors.white, width: 3)
-                                  : null,
+                              border: isSelected ? Border.all(color: Colors.white, width: 3) : null,
                             ),
                             child: Icon(
                               category['icon'],
@@ -249,9 +245,7 @@ class _DeliveryLocationPageState extends State<DeliveryLocationPage> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: isSelected
-                                  ? Colors.deepOrange
-                                  : Colors.black87,
+                              color: isSelected ? Colors.deepOrange : Colors.black87,
                             ),
                           ),
                         ],
@@ -362,7 +356,7 @@ class _DeliveryLocationPageState extends State<DeliveryLocationPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrange,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -376,8 +370,7 @@ class _DeliveryLocationPageState extends State<DeliveryLocationPage> {
                     : controller.isZoomedEnough.value
                     ? 'Location Not Covered'
                     : 'Zoom In Required',
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),
               ),
             )),
           ),

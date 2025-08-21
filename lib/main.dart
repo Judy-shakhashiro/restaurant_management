@@ -23,12 +23,16 @@ Future <void> main() async {
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          buttonTheme: ButtonThemeData(
+            shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50)
+          ),
+          ),
           appBarTheme: AppBarTheme( backgroundColor:Colors.grey.shade100 ,
             shadowColor: Colors.grey.shade300,
             surfaceTintColor: Colors.grey.shade300,),

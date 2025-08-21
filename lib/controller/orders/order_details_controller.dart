@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/order_service.dart';
-import 'order_controller.dart';
+import 'order_list_controller.dart';
 
 class OrderDetailController extends GetxController {
   final OrderService _orderService = OrderService();

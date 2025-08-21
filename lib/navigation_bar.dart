@@ -40,8 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
         surfaceTintColor: Colors.grey.shade600,
         color: Colors.white,
         shape: const CircularNotchedRectangle(), // Creates the notch for the FAB
-        // Space between FAB and AppBar
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround, // Distribute items evenly
           children: <Widget>[
@@ -60,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
+                  icon: Icon(Icons.fastfood_outlined, color: Colors.black),
                   onPressed: () => _onItemTapped(1),
                 ),
                 const Text('orders',style: TextStyle(color: Colors.black),)
@@ -72,10 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.favorite_border, color:  Colors.black),
+                  icon: const Icon(Icons.shopping_cart_outlined, color:  Colors.black),
                   onPressed: () => _onItemTapped(3),
                 ),
-                const Text('fav',style: TextStyle(color: Colors.black),)
+                const Text('cart',style: TextStyle(color: Colors.black),)
 
               ],
             ),

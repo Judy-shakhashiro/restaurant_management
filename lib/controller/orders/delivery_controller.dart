@@ -34,8 +34,8 @@ class DeliveryController extends GetxController {
 
   final List<Map<String, dynamic>> deliveryCategories = [
     {'icon': Icons.delivery_dining, 'title': 'Delivery'},
-    {'icon': Icons.fastfood, 'title': 'Pickup'},
-    {'icon': Icons.restaurant_menu, 'title': 'Dine-in'},
+    {'icon': Icons.takeout_dining_outlined, 'title': 'Pickup'},
+    {'icon': Icons.table_bar, 'title': 'Dine-in'},
   ];
 
   late List<List<LatLng>> _serviceAreaBoundaries ;

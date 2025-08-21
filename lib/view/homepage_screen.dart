@@ -1,13 +1,18 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/view/my_addresses.dart';
+import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
+import 'package:flutter_application_restaurant/view/show_favorite_page.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
+import '../controller/orders/get_addresses_controller.dart';
 import '../core/static/routes.dart';
 import '../controller/favourite_controller.dart';
 import '../controller/home_controller.dart';
 import '../model/category_model.dart';
 import '../model/home_page_model.dart';
+import '../navigation_bar.dart';
 import 'cart.dart';
 import 'orders/delivery_location.dart';
 import 'dish_details.dart';
@@ -15,9 +20,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 class Homepage extends StatelessWidget {
   Homepage({super.key});
-
+  final WishlistController favoriteController = Get.put(WishlistController());
   final HomeController controller = Get.put(HomeController());
-
+final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
   final List<Map<String, dynamic>> deliveryCategories = [
     {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>DeliveryLocationPage()},
     const {'title': 'take away', 'icon': Icons.takeout_dining_outlined},
@@ -28,58 +33,145 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: InkWell(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 2)],
-              color: Colors.white,
-            ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: Text(
-                    "Babbila , Damascus",
-                    style: TextStyle(color: Colors.grey,fontSize: 18),
+        appBar: AppBar(
+          // The automaticallyImplyLeading property is set to false because you're
+          // manually adding the leading icons in a Row.
+          automaticallyImplyLeading: false,
+          actions: [Row(
+            children: [
+              InkWell(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 2)],
+                    color: Colors.white,
                   ),
+                  padding: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(8.0),
+                  child: const Icon(Icons.notifications_none),
                 ),
-
-              ],
+              ),
+              Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  );
+                },
+              ),
+            ],
+          )],
+          title: InkWell(
+            child: Container(
+             // width: MediaQuery.of(context).size.width*0.7,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 2)],
+                color: Colors.white,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(Icons.location_pin, color: Colors.red),
+                  ),
+                  Obx(() {
+                    // Get the controller with Get.find() instead of Get.put()
+                    final adController = Get.find<GetAddressesController>();
+                    return Expanded(
+                      child: Text(
+                        adController.selectedAddressDetails.value?.label ?? '',
+                        style: const TextStyle(color: Colors.grey, fontSize: 18),
+                        overflow: TextOverflow.ellipsis, // Prevents text overflow in the title
+                      ),
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
         ),
-        actions: [
-          InkWell(
-
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 2)],
-                color: Colors.white,
+        endDrawer: Drawer(
+          backgroundColor: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person, size: 40, color: Colors.deepOrange),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'User Profile',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              padding: const EdgeInsets.all(8.0),
-              margin: const EdgeInsets.all(8.0),
-              child: const Icon(Icons.notifications_none),
-            ),
-          ),
-          InkWell(
-           onTap: (){Get.to(CartScreen());},
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 2)],
-                color: Colors.white,
+              _buildDrawerItem(
+                icon: Icons.person,
+                title: 'Profile',
+                onTap: () {
+                  // Navigate to the profile page
+                  Navigator.pop(context); // Close the drawer
+                  Get.to(() => const MyHomePage()); // Placeholder for profile page
+                },
               ),
-              padding: const EdgeInsets.all(8.0),
-              margin: const EdgeInsets.all(8.0),
-              child: const Icon(Icons.shopping_cart),
-            ),
+              _buildDrawerItem(
+                icon: Icons.location_on,
+                title: 'My Addresses',
+                onTap: () {
+                  // Navigate to the addresses page
+               Get.to(AddressesPage());
+                  // We're already here, so no navigation needed.
+                },
+              ),
+              _buildDrawerItem(
+                icon: Icons.favorite,
+                title: 'Favourites',
+                onTap: () {
+                  // Navigate to the favourites page
+                  Navigator.pop(context); // Close the drawer
+                  Get.to(() => const FavoritesPage());
+                },
+              ),
+              _buildDrawerItem(
+                icon: Icons.bookmark,
+                title: 'Reservations',
+                onTap: () {
+                  // Navigate to the reservations page
+                  Navigator.pop(context); // Close the drawer
+                  Get.to(() => ReservationsListView());
+                },
+              ),
+              _buildDrawerItem(
+                icon: Icons.help,
+                title: 'FAQ',
+                onTap: () {
+                  // Navigate to the FAQ page
+                  Navigator.pop(context); // Close the drawer
+                  Get.snackbar('FAQ', 'Navigating to FAQ page...'); // Placeholder
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
       body: Obx(() {
         // This outer Obx only reacts to isLoading and errorMessage
         if (controller.isLoading.value) {
@@ -113,12 +205,11 @@ class Homepage extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     itemCount: deliveryCategories.length + 1,
-                    separatorBuilder: (context, index) => const SizedBox(width: 24),
+                    separatorBuilder: (context, index) => const SizedBox(width: 40),
                     itemBuilder: (context, index) {
                       if (index < deliveryCategories.length) {
                         final category = deliveryCategories[index];
                         return Obx(() {
-                          // This Obx reacts only to controller.selectedDeliveryIndex.value
                           final isSelected = controller.selectedDeliveryIndex.value == index;
                           return Animate(
                             effects: const [
@@ -143,14 +234,9 @@ class Homepage extends StatelessWidget {
                                     Container(
                                       width: 55,
                                       height: 55,
-                                      decoration: BoxDecoration(
+                                      decoration:BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Colors.grey.shade100,
-                                        // gradient:  LinearGradient(
-                                        //   colors: [Colors.deepOrange,Colors.red.shade100],
-                                        //   begin: Alignment.topLeft,
-                                        //   end: Alignment.bottomRight,
-                                        // ),
                                         boxShadow: [
                                           BoxShadow(
                                             color: isSelected ? Colors.deepOrange.withOpacity(0.6) : Colors.grey.shade300,
@@ -347,10 +433,23 @@ class Homepage extends StatelessWidget {
       ),
     );
   }
+  // Helper function to build a drawer item
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.deepOrange),
+      title: Text(title),
+      onTap: onTap,
+    );
+  }
   Widget ProductCard(BuildContext context,ProductHome product) {
     bool isExpanded = false;
     bool isFavorite = false;
-    final WishlistController controller = Get.put(WishlistController());
+    // Get the existing controller instance instead of creating a new one
+    final WishlistController wishlistController = Get.find<WishlistController>();
 
     return Padding(
       padding: const EdgeInsets.all(5.0),
@@ -393,60 +492,25 @@ class Homepage extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Obx(() {
-                          bool isFav = controller.isFavorite(product.id);
+                          // Use the fetched instance
+                          bool isFav = wishlistController.isFavorite(product.id);
                           return IconButton(
                             icon: Icon(
                               isFav ? Icons.favorite : Icons.favorite_border,
                               color: isFav ? Colors.red : Colors.grey,
                             ),
                             onPressed: () async {
-                              await controller.toggleFavorite(product.id);
+                              // Use the fetched instance
+                              await wishlistController.toggleFavorite(product.id);
                             },
                           );
                         }),
-
-
                       ])
               ),
               const Padding(
                 padding: EdgeInsets.only(left: 10, right: 80),
                 child: Divider(thickness: 2,color: Colors.deepOrange,),
               ),
-
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 10),
-              //   child: AnimatedCrossFade(
-              //     firstChild: Text(
-              //       product.description.length > 30
-              //           ? product.description.substring(0, 30) + '...'
-              //           : product.description,
-              //       style: const TextStyle(fontSize: 15, color: Colors.black87),
-              //     ),
-              //     secondChild: Text(
-              //       product.description,
-              //       style: const TextStyle(fontSize: 16, color: Colors.black87),
-              //     ),
-              //     crossFadeState: isExpanded
-              //         ? CrossFadeState.showSecond
-              //         : CrossFadeState.showFirst,
-              //     duration: const Duration(milliseconds: 300),
-              //   ),
-              // ),
-              // if (product.description.length > 30)
-              //   Padding(
-              //     padding: const EdgeInsets.only(left: 20, top: 5),
-              //     child: TextButton(
-              //       onPressed: () {
-              //         setState(() {
-              //           isExpanded = !isExpanded;
-              //         });
-              //       },
-              //       child: Text(
-              //         isExpanded ? "عرض أقل" : "عرض المزيد",
-              //         style: const TextStyle(color: Colors.black),
-              //       ),
-              //     ),
-              //   ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
                 child: Row(
@@ -502,7 +566,6 @@ class Homepage extends StatelessWidget {
         ),
       ),
     );
-
-
   }
+
 }

@@ -3,12 +3,6 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/main.dart';
-import 'package:flutter_application_restaurant/main.dart';
-import 'package:flutter_application_restaurant/main.dart';
-import 'package:flutter_application_restaurant/main.dart';
-import 'package:flutter_application_restaurant/main.dart';
-import 'package:flutter_application_restaurant/main.dart';
-import 'package:flutter_application_restaurant/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
@@ -25,6 +19,7 @@ class Address{
    final String street;
    final  String? mobile;
    final String? additionalDetails;
+   final bool is_deliverable;
       Address( {
         required this.id,
         required this.latitude,
@@ -35,9 +30,10 @@ class Address{
    required this.area,
    required this.street,
    this.mobile,
-   this.additionalDetails,});
+   this.additionalDetails,
+       required this.is_deliverable, });
       factory Address.fromJson(Map<String,dynamic> json){
-        return Address(id: json['id'], latitude:json['latitude'] , longitude: json['longitude'], name: json['name'], label: json['label'], city: json['city'], area: json['area'], street: json['street']);
+        return Address(id: json['id'], latitude:json['latitude'] , longitude: json['longitude'], name: json['name'], label: json['label'], city: json['city'], area: json['area'], street: json['street'], is_deliverable: json['is_deliverable'],additionalDetails: json['additional_details']);
   }
 
 }
@@ -146,6 +142,13 @@ class AddressService extends GetxService {
     }
     catch(e){
       print('exception deleting address');
+      Get.snackbar(
+        'Error',
+        'Error deleting address: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
     return null;
 
@@ -217,7 +220,7 @@ class AddressService extends GetxService {
       print('Error posting address: $e');
       Get.snackbar(
         'Error',
-        'Network error or failed to connect to server: $e',
+        'Error posting address: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,

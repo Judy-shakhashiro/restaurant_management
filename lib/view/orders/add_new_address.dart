@@ -136,8 +136,6 @@ class _AddNewAddressPageState extends State<AddNewAddressPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Address'),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
       ),
       body: Stack(
         children: [

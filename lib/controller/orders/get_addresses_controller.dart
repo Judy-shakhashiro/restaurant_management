@@ -1,10 +1,10 @@
-// lib/controller/get_addresses_controller.dart
+
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import '../../services/address_service.dart'; // For snackbar, if used
+import '../../services/address_service.dart';
 
 class GetAddressesController extends GetxController {
   // Reactive list to hold all saved addresses
@@ -71,7 +71,7 @@ class GetAddressesController extends GetxController {
 
   Future<void> fetchSelectedAddressDetails(int id) async {
  selectedAddressDetails.value=await service.getAddressById(id);
- print('ttttttttttttttttt${selectedAddressDetails.value!.area}');
+ print('${selectedAddressDetails.value!.area}');
  }
 
 }

@@ -69,10 +69,13 @@ class ReservationsController extends GetxController {
           errorMessage.value = data['message'] ?? 'Failed to load reservations.';
         }
       } else {
+        print(response.body);
         errorMessage.value = 'Error ${response.statusCode}: Failed to fetch data.';
       }
 
     } catch (e) {
+      print(e);
+
       errorMessage.value = 'An unexpected error occurred: $e';
     } finally {
       isLoading.value = false;

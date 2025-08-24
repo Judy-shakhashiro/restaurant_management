@@ -62,8 +62,8 @@ class CartItem {
   final int isRecommended;
   final String basePrice;
   final int extraPrice;
-  final int totalPrice;
-   RxInt quantity; 
+  final RxInt totalPrice;
+  final RxInt quantity; 
   final CartItemAttributes selectedAttributes;
 
   CartItem({
@@ -75,31 +75,33 @@ class CartItem {
     required this.isRecommended,
     required this.basePrice,
     required this.extraPrice,
-    required this.totalPrice,
+    required int initialTotalPrice, 
     required int initialQuantity, 
     required this.selectedAttributes,
-  }) : quantity = initialQuantity.obs; 
+  }) : totalPrice = initialTotalPrice.obs, 
+       quantity = initialQuantity.obs; 
 
- factory CartItem.fromJson(Map<String, dynamic> json) {
-  final attributesJson = json['selected_attributes'] ??
-                         json['attributes'];
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    final attributesJson = json['selected_attributes'] ?? json['attributes'];
 
-  return CartItem(
-    id: json['id'] is int ? json['id'] as int : 0,
-    name: json['name'] as String? ?? '',
-    description: json['description'] as String? ?? '',
-    image: json['image'] as String? ?? '',
-    isSimple: json['is_simple'] is int ? json['is_simple'] as int : 0,
-    isRecommended: json['is_recommended'] is int ? json['is_recommended'] as int : 0,
-    basePrice: json['base_price'] as String? ?? '0.00',
-    extraPrice: json['extra_price'] as int? ?? 0,
-    totalPrice: json['total_price'] as int? ?? 0,
-    initialQuantity: json['quantity'] is int ? json['quantity'] as int : 1,
-    selectedAttributes: CartItemAttributes.fromJson(
-      attributesJson as Map<String, dynamic>? ?? {},
-    ),
-  );
-}
+    return CartItem(
+      id: json['id'] is int ? json['id'] as int : 0,
+      name: json['name'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      image: json['image'] as String? ?? '',
+      isSimple: json['is_simple'] is int ? json['is_simple'] as int : 0,
+      isRecommended: json['is_recommended'] is int ? json['is_recommended'] as int : 0,
+      basePrice: json['base_price'] as String? ?? '0.00',
+      extraPrice: json['extra_price'] as int? ?? 0,
+      // ✅ استخدام القيمة الموجودة في الـ JSON كقيمة أولية
+      initialTotalPrice: json['total_price'] as int? ?? 0,
+      initialQuantity: json['quantity'] is int ? json['quantity'] as int : 1,
+      selectedAttributes: CartItemAttributes.fromJson(
+        attributesJson as Map<String, dynamic>? ?? {},
+      ),
+    );
+  }
+
 
 }
 
@@ -162,29 +164,29 @@ class AdditionalAttributeValue {
 }
 
 
-class CartItemDetails {
-  final bool status;
-  final int statusCode;
-  final String message;
-  final DishDetails cartItem;
+// class CartItemDetails {
+//   final bool status;
+//   final int statusCode;
+//   final String message;
+//   final DishDetails cartItem;
 
-  CartItemDetails({
-    required this.status,
-    required this.statusCode,
-    required this.message,
-    required this.cartItem,
-  });
+//   CartItemDetails({
+//     required this.status,
+//     required this.statusCode,
+//     required this.message,
+//     required this.cartItem,
+//   });
 
-  factory CartItemDetails.fromJson(Map<String, dynamic> json) {
-    return CartItemDetails(
-      status: json['status'] as bool? ?? false,
-      statusCode: json['status_code'] is int ? json['status_code'] as int : 0,
-      message: json['message'] as String? ?? 'Unknown message',
-      cartItem: DishDetails.fromJson(
-          json['item'] as Map<String, dynamic>? ?? {}),
-    );
-  }
-}
+//   factory CartItemDetails.fromJson(Map<String, dynamic> json) {
+//     return CartItemDetails(
+//       status: json['status'] as bool? ?? false,
+//       statusCode: json['status_code'] is int ? json['status_code'] as int : 0,
+//       message: json['message'] as String? ?? 'Unknown message',
+//       cartItem: DishDetails.fromJson(
+//           json['item'] as Map<String, dynamic>? ?? {}),
+//     );
+//   }
+// }
 
 // class DishDetails {
 //   final int id;

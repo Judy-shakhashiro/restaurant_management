@@ -1,9 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/my_addresses.dart';
+import 'package:flutter_application_restaurant/view/profile/profile_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
-import 'package:flutter_application_restaurant/view/show_favorite_page.dart';
+import 'package:flutter_application_restaurant/view/favorite_page.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
 import '../controller/orders/get_addresses_controller.dart';
@@ -22,7 +23,7 @@ class Homepage extends StatelessWidget {
   Homepage({super.key});
   final WishlistController favoriteController = Get.put(WishlistController());
   final HomeController controller = Get.put(HomeController());
-final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
+  final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
   final List<Map<String, dynamic>> deliveryCategories = [
     {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>DeliveryLocationPage()},
     const {'title': 'take away', 'icon': Icons.takeout_dining_outlined},
@@ -34,10 +35,9 @@ final GetAddressesController adController=Get.put(GetAddressesController(),perma
     return Scaffold(
       backgroundColor: Colors.white,
         appBar: AppBar(
-          // The automaticallyImplyLeading property is set to false because you're
-          // manually adding the leading icons in a Row.
           automaticallyImplyLeading: false,
-          actions: [Row(
+          actions: [
+            Row(
             children: [
               InkWell(
                 child: Container(
@@ -80,13 +80,12 @@ final GetAddressesController adController=Get.put(GetAddressesController(),perma
                     child: Icon(Icons.location_pin, color: Colors.red),
                   ),
                   Obx(() {
-                    // Get the controller with Get.find() instead of Get.put()
-                    final adController = Get.find<GetAddressesController>();
+                    final adController = Get.put(GetAddressesController());
                     return Expanded(
                       child: Text(
                         adController.selectedAddressDetails.value?.label ?? '',
                         style: const TextStyle(color: Colors.grey, fontSize: 18),
-                        overflow: TextOverflow.ellipsis, // Prevents text overflow in the title
+                        overflow: TextOverflow.ellipsis, 
                       ),
                     );
                   }),
@@ -130,7 +129,7 @@ final GetAddressesController adController=Get.put(GetAddressesController(),perma
                 onTap: () {
                   // Navigate to the profile page
                   Navigator.pop(context); // Close the drawer
-                  Get.to(() => const MyHomePage()); // Placeholder for profile page
+                  Get.to(() =>  ProfilePage()); // Placeholder for profile page
                 },
               ),
               _buildDrawerItem(
@@ -173,17 +172,36 @@ final GetAddressesController adController=Get.put(GetAddressesController(),perma
           ),
         ),
       body: Obx(() {
-        // This outer Obx only reacts to isLoading and errorMessage
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.errorMessage.value != null) {
           return Center(
-            child: Text(
-              controller.errorMessage.value!,
-              style: const TextStyle(color: Colors.red, fontSize: 16),
-            ),
-          );
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Please try again.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18, color: Colors.red)
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                   onPressed: () {
+                      controller.fetchInitialData();
+                        }, // Retry fetch
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Retry'),
+                  
+                ),
+                    ],
+                  ),
+                );
         }
 
         final HomeModel? homeData = controller.homeData.value;
@@ -397,7 +415,7 @@ final GetAddressesController adController=Get.put(GetAddressesController(),perma
                   ),
                   child: CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage('${Linkapi.backUrl}/images/${c.image}'),
+                    backgroundImage: NetworkImage('${Linkapi.bacUrlImage}${c.image}'),
                     backgroundColor: Colors.transparent,
                   ),
                 ),
@@ -446,19 +464,16 @@ final GetAddressesController adController=Get.put(GetAddressesController(),perma
     );
   }
   Widget ProductCard(BuildContext context,ProductHome product) {
-    bool isExpanded = false;
-    bool isFavorite = false;
-    // Get the existing controller instance instead of creating a new one
-    final WishlistController wishlistController = Get.find<WishlistController>();
+    final WishlistController wishlistController = Get.put(WishlistController());
 
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
         width: 260,
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        margin:const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          boxShadow:  [BoxShadow(color: Colors.grey, blurRadius: 8,)],
+          boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 8,)],
           color: Colors.white,
         ),
         child: InkWell(
@@ -470,16 +485,40 @@ final GetAddressesController adController=Get.put(GetAddressesController(),perma
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  '${Linkapi.backUrl}/images/${product.image}',
-                  height: 180,
+                    '${Linkapi.bacUrlImage}${product.image}',
+                   height: 180,
                   width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const SizedBox(
+                                height: 150,
+                                child:  Center(
+                                  child: CircularProgressIndicator(
+                                     color: Colors.deepOrange,
+                                                        ),
+                                ),
+                              ); 
+                            },  
+                            errorBuilder: (context, error, stackTrace) {
+                            print('Failed to load image: $error'); 
+                              return Container(
+                                height: 180,
+                                width: double.infinity,
+                                color: Colors.grey[200],
+                                child: const Icon(
+                                  Icons.image_not_supported, 
+                                  color: Colors.grey,
+                                  size: 50,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
               Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

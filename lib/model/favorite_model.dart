@@ -2,13 +2,13 @@ class WishlistResponse {
   final bool status;
   final int statusCode;
   final String message;
-  Product product;
+  final List<ProductFavorite> products; // تم التعديل هنا ليصبح قائمة
 
   WishlistResponse({
     required this.status,
     required this.statusCode,
     required this.message,
-    required this.product,
+    required this.products,
   });
 
   factory WishlistResponse.fromJson(Map<String, dynamic> json) {
@@ -16,7 +16,9 @@ class WishlistResponse {
       status: json['status'],
       statusCode: json['status_code'],
       message: json['message'],
-      product: Product.fromJson(json["product"]),
+      products: (json['products'] as List<dynamic>)
+          .map((e) => ProductFavorite.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -24,11 +26,11 @@ class WishlistResponse {
         'status': status,
         'status_code': statusCode,
         'message': message,
-        "product": product.toJson(),
+        'products': products.map((e) => e.toJson()).toList(),
       };
 }
 
-class Product {
+class ProductFavorite {
   final int id;
   final String name;
   final String description;
@@ -40,7 +42,7 @@ class Product {
   final int categoryId;
   final List<Tag> tags;
 
-  Product({
+  ProductFavorite({
     required this.id,
     required this.name,
     required this.description,
@@ -53,8 +55,8 @@ class Product {
     required this.tags,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
+  factory ProductFavorite.fromJson(Map<String, dynamic> json) {
+    return ProductFavorite(
       id: json['id'],
       name: json['name'],
       description: json['description'],

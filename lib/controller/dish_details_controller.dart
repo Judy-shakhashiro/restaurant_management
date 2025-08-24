@@ -1,55 +1,48 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-
 import '../model/dish_details_model.dart';
 import '../services/cart_service.dart';
 import '../services/dish_details_service.dart';
 
-
 class DishDetailsController extends GetxController {
   final int productId;
-  final DishDetailsService dishDetailsService=DishDetailsService();
-  final CartService cartService=CartService();
+  final DishDetailsService dishDetailsService = DishDetailsService();
+  final CartService cartService = CartService();
 
-
-  var dishDetails = Rx<DishDetails?>(null); 
-  var isLoading = true.obs; 
+  var dishDetails = Rx<DishDetails?>(null);
+  var isLoading = true.obs;
   var errorMessage = Rx<String?>(null);
 
   var selectedSize = Rx<AttributeItem?>(null);
   var selectedPiecesNumber = Rx<AttributeItem?>(null);
-  var selectedAddons = <AttributeItem>[].obs; 
-  var selectedSauces = <AttributeItem>[].obs; 
-  var quantity=1.obs;
-  var totalPrice = 0.0.obs; 
+  var selectedAddons = <AttributeItem>[].obs;
+  var selectedSauces = <AttributeItem>[].obs;
+  var quantity = 1.obs;
+  var totalPrice = 0.0.obs;
 
-  // Constructor
-  DishDetailsController({ required this.productId});
+  DishDetailsController({required this.productId});
 
   @override
   void onInit() {
     super.onInit();
-    fetchDishDetails(); 
+    fetchDishDetails();
+    everAll([selectedSize, selectedPiecesNumber, selectedAddons, selectedSauces, quantity], (_) => _updatePrice());
   }
-
 
   Future<void> fetchDishDetails() async {
     isLoading.value = true;
     errorMessage.value = null;
-
     try {
       final fetchedDetails = await dishDetailsService.getDishDetails(productId);
       dishDetails.value = fetchedDetails as DishDetails?;
-
       _initializeSelectionsAndPrice();
     } catch (e) {
       errorMessage.value = 'Failed to load dish details: $e';
-      print(e); 
+      print(e);
     } finally {
       isLoading.value = false;
     }
   }
-
 
   void _initializeSelectionsAndPrice() {
     if (dishDetails.value == null) return;
@@ -62,14 +55,14 @@ class DishDetailsController extends GetxController {
       selectedSize.value = basicAttributes.size!.firstWhereOrNull((item) => item.isDefault) ??
           basicAttributes.size!.first;
     } else {
-      selectedSize.value = null; 
+      selectedSize.value = null;
     }
 
     if (basicAttributes?.piecesNumber != null && basicAttributes!.piecesNumber!.isNotEmpty) {
       selectedPiecesNumber.value = basicAttributes.piecesNumber!.firstWhereOrNull((item) => item.isDefault) ??
           basicAttributes.piecesNumber!.first;
     } else {
-      selectedPiecesNumber.value = null; 
+      selectedPiecesNumber.value = null;
     }
 
     if (additionalAttributes?.addons != null) {
@@ -83,21 +76,17 @@ class DishDetailsController extends GetxController {
     } else {
       selectedSauces.clear();
     }
-
-    _updatePrice(); 
   }
 
   void updateSelectedSize(AttributeItem? size) {
     if (selectedSize.value != size) {
       selectedSize.value = size;
-      _updatePrice();
     }
   }
 
   void updateSelectedPiecesNumber(AttributeItem? piecesNumber) {
     if (selectedPiecesNumber.value != piecesNumber) {
       selectedPiecesNumber.value = piecesNumber;
-      _updatePrice();
     }
   }
 
@@ -109,7 +98,6 @@ class DishDetailsController extends GetxController {
     } else {
       selectedAddons.removeWhere((item) => item.id == addon.id);
     }
-    _updatePrice();
   }
 
   void toggleSauceSelection(AttributeItem sauce, bool isSelected) {
@@ -120,11 +108,10 @@ class DishDetailsController extends GetxController {
     } else {
       selectedSauces.removeWhere((item) => item.id == sauce.id);
     }
-    _updatePrice();
   }
 
   void _updatePrice() {
-    if (dishDetails.value == null) return; 
+    if (dishDetails.value == null) return;
     double calculatedPrice = double.parse(dishDetails.value!.product!.price);
 
     if (selectedSize.value != null) {
@@ -139,29 +126,26 @@ class DishDetailsController extends GetxController {
     for (var sauce in selectedSauces) {
       calculatedPrice += double.parse(sauce.price);
     }
-    totalPrice.value = calculatedPrice; 
+    totalPrice.value = calculatedPrice * quantity.value;
   }
 
   void resetSelections() {
     _initializeSelectionsAndPrice();
   }
 
- 
-Future<void> addToCart() async {
-   int? basicOptionId= selectedSize.value?.id?? selectedPiecesNumber.value?.id;
-    List<int> additionalOptions=[];
-    int opId;
-    for(int i=0;i<selectedAddons.length;i++){
-      opId=selectedAddons[i].id;
-      additionalOptions.add(opId);
-    }
-    for(int i=0;i<selectedSauces.length;i++){
-      opId=selectedSauces[i].id;
-      additionalOptions.add(opId);
+  Future<void> addToCart() async {
+    int? basicOptionId;
+    if (selectedSize.value != null) {
+      basicOptionId = selectedSize.value!.id;
+    } else if (selectedPiecesNumber.value != null) {
+      basicOptionId = selectedPiecesNumber.value!.id;
     }
 
+    List<int> additionalOptions = [];
+    additionalOptions.addAll(selectedAddons.map((e) => e.id));
+    additionalOptions.addAll(selectedSauces.map((e) => e.id));
+
     try {
- 
       final String message = await cartService.addProductToCart(
         productId: productId,
         quantity: quantity.value,
@@ -169,17 +153,11 @@ Future<void> addToCart() async {
         additionalOptionIds: additionalOptions,
       );
 
-    
       Get.snackbar(
-        'success', 
-        message, 
-        backgroundGradient: const LinearGradient(colors: [
-          Color.fromARGB(255, 255, 210, 150), 
-          Colors.white
-        ]),
-        snackPosition: SnackPosition.BOTTOM, 
-        colorText: Colors.black87, 
-        duration: const Duration(seconds: 3), 
+        'تم بنجاح',
+        'تمت إضافة المنتج إلى السلة بنجاح!',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
       );
 
       print('Added to cart! Total: ${totalPrice.value} EGP');
@@ -187,22 +165,17 @@ Future<void> addToCart() async {
       print('Selected Pieces Number: ${selectedPiecesNumber.value?.name}');
       print('Selected Addons: ${selectedAddons.map((e) => e.name).join(', ')}');
       print('Selected Sauces: ${selectedSauces.map((e) => e.name).join(', ')}');
-
     } catch (e) {
-  
-      print('Error adding to cart: $e');
       Get.snackbar(
-        'خطأ', 
-        e.toString().replaceFirst('Exception: ', ''), 
-        backgroundColor: Colors.redAccent,
+        'خطأ',
+        'فشل إضافة المنتج إلى السلة: $e',
+        backgroundColor: Colors.red,
         colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 4),
       );
+      print('Error adding to cart: $e');
     }
   }
 }
-
 
 extension IterableExtension<T> on Iterable<T> {
   T? firstWhereOrNull(bool Function(T element) test) {

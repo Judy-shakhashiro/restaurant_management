@@ -24,12 +24,12 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
   final GlobalKey _saucesSectionKey = GlobalKey();
 
   // Get your controller instance
-  late final DishDetailsController controller;
-
+   late final DishDetailsController controller;
+// DishDetailsController controller =Get.put(DishDetailsController(productId: productId));
   @override
   void initState() {
     super.initState();
-    controller = Get.put(DishDetailsController(productId: widget.productId));
+   controller = Get.put(DishDetailsController(productId: widget.productId));
     ever(controller.dishDetails, (_) {
       _updateTabController();
     });
@@ -126,6 +126,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
      final WishlistController cont = Get.find();
+
     return Obx(() {
       if (controller.isLoading.value) {
         return const Scaffold(
@@ -134,15 +135,32 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
       }
 
       if (controller.errorMessage.value != null) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('Error')),
-          body: Center(
-            child: Text(
-              controller.errorMessage.value!,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
-        );
+        return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Please try again.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18, color: Colors.red)
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                   onPressed: () {
+                      controller.fetchDishDetails();
+                        }, // Retry fetch
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Retry'),
+                  
+                ),
+                    ],
+                  ),
+                );
       }
 
       final dishDetails = controller.dishDetails.value;
@@ -179,14 +197,14 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
               Get.back();
             },
           ),
-          title: Text('Details'),
+          title:const Text('Details',),
           centerTitle: false,
           actions: [
             TextButton(
               onPressed: controller.resetSelections, 
               child: const Text(
                 'RESET',
-                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),
+                style: TextStyle(color: Colors.black, fontSize: 20),
               ),
             ),
             const SizedBox(width: 8),
@@ -194,7 +212,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
           bottom: TabBar(
             controller: _tabController!,
             labelColor: Colors.deepOrange,
-            unselectedLabelColor: Colors.grey,
+            unselectedLabelColor: Colors.black54,
             indicatorColor: Colors.deepOrange,
             tabs: tabs,
           ),
@@ -209,18 +227,19 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Stack(
-                      children: [Center(
+                      children: [
+                        Center(
                         child: product.image.isNotEmpty
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(12), 
+                                borderRadius: BorderRadius.circular(15), 
                                 child: Image.network(
-                                  '${Linkapi.backUrl}/images/${product.image}',
-                                  height: 200,
+                                  '${Linkapi.bacUrlImage}${product.image}',
+                                  height: 160,
                                   width: 400, 
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) => const Icon(
                                     Icons.image_not_supported,
-                                    size: 200,
+                                    size: 120,
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -232,24 +251,23 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                               ),
                       ),
                       Positioned(
-  child: Obx(() {
-    bool isFav = cont.isFavorite(dishDetails.product.id);
-    return CircleAvatar(
-      backgroundColor: Colors.white,
-      child: IconButton(
-        icon: Icon(
-          isFav ? Icons.favorite : Icons.favorite_border,
-          color: isFav ? Colors.red : Colors.grey,
-        ),
-        onPressed: () async {
-          await cont.toggleFavorite(dishDetails.product.id);
-        },
-      ),
-    );
-  }),
-),
-
-                      ]
+                  child: Obx(() {
+                    bool isFav = cont.isFavorite(dishDetails.product.id);
+                    return CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: IconButton(
+                        icon: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          color: isFav ? Colors.red : Colors.grey,
+                        ),
+                        onPressed: () async {
+                          await cont.toggleFavorite(dishDetails.product.id);
+                        },
+                      ),
+                    );
+                  }),
+                ),
+                                      ]
                     )
 ,
                     const SizedBox(height: 16),
@@ -258,22 +276,22 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                       children: [
                         Text(
                           product.name,
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Colors.black),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black),
                         ),
                         Text(
-                      '${controller.totalPrice.value.toStringAsFixed(2)}  EGP', 
-                      style:  TextStyle(fontSize: 22, color: Colors.deepOrange),
+                      '${product.price}  EGP', 
+                      style:const  TextStyle(fontSize: 22, color: Colors.deepOrange),
                     ),
                       ],
                     ),
                   const  Padding(
-                      padding: const EdgeInsets.only(right: 200),
+                      padding:  EdgeInsets.only(right: 200),
                       child: Divider(thickness: 2,color: Colors.deepOrange,),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       product.description,
-                      style: const TextStyle(fontSize: 14, color: Colors.black87),
+                      style: const TextStyle(fontSize: 15, color: Colors.black87),
                     ),
                   //  const SizedBox(height: 16),
                     
@@ -340,7 +358,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style:  TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color:  Colors.black),
+        style:const  TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color:  Colors.black),
       ),
     );
   }
@@ -354,7 +372,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(
-            color: isSelected ? Colors.deepOrange : Colors.grey[300]!,
+            color: isSelected ? Colors.deepOrange : Colors.black38,
             width: 2,
           ),
         ),
@@ -362,14 +380,14 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              const Icon(Icons.local_dining_outlined, size: 40, color: Colors.deepOrange),
+              const Icon(Icons.local_dining_outlined, size: 45, color: Colors.deepOrange),
               const SizedBox(height: 8),
               Text(
                 item.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: isSelected ? Colors.deepOrange : Colors.black,
-                  fontSize: 15
+                  fontSize: 17
                 ),
               ),
               const SizedBox(height: 4),
@@ -387,203 +405,316 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
     );
   }
 
-  Widget _buildPiecesNumberOption(AttributeItem item, DishDetailsController controller) {
-    bool isSelected = controller.selectedPiecesNumber.value?.id == item.id;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: GestureDetector(
-        onTap: () => controller.updateSelectedPiecesNumber(item),
-        child: Container(
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.deepOrange[50] : Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: isSelected ? Colors.deepOrange : Colors.grey[300]!,
-              width: 2,
-            ),
-          ),
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: isSelected ? Colors.deepOrange : Colors.black,
-                      ),
-                    ),
-                    Text(
-                      '+ ${double.parse(item.price).toStringAsFixed(2)}EGP',
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    ),
-                    if (item.isDefault) _buildDefaultBadge(),
-                  ],
+Widget _buildPiecesNumberOption(AttributeItem item, DishDetailsController controller) {
+  bool isSelected = controller.selectedPiecesNumber.value?.id == item.id;
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
+    child: GestureDetector(
+      onTap: () => controller.updateSelectedPiecesNumber(item),
+      child: Stack(
+        children: [
+          Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  color: isSelected ? Colors.deepOrange : Colors.grey[300]!,
+                  width: 3,
                 ),
               ),
-              Radio<AttributeItem>(
-                value: item,
-                groupValue: controller.selectedPiecesNumber.value,
-                onChanged: controller.updateSelectedPiecesNumber,
-                activeColor: Colors.deepOrange,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
-    bool isSelected = controller.selectedAddons.any((selectedItem) => selectedItem.id == item.id);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            const SizedBox(width: 60, height: 60, child: Icon(Icons.fastfood, color: Colors.deepOrange)),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Text(
-                    item.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                  Icon(
+                    Icons.layers,
+                    color: isSelected ? Colors.deepOrange : Colors.black,
+                    size: 36,
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: isSelected ? Colors.deepOrange : Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '+ ${double.parse(item.price).toStringAsFixed(2)} EGP',
+                          style: const TextStyle(fontSize: 15, color: Colors.black54),
+                        ),
+                      ],
                     ),
                   ),
-                  Row(
+                  Radio<AttributeItem>(
+                    value: item,
+                    groupValue: controller.selectedPiecesNumber.value,
+                    onChanged: controller.updateSelectedPiecesNumber,
+                    activeColor: Colors.deepOrange,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          if (item.isDefault)
+            Positioned(
+              top: 0,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text(
+                  "Default",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
+  bool isSelected = controller.selectedAddons.any((selectedItem) => selectedItem.id == item.id);
+  bool isDefault = item.isDefault;
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Stack(
+      children: [
+        Card(
+          elevation: 5,
+          child: Container(
+            decoration: BoxDecoration(
+              // ✅ تغيير لون الخلفية بناءً على isSelected
+              color: isSelected ? Colors.deepOrange.shade50 : Colors.white, 
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+              border: Border.all(
+                width: 3,
+                // ✅ تغيير لون الحدود بناءً على isSelected
+                color: isSelected ? Colors.deepOrange : Colors.grey[300]!, 
+              ),
+            ),
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                const SizedBox(width: 60, height: 60, child: Icon(Icons.fastfood_sharp, color: Colors.black, size: 40)),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Checkbox(
-                        value: isSelected,
-                        onChanged: (bool? value) {
-                          controller.toggleAddonSelection(item, value ?? false);
-                        },
-                        activeColor: Colors.deepOrange,
-                      ),
                       Text(
-                        'Extra (+ ${double.parse(item.price).toStringAsFixed(2)}EGP)',
-                        style: const TextStyle(fontSize: 14, color: Colors.black87),
+                        item.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          // ✅ تغيير لون النص بناءً على isSelected
+                          color: isSelected ? Colors.deepOrange : Colors.black, 
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: isSelected,
+                            // ✅ السماح بتعديل القيمة دائماً
+                            onChanged: (bool? value) {
+                              controller.toggleAddonSelection(item, value ?? false);
+                            },
+                            activeColor: Colors.deepOrange,
+                          ),
+                          Text(
+                            'Extra (+ ${double.parse(item.price).toStringAsFixed(2)}EGP)',
+                            style: const TextStyle(fontSize: 15, color: Colors.black87),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  if (item.isDefault) _buildDefaultBadge(),
-                ],
+                ),
+                // ✅ جعل زر الحذف مرئياً وقابلاً للضغط فقط إذا كان العنصر محدداً
+                IconButton(
+                  icon: const Icon(Icons.delete_outline, color: Colors.red, size: 30),
+                  onPressed: isSelected ? () => controller.toggleAddonSelection(item, false) : null,
+                ),
+              ],
+            ),
+          ),
+        ),
+        // ✅ عرض علامة "Default" إذا كان العنصر افتراضياً
+        if (isDefault)
+          Positioned(
+            top: 0,
+            right: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                "Default",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline, color: Colors.deepOrange),
-              // Only allow delete if selected
-              onPressed: isSelected ? () => controller.toggleAddonSelection(item, false) : null,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+          ),
+      ],
+    ),
+  );
+}
 
-  Widget _buildDefaultBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.orange[100],
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Text(
-        'DEFAULT',
-        style: TextStyle(color: Colors.orange[800], fontSize: 10, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
+  // Widget _buildDefaultBadge() {
+  //   return Container(
+  //     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+  //     decoration: BoxDecoration(
+  //       color: Colors.orange[100],
+  //       borderRadius: BorderRadius.circular(5),
+  //     ),
+  //     child: Text(
+  //       'DEFAULT',
+  //       style: TextStyle(color: Colors.orange[800], fontSize: 10, fontWeight: FontWeight.bold),
+  //     ),
+  //   );
+  // }
 
   Widget _buildSauceItem(AttributeItem item, DishDetailsController controller) {
-    bool isSelected = controller.selectedSauces.any((selectedItem) => selectedItem.id == item.id);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            const SizedBox(width: 60, height: 60, child: Icon(Icons.local_dining, color: Colors.deepOrange)),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    '+ ${double.parse(item.price).toStringAsFixed(2)}EGP',
-                    style: const TextStyle(fontSize: 14, color: Colors.black87),
-                  ),
-                  if (item.isDefault) _buildDefaultBadge(),
-                ],
+  bool isSelected = controller.selectedSauces.any((selectedItem) => selectedItem.id == item.id);
+  bool isDefault = item.isDefault;
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Stack(
+      children: [
+        Card(
+          elevation: 5,
+          child: Container(
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+              border: Border.all(
+                width: 3,
+                color: isSelected ? Colors.deepOrange : Colors.grey[300]!,
               ),
             ),
-            isSelected
-                ? IconButton(
-              icon: const Icon(Icons.delete_outline, color: Colors.deepOrange),
-              onPressed: () => controller.toggleSauceSelection(item, false),
-            )
-                : ElevatedButton(
-              onPressed: () => controller.toggleSauceSelection(item, true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepOrange,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(60, 30),
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-              ),
-              child: const Text('ADD'),
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                const SizedBox(width: 60, height: 60, child: Icon(Icons.liquor, color: Colors.black, size: 40)),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: isSelected ? Colors.deepOrange : Colors.black,
+                        ),
+                      ),
+                      Text(
+                        '+ ${double.parse(item.price).toStringAsFixed(2)}EGP',
+                        style: const TextStyle(fontSize: 15, color: Colors.black87),
+                      ),
+                    ],
+                  ),
+                ),
+                isSelected
+                    ? IconButton(
+                        icon: const Icon(Icons.delete_outline, color: Colors.deepOrange, size: 30),
+                        onPressed: () => controller.toggleSauceSelection(item, false),
+                      )
+                    : ElevatedButton(
+                        onPressed: () => controller.toggleSauceSelection(item, true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepOrange,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          minimumSize:const Size(70, 36),
+                          padding: EdgeInsets.zero,
+                        ),
+                        child: const Text('Add', style: TextStyle(fontSize: 15)),
+                      ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+        if (isDefault)
+          Positioned(
+            top: 0,
+            right: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                "Default",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
+
+
+
+
+
+
 
   Widget _buildAddToCartBar(DishDetailsController controller) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
-        color: Colors.deepOrange.shade400,
+        color: Colors.grey.shade300,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -611,28 +742,28 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                 'inclusive of taxes',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 12,
+                  fontSize: 13,
                 ),
               ),
             ],
           ),
          ElevatedButton.icon(
-  onPressed: () async { 
-    await controller.addToCart(); 
-  },
-  icon: const Icon(Icons.shopping_cart, color: Colors.black),
-  label: const Text(
-    'ADD TO CART',
-    style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),
-  ),
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.white,
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50),
-    ),
-  ),
-),
+            onPressed: () async { 
+              await controller.addToCart(); 
+            },
+            icon: const Icon(Icons.shopping_cart, color: Colors.black),
+            label: const Text(
+              'ADD TO CART',
+              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 15),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepOrange,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
+            ),
+          ),
         ],
       ),
     );

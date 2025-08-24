@@ -1,31 +1,33 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/model/favorite_model.dart';
 import 'package:get/get.dart';
 
-import '../core/static/routes.dart';
-import '../model/dish_details_model.dart';
+import '../core/static/routes.dart'; // تأكد من المسار
 
 
 
 class WishlistController extends GetxController {
   var favoriteProductIds = <int>{}.obs;
-  var favoriteProducts = <Product>[].obs;
+  var favoriteProducts = <ProductFavorite>[].obs;
+  var isLoading = true.obs;
+  var hasError = false.obs;
+
 
   bool isFavorite(int productId) => favoriteProductIds.contains(productId);
 
   Future<void> toggleFavorite(int productId) async {
     if (isFavorite(productId)) {
-      await removeFromWishlist(productId);
+      await removeFromFavorite(productId);
       favoriteProductIds.remove(productId);
       favoriteProducts.removeWhere((product) => product.id == productId);
     } else {
-      await addToWishlist(productId);
-      favoriteProductIds.add(productId);
-      await loadFavorites(); 
+      await addToFavorite(productId);
+      await ShowFavorite();
     }
   }
 
-  Future<void> addToWishlist(int productId) async {
+  Future<void> addToFavorite(int productId) async {
     final Dio dio = Dio();
     String url = '${Linkapi.backUrl}/wishlists/add-product';
 
@@ -43,26 +45,25 @@ class WishlistController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-         Get.snackbar(
-          'Success',
-          '${response.data['message']}',
-          backgroundGradient: LinearGradient(colors: [Color.fromARGB(255, 255, 210, 150), Colors.white]),
-          snackPosition: SnackPosition.BOTTOM,
-    );
         print('تمت إضافة المنتج بنجاح');
       } else {
         print('فشل في الإضافة: ${response.statusCode}');
-        Get.snackbar('خطأ', 'فشل في إضافة المنتج إلى المفضلة');
+        String errorMessage = response.data?['message'] ?? ' error ';
+        Get.snackbar(
+          'Alert',
+          errorMessage,
+          backgroundColor: Colors.red[500],
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
-    } catch (e) {
-      print('Exception adding favorite: $e');
-      Get.snackbar('خطأ', 'حدث خطأ أثناء الإضافة');
+    } on DioError catch (e) {
+      print('$e');
     }
   }
 
-  Future<void> removeFromWishlist(int productId) async {
+  Future<void> removeFromFavorite(int productId) async {
     final Dio dio = Dio();
-     String url = '${Linkapi.backUrl}/wishlists/remove-product';
+    String url = '${Linkapi.backUrl}/wishlists/remove-product';
 
     try {
       final response = await dio.post(
@@ -78,26 +79,27 @@ class WishlistController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-          Get.snackbar(
-          'Success',
-          '${response.data['message']}',
-          backgroundGradient: LinearGradient(colors: [Color.fromARGB(255, 255, 210, 150), Colors.white]),
-          snackPosition: SnackPosition.BOTTOM,
-    );
         print('تم الحذف بنجاح');
       } else {
         print('فشل في الحذف: ${response.statusCode}');
-        Get.snackbar('خطأ', 'فشل في حذف المنتج من المفضلة');
+        String errorMessage = response.data?['message'] ?? ' error';
+        Get.snackbar(
+          'Alert',
+          errorMessage,
+          backgroundColor: Colors.red[500],
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
-    } catch (e) {
-      print('Exception removing favorite: $e');
-      Get.snackbar('خطأ', 'حدث خطأ أثناء الحذف');
+    } on DioError catch (e) {
+     print('$e');
     }
   }
 
-  Future<void> loadFavorites() async {
+   Future<void> ShowFavorite() async {
+    isLoading.value = true;
+    hasError.value = false;
     final Dio dio = Dio();
-     String url = '${Linkapi.backUrl}/wishlists';
+    String url = '${Linkapi.backUrl}/wishlists';
 
     try {
       final response = await dio.get(
@@ -112,19 +114,34 @@ class WishlistController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> productsJson = response.data['products'];
-        final List<Product> products = productsJson.map((e) => Product.fromJson(e)).toList();
+        final wishlistResponse = WishlistResponse.fromJson(response.data);
+        final List<ProductFavorite> products = wishlistResponse.products;
+        
         favoriteProducts.assignAll(products);
         favoriteProductIds.assignAll(products.map((e) => e.id));
+        
+        isLoading.value = false; 
+        print('تم تحميل ${products.length} منتج مفضل بنجاح.');
+      } else {
+        isLoading.value = false;
+        hasError.value = true; 
+        print('فشل تحميل المفضلة: ${response.statusCode}');
       }
+    } on DioError catch (e) {
+      isLoading.value = false;
+      hasError.value = true; 
+      print("خطأ أثناء تحميل المفضلة (DioError): ${e.message}");
     } catch (e) {
-      print("خطأ أثناء تحميل المفضلة: $e");
+      isLoading.value = false;
+      hasError.value = true; 
+      print("خطأ غير متوقع أثناء تحميل المفضلة: $e");
     }
   }
+
 
   @override
   void onInit() {
     super.onInit();
-    loadFavorites();
+    ShowFavorite();
   }
 }

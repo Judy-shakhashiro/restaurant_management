@@ -28,7 +28,6 @@ class _MenuPageState extends State<MenuPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(title: const Text('Discover Menu'), backgroundColor: Colors.white),
       body: Obx(() {
-        // While the very first category is loading, show a full shimmer
         if (c.menuItems.isEmpty) {
           return _buildFullShimmer();
 
@@ -36,7 +35,6 @@ class _MenuPageState extends State<MenuPage> {
 
         return Column(
           children: [
-            // --- Category selector ─────────────────────────────────
             SizedBox(
               height: 120,
               child: Row(
@@ -84,7 +82,6 @@ class _MenuPageState extends State<MenuPage> {
                         return GestureDetector(
                           onTap: () {
                             c.selectedCat.value = cat;
-                            // Trigger the scroll using the controller's logic
                             c.scrollToCategory(cat);
                           },
                           child: Obx(() {
@@ -125,13 +122,33 @@ class _MenuPageState extends State<MenuPage> {
                                           ? Colors.orange[100]
                                           : Colors.grey[200],
                                       child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(38),
-                                          // Ensure backUrl is correctly provided by config.dart
-                                          child: Image.network("${Linkapi.backUrl}/images/${cat.image}",
-                                            fit: BoxFit.cover, // Ensure image covers the circle
-                                            errorBuilder: (context, error, stackTrace) =>
-                                            const Icon(Icons.broken_image, color: Colors.grey), // Fallback for image load error
-                                          )),
+                          borderRadius: BorderRadius.circular(38),
+                          child: Image.network(
+                            '${Linkapi.bacUrlImage}${cat.image}',
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                             return const SizedBox(
+                                child:  Center(
+                                  child: CircularProgressIndicator(
+                                     color: Colors.deepOrange,
+                                                        ),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              print('Failed to load image: $error'); 
+                              return Container(
+                                color: Colors.grey[200],
+                                child: const Icon(
+                                  Icons.image_not_supported, 
+                                  color: Colors.grey,
+                                  size: 30,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -221,18 +238,18 @@ class _MenuPageState extends State<MenuPage> {
                       child:  Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
+                         const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(Icons.circle, color: Colors.orange, size: 13),
                           ),
                           Text(
                             item.title,
-                            style: TextStyle(
+                            style:const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Padding(
+                        const  Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(Icons.circle, color: Colors.orange, size: 13),
                           ),
@@ -242,14 +259,13 @@ class _MenuPageState extends State<MenuPage> {
                   }
 
                   if (item is LoadingItem) {
-                    // single-shimmer placeholder for dish items
                     return Container(
                       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                       child: Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
                         child: Container(
-                          height: 250, // Shimmer height matching DishItemTile approximate height
+                          height: 250, 
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.white,
@@ -292,7 +308,6 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     );
                   }
-
                   return const SizedBox.shrink();
                 },
               )

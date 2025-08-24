@@ -7,7 +7,7 @@ import '../../homepage_screen.dart';
 import '../../menu_page.dart';
 import '../../orders/my_orders.dart';
 import '../../search_page.dart';
-import '../../show_favorite_page.dart';
+import '../../favorite_page.dart';
 class ListPages {
   static final List<Widget> pages = [
      MenuPage(),

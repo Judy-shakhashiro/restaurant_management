@@ -24,7 +24,9 @@ class OrdersPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Failed to load orders.', style: TextStyle(fontSize: 18, color: Colors.red)),
+                const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                const SizedBox(height: 20),
+                const Text('Please try again.', style: TextStyle(fontSize: 18, color: Colors.red)),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () => orderController.fetchOrders(), // Retry fetch

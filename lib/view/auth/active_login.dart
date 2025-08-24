@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/view/auth/register.dart' show Register;
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/button_login.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
+import 'package:flutter_application_restaurant/view/homepage_screen.dart';
 import '../../controller/auth/login_controller.dart';
 import '../../core/functions/validation.dart';
 import '../../core/static/global_service.dart';
@@ -141,7 +143,7 @@ class _ActiveLoginState extends State<ActiveLogin> {
                       if(controller1.formstate.currentState!.validate()){
                       bool Success= await LoginServ.login( controller1.email.text,cont. password.text);
                       if(Success){
-                      Get.to(Forgetpassword());
+                      Get.to(Homepage());
                       }
                       }
                     },
@@ -157,7 +159,7 @@ class _ActiveLoginState extends State<ActiveLogin> {
                       ),
                       IconButton(
                         onPressed: () {
-                       //    Get.to(Register());
+                           Get.to(Register());
                         },
                         icon: Icon(Icons.arrow_circle_right_outlined, size: 35,color: Colors.orange[900],),
                       ),

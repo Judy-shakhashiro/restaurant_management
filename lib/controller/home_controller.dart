@@ -64,7 +64,7 @@ class HomeController extends GetxController {
     isLoading.value = true;
     errorMessage.value = null;
     try {
-      // Fetch both futures concurrently
+
       final results = await Future.wait([
         HomeServ().fetchHomeData(),
         HomeServ().fetchCategories(),
@@ -87,7 +87,5 @@ class HomeController extends GetxController {
 
   void selectFoodCategory(int? categoryId) {
     selectedCategoryId.value = categoryId;
-    // You might want to refresh products based on selectedCategoryId here
-    // e.g., if you have another service call to fetch products by category
   }
 }

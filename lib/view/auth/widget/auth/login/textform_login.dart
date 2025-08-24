@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/controller/profile_controller.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class Textformlogin extends StatelessWidget {
 
-  Textformlogin({super.key,  this.text,  this.iconData, this.hintText, this.obscureText, this.onTapIcon, required this.isNumber, required this.mycontoller, this.validator});
+  Textformlogin({super.key,this.isDateField=false ,this.onTap ,this.text,  this.iconData,this.readOnly, this.hintText, this.obscureText, this.onTapIcon, required this.isNumber, required this.mycontoller, this.validator});
   final String? hintText;
+  final bool? readOnly;
   final String? text;
   final IconData? iconData;
   final bool? obscureText;
@@ -11,21 +15,27 @@ class Textformlogin extends StatelessWidget {
   final void Function()? onTapIcon;
   final String? Function(String?)? validator;
   final bool isNumber;
+   void Function()? onTap;
+   final bool isDateField;
   final  GlobalKey<FormState> formState =  GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final ProfileController controller1 = Get.put(ProfileController());
     return Padding(
        padding: const EdgeInsets.symmetric(horizontal: 30),
       child: 
       TextFormField(
+        readOnly: readOnly ?? false,
        validator: validator,
         keyboardType: isNumber ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
         obscureText: obscureText == null || obscureText == false ? false : true,
+        onTap:onTap,
         controller: mycontoller,
        decoration: InputDecoration(
        hintText: hintText,
-        hintStyle: const TextStyle(fontSize: 15),
+       
+      //  hintStyle: const TextStyle(fontSize: 15),
          floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20),
          label: Container(
@@ -33,14 +43,13 @@ class Textformlogin extends StatelessWidget {
          child: Text(
          text!,
           style: const TextStyle(
-           fontSize: 23,
+           fontSize: 24,
            fontWeight: FontWeight.bold,
            fontFamily: 'Georgia',
           color: Colors.black,
              ),)),
           suffixIcon:InkWell(
-          onTap:onTapIcon ,
-          child: Icon(iconData,color:  Colors.orange.shade900) ,
+          child: Icon(iconData,color:  Colors.black,size: 22,) ,
                     ),
           border: OutlineInputBorder(
          borderRadius: BorderRadius.circular(5), //borderSide: BorderSide.none,
@@ -48,12 +57,12 @@ class Textformlogin extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5), 
         borderSide:const BorderSide( 
-        color: Colors.black45,
+        color: Colors.black38,
         width: 2, ), ),
         focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
-        borderSide: BorderSide( 
-        color:  Colors.orange[900]!,
+        borderSide:const BorderSide( 
+        color:  Colors.black,
         width: 2.0, ), ),
                                     ),
     ));

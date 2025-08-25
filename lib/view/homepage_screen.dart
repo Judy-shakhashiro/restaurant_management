@@ -1,12 +1,14 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/view/faq_page.dart';
+import 'package:flutter_application_restaurant/view/menu_page.dart';
 import 'package:flutter_application_restaurant/view/my_addresses.dart';
-import 'package:flutter_application_restaurant/view/profile/profile_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:flutter_application_restaurant/view/favorite_page.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
+import '../controller/menu_controller.dart';
 import '../controller/orders/get_addresses_controller.dart';
 import '../core/static/routes.dart';
 import '../controller/favourite_controller.dart';
@@ -23,21 +25,17 @@ class Homepage extends StatelessWidget {
   Homepage({super.key});
   final WishlistController favoriteController = Get.put(WishlistController());
   final HomeController controller = Get.put(HomeController());
-  final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
-  final List<Map<String, dynamic>> deliveryCategories = [
-    {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>DeliveryLocationPage()},
-    const {'title': 'take away', 'icon': Icons.takeout_dining_outlined},
-    {'title': 'in restaurant', 'icon': Icons.table_bar_sharp,'page':const ReservationsView()},
-  ];
+final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
+final MyMenuController menuController=Get.put(MyMenuController(),);
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: [
-            Row(
+       automaticallyImplyLeading: false,
+          actions: [Row(
             children: [
               InkWell(
                 child: Container(
@@ -80,12 +78,13 @@ class Homepage extends StatelessWidget {
                     child: Icon(Icons.location_pin, color: Colors.red),
                   ),
                   Obx(() {
-                    final adController = Get.put(GetAddressesController());
+                    // Get the controller with Get.find() instead of Get.put()
+                    final adController = Get.find<GetAddressesController>();
                     return Expanded(
                       child: Text(
                         adController.selectedAddressDetails.value?.label ?? '',
                         style: const TextStyle(color: Colors.grey, fontSize: 18),
-                        overflow: TextOverflow.ellipsis, 
+                        overflow: TextOverflow.ellipsis, // Prevents text overflow in the title
                       ),
                     );
                   }),
@@ -129,7 +128,7 @@ class Homepage extends StatelessWidget {
                 onTap: () {
                   // Navigate to the profile page
                   Navigator.pop(context); // Close the drawer
-                  Get.to(() =>  ProfilePage()); // Placeholder for profile page
+                  Get.to(() => const MyHomePage()); // Placeholder for profile page
                 },
               ),
               _buildDrawerItem(
@@ -147,14 +146,13 @@ class Homepage extends StatelessWidget {
                 onTap: () {
                   // Navigate to the favourites page
                   Navigator.pop(context); // Close the drawer
-                  Get.to(() => const FavoritesPage());
+                  Get.to(() => FavoritesPage());
                 },
               ),
               _buildDrawerItem(
                 icon: Icons.bookmark,
                 title: 'Reservations',
                 onTap: () {
-                  // Navigate to the reservations page
                   Navigator.pop(context); // Close the drawer
                   Get.to(() => ReservationsListView());
                 },
@@ -163,45 +161,26 @@ class Homepage extends StatelessWidget {
                 icon: Icons.help,
                 title: 'FAQ',
                 onTap: () {
-                  // Navigate to the FAQ page
+
                   Navigator.pop(context); // Close the drawer
-                  Get.snackbar('FAQ', 'Navigating to FAQ page...'); // Placeholder
+                Get.to(()=>const FaqView());
                 },
               ),
             ],
           ),
         ),
       body: Obx(() {
+        // This outer Obx only reacts to isLoading and errorMessage
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.errorMessage.value != null) {
           return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 60),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Please try again.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18, color: Colors.red)
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                   onPressed: () {
-                      controller.fetchInitialData();
-                        }, // Retry fetch
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepOrange,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Retry'),
-                  
-                ),
-                    ],
-                  ),
-                );
+            child: Text(
+              controller.errorMessage.value!,
+              style: const TextStyle(color: Colors.red, fontSize: 16),
+            ),
+          );
         }
 
         final HomeModel? homeData = controller.homeData.value;
@@ -222,13 +201,13 @@ class Homepage extends StatelessWidget {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
-                    itemCount: deliveryCategories.length + 1,
-                    separatorBuilder: (context, index) => const SizedBox(width: 40),
+                    itemCount: controller.deliveryCategories.length + 1,
+                    separatorBuilder: (context, index) => const SizedBox(width: 30),
                     itemBuilder: (context, index) {
-                      if (index < deliveryCategories.length) {
-                        final category = deliveryCategories[index];
+                      if (index < controller.deliveryCategories.length) {
+                        final category = controller.deliveryCategories[index];
                         return Obx(() {
-                          final isSelected = controller.selectedDeliveryIndex.value == index;
+                          final isSelected = selectedDeliveryIndex.value == index;
                           return Animate(
                             effects: const [
                               SlideEffect(
@@ -389,17 +368,15 @@ class Homepage extends StatelessWidget {
 
   Widget cate(CategoryR c) {
     return
-      // This Obx reacts only to controller.selectedCategoryId.value
       GestureDetector(
         onTap: () {
           controller.selectFoodCategory(c.id);
           controller.selectedCategoryId.value = c.id;
-
-          // Get.to(() => CategoryProductsPage(category: c));
+          menuController.scrollToCategory(c);
+           Get.to(() =>const  MenuPage());
         },
         child: Obx((){
           final isSelected = controller.selectedCategoryId.value == c.id;
-
           return
            Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
@@ -410,12 +387,12 @@ class Homepage extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 4)],
                     border: Border.all(
-                        color: isSelected ? Colors.deepOrange : Colors.deepOrange, width: 3),
+                        color: isSelected ? Colors.deepOrange : Colors.transparent, width: 3),
                     color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
                   ),
                   child: CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage('${Linkapi.bacUrlImage}${c.image}'),
+                    backgroundImage: NetworkImage('${Linkapi.backUrl}/images/${c.image}'),
                     backgroundColor: Colors.transparent,
                   ),
                 ),
@@ -464,16 +441,19 @@ class Homepage extends StatelessWidget {
     );
   }
   Widget ProductCard(BuildContext context,ProductHome product) {
-    final WishlistController wishlistController = Get.put(WishlistController());
+    bool isExpanded = false;
+    bool isFavorite = false;
+    // Get the existing controller instance instead of creating a new one
+    final WishlistController wishlistController = Get.find<WishlistController>();
 
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
         width: 260,
-        margin:const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 8,)],
+          boxShadow:  [BoxShadow(color: Colors.grey, blurRadius: 8,)],
           color: Colors.white,
         ),
         child: InkWell(
@@ -485,40 +465,16 @@ class Homepage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                    '${Linkapi.bacUrlImage}${product.image}',
-                   height: 180,
+                  '${Linkapi.backUrl}/images/${product.image}',
+                  height: 180,
                   width: double.infinity,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const SizedBox(
-                                height: 150,
-                                child:  Center(
-                                  child: CircularProgressIndicator(
-                                     color: Colors.deepOrange,
-                                                        ),
-                                ),
-                              ); 
-                            },  
-                            errorBuilder: (context, error, stackTrace) {
-                            print('Failed to load image: $error'); 
-                              return Container(
-                                height: 180,
-                                width: double.infinity,
-                                color: Colors.grey[200],
-                                child: const Icon(
-                                  Icons.image_not_supported, 
-                                  color: Colors.grey,
-                                  size: 50,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                  fit: BoxFit.cover,
+                ),
+              ),
               Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

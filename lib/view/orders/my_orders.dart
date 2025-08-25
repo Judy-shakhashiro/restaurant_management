@@ -105,6 +105,7 @@ class OrdersPage extends StatelessWidget {
                                     child:
                                     ElevatedButton.icon(
                                       onPressed: () {
+                                        orderController.reorder(order.id);
                                       },
                                       icon: const Icon(Icons.refresh),
                                       label: const Text('Reorder'),

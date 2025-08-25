@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/services/order_service.dart';
 import 'package:get/get.dart';
+import '../home_controller.dart';
 import 'get_addresses_controller.dart';
 
 class CheckoutController extends GetxController{
@@ -12,12 +13,17 @@ class CheckoutController extends GetxController{
   final List<String> orderTypes = [
     'Delivery',
     'Pick Up',
-    'In Restaurant',
   ];
   // Make selectedOrderType reactive
-  RxString selectedOrderType='Delivery'.obs;
+  RxString selectedOrderType=RxString('');
   @override
   void onInit() {
+    if(selectedDeliveryIndex.value==0) {
+      selectedOrderType = 'Delivery'.obs;
+    }
+    else{
+      selectedOrderType = 'Pick Up'.obs;
+    }
     getCheckoutDetails();
     ever(selectedOrderType, (_) {
       getCheckoutDetails();

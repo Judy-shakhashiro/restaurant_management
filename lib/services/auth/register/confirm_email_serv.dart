@@ -37,13 +37,6 @@ class ConfirmEmailServ{
       myServices.removeToken();
       myServices.saveToken(model.token);
       myServices.getToken();
-      Get.snackbar(
-          'Success',
-          '${model.message}',
-          backgroundGradient: LinearGradient(colors: [Colors.yellow , Colors.white]),
-          snackPosition: SnackPosition.TOP,
-          icon: Icon(Icons.face_retouching_natural_sharp,color: Colors.black,)
-    );
       return true;
     } else {
       print('Error Message: ${data['message']}');

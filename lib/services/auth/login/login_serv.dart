@@ -17,6 +17,7 @@ class LoginServ{
         Uri.parse(Linkapi.LoginApi) ,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
         },
         body: jsonEncode(<String, String>{
           'email': email,
@@ -32,13 +33,6 @@ class LoginServ{
         myServices.removeToken();
         await myServices.saveToken(authResponse.token);
         print(myServices.getToken());
-        Get.snackbar(
-          'Success',
-          '${authResponse.message}',
-          backgroundGradient: LinearGradient(colors: [Colors.yellow , Colors.white]),
-          snackPosition: SnackPosition.TOP,
-          icon: Icon(Icons.face_retouching_natural_sharp,color: Colors.black,)
-    );
     return true;
       } 
       else if (response.statusCode == 401) {

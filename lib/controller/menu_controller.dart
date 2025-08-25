@@ -35,40 +35,51 @@ class MyMenuController extends GetxController {
     _loadInitialData();
   }
 
-  // --- Initial Data Loading (Categories, Tags, ALL Placeholders, FIRST Category Dishes) ---
   Future<void> _loadInitialData() async {
+    try {
+      _isProgrammaticScrolling.value = true;
+      categories.value = await CategoryService().fetchCategories();
+      tags.value = await ApiService().fetchTags();
+      print('Initial data loaded: ${categories.length} categories, ${tags.length} tags.');
 
-    _isProgrammaticScrolling.value = true;
+      _populateAllCategoryPlaceholders();
 
-    categories.value = await CategoryService().fetchCategories();
-    tags.value = await ApiService().fetchTags();
-    print('Initial data loaded: ${categories.length} categories, ${tags.length} tags.');
+      if (categories.isNotEmpty) {
+        selectedCat.value = categories.first;
+        await _loadDishesForCategory(categories.first);
+        _nextSequentialCategoryIndex.value = 1;
+      }
 
-    _populateAllCategoryPlaceholders();
-
-    if (categories.isNotEmpty) {
-      selectedCat.value = categories.first;
-      await _loadDishesForCategory(categories.first);
-      _nextSequentialCategoryIndex.value = 1;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _handleEmptyMenuState();
+        itemPositionsListener.itemPositions.addListener(_onScroll);
+        print('Added _onScroll listener after initial data load (post-frame callback).');
+        _isProgrammaticScrolling.value = false;
+      });
+    } catch (e) {
+      print('Error loading initial menu data: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to load menu data. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
-
-    // NEW: Check for empty menu state after initial load
-    _handleEmptyMenuState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      itemPositionsListener.itemPositions.addListener(_onScroll);
-      print('Added _onScroll listener after initial data load (post-frame callback).');
-      _isProgrammaticScrolling.value = false;
-    });
-
-
   }
-
+  // void _preloadImage(String imageUrl) {
+  //   precacheImage(
+  //     NetworkImage(imageUrl),
+  //     Get.context!,
+  //     // onError handler to prevent crashes on bad images
+  //     onError: (exception, stackTrace) {
+  //       print("Error preloading image: $exception");
+  //     },
+  //   );
+  // }
   void _populateAllCategoryPlaceholders() async{
-
     menuItems.clear();
     _loadedCategoryIds.clear();
-
 
     for (var category in categories) {
       menuItems.add(CategoryHeaderItem(title: category.name, categoryId: category.id));
@@ -78,6 +89,7 @@ class MyMenuController extends GetxController {
     }
     print('All category headers and dish placeholders added. Total items: ${menuItems.length}');
   }
+
   Future<void> _loadDishesForCategory(CategoryR categoryToLoad) async {
     if (_isLoadingCategoryDishes.value) {
       print('Already loading dishes. Skipping request for ${categoryToLoad.name}.');
@@ -106,7 +118,6 @@ class MyMenuController extends GetxController {
         final int startIndexToReplace = categoryHeaderIndexInMenuItems + 1;
         final int originalPlaceholderCount = categoryToLoad.productsCount;
 
-        // NEW LOGIC: If no dishes are returned for this category with selected tags, remove its header and placeholders.
         if (dishes.isEmpty) {
           print('Category ${categoryToLoad.name} has no dishes for selected tags. Removing header and placeholders.');
           int itemsToRemoveFromThisBlock = 0;
@@ -126,13 +137,10 @@ class MyMenuController extends GetxController {
           _loadedCategoryIds.add(categoryToLoad.id);
           print('Category ${categoryToLoad.name} and its items removed. menuItems length now: ${menuItems.length}');
 
-          // Check for empty menu state after removing a category that had no dishes
-          // This ensures that if the removal makes the entire menu empty, the message appears.
           _handleEmptyMenuState();
           return;
         }
 
-        // Existing logic: Remove placeholders and insert actual dishes (only if dishes is NOT empty)
         int actualRemovedCount = 0;
         if (startIndexToReplace < menuItems.length) {
           for (int i = startIndexToReplace; i < menuItems.length && actualRemovedCount < originalPlaceholderCount; i++) {
@@ -162,20 +170,17 @@ class MyMenuController extends GetxController {
     }
   }
 
-  // NEW: Helper to display a message if no items are left
   void _handleEmptyMenuState() {
-    // If the list is empty (after potential category removals)
-    // AND it doesn't already contain our no-items message
-    if (menuItems.isEmpty) {
-      print('Menu items list is empty after processing. Displaying "No items found" message.');
-      menuItems.add(NoItemsFoundItem());
-    } else {
-      // If it's not empty, ensure no previous NoItemsFoundItem is lingering
-      menuItems.removeWhere((item) => item is NoItemsFoundItem);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (menuItems.isEmpty) {
+        print('Menu items list is empty after processing. Displaying "No items found" message.');
+        menuItems.add(NoItemsFoundItem());
+      } else {
+        menuItems.removeWhere((item) => item is NoItemsFoundItem);
+      }
+    });
   }
 
-  // --- Helper to Update selectedCat based on Scroll Position ---
   void _updateSelectedCategoryFromScroll() {
     if (itemPositionsListener.itemPositions.value.isEmpty) {
       return;
@@ -199,7 +204,6 @@ class MyMenuController extends GetxController {
       }
     } else {
       ItemPosition? highestVisibleCategoryHeaderPosition;
-
       for (final position in itemPositionsListener.itemPositions.value) {
         if (position.index < menuItems.length &&
             menuItems[position.index] is CategoryHeaderItem &&
@@ -222,8 +226,6 @@ class MyMenuController extends GetxController {
     }
   }
 
-
-  // --- Hybrid Scrolling Logic (`_onScroll`) ---
   void _onScroll() {
     if (_isProgrammaticScrolling.value || _isLoadingCategoryDishes.value) {
       return;
@@ -276,7 +278,6 @@ class MyMenuController extends GetxController {
       return;
     }
 
-
     final lastVisibleItem = visiblePositions.isNotEmpty ? visiblePositions.reduce((min, position) => position.index > min.index ? position : min) : null;
 
     if (lastVisibleItem == null) {
@@ -319,10 +320,8 @@ class MyMenuController extends GetxController {
     }
   }
 
-  // --- Jump to Specific Category Logic (`scrollToCategory`) ---
   void scrollToCategory(CategoryR category) async {
     print('Attempting to scroll to category: ${category.name}');
-
     _isProgrammaticScrolling.value = true;
     itemPositionsListener.itemPositions.removeListener(_onScroll);
     print('Removed _onScroll listener temporarily for programmatic scroll.');
@@ -339,7 +338,6 @@ class MyMenuController extends GetxController {
       if (!_loadedCategoryIds.contains(category.id)) {
         print('Dishes for ${category.name} not loaded. Fetching them before scrolling...');
         await _loadDishesForCategory(category);
-
         int newTargetHeaderIndex = -1;
         for (int i = 0; i < menuItems.length; i++) {
           if (menuItems[i] is CategoryHeaderItem && (menuItems[i] as CategoryHeaderItem).categoryId == category.id) {
@@ -374,9 +372,7 @@ class MyMenuController extends GetxController {
           _nextSequentialCategoryIndex.value = categories.length;
           print('Warning: Category not found in master list during _nextSequentialCategoryIndex update.');
         }
-
         _updateSelectedCategoryFromScroll();
-
       } catch (e) {
         print('Error during programmatic scroll: $e');
       } finally {
@@ -392,7 +388,6 @@ class MyMenuController extends GetxController {
     }
   }
 
-  // --- Tag Filtering Logic (`toggleTag`) ---
   void toggleTag(int tagId) async {
     if (selectedTagIds.contains(tagId)) {
       selectedTagIds.remove(tagId);
@@ -416,24 +411,20 @@ class MyMenuController extends GetxController {
       _nextSequentialCategoryIndex.value = 1;
     }
 
-    // NEW: Check for empty menu state after tag filtering
-    _handleEmptyMenuState();
-
-    if (itemScrollController.isAttached) {
-      try {
-         itemScrollController.jumpTo(
-          index: 0,
-
-        );
-        print('Scrolled to top after tag toggle.');
-      } catch (e) {
-        print('Error scrolling to top after tag toggle: $e');
+    // Defer the UI update and scrolling to the next frame
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _handleEmptyMenuState();
+      if (itemScrollController.isAttached) {
+        try {
+           itemScrollController.jumpTo(index: 0);
+          print('Scrolled to top after tag toggle.');
+        } catch (e) {
+          print('Error scrolling to top after tag toggle: $e');
+        }
       }
-
-    }
-
-    itemPositionsListener.itemPositions.addListener(_onScroll);
-    print('Re-added _onScroll listener after tag toggle.');
+      itemPositionsListener.itemPositions.addListener(_onScroll);
+      print('Re-added _onScroll listener after tag toggle.');
+    });
   }
 
   @override

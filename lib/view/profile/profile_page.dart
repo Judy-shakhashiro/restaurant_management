@@ -1,9 +1,11 @@
+import 'package:animated_background/animated_background.dart';
+import 'package:animated_background/particles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/profile_controller.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
 import 'package:get/get.dart';
-import 'package:animated_background/animated_background.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

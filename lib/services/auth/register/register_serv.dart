@@ -40,13 +40,6 @@ class RegisterServ{
       final registerModel = RegisterModel.fromJson(data);
       print(registerModel.message);
       print('object');
-      Get.snackbar(
-          'Success',
-          '${registerModel.message}',
-          backgroundGradient: LinearGradient(colors: [Colors.yellow , Colors.white]),
-          snackPosition: SnackPosition.TOP,
-          icon: Icon(Icons.face_retouching_natural_sharp,color: Colors.black,)
-    );
       return true;
     } else {
       final data = jsonDecode(response.body);

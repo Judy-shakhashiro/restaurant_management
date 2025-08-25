@@ -347,7 +347,7 @@ class OrderService {
       return null;
     }
 
-    try {
+   // try {
       final response = await http.get(
         uri,
         headers: {
@@ -377,17 +377,17 @@ class OrderService {
         );
         return null;
       }
-   }
-    catch(e){
-      print('Error fetching order details: $e');
-      Get.snackbar(
-        'Error',
-        'Error fetching order details: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
+  // }
+    // catch(e){
+    //   print('Error fetching order details: $e');
+    //   Get.snackbar(
+    //     'Error',
+    //     'Error fetching order details: $e',
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    // }
 
 
   }
@@ -554,5 +554,69 @@ class OrderService {
     //   );
     // }
   return null;
+  }
+
+  reorder(int orderId) async {
+    final uri = Uri.parse('${Linkapi.backUrl}/orders/reorder/$orderId');
+
+
+    if ({token} == null) {
+      Get.snackbar(
+        'Authentication Error',
+        'User not authenticated. Please log in.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+
+    try {
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${token}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        if (jsonResponse['status'] == true) {
+          return true;
+        } else {
+          Get.snackbar(
+            'Failed',
+            jsonResponse['message'] ?? 'Failed to delete order.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+          return false;
+        }
+      } else {
+        print('Failed to delete order. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        Get.snackbar(
+          'Error',
+          'Failed to delete order: ${response.statusCode}',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return false;
+      }
+    } catch (e) {
+      print('Error deleting order: $e');
+      Get.snackbar(
+        'Error',
+        'Error deleting order: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-class Button {
+class Button extends StatelessWidget {
   final String label;
   final IconData? icon;
   final Color? backgroundColor;
@@ -11,7 +11,7 @@ class Button {
 
   Button({
     required this.label,
-    required this.icon,
+   this.icon,
     required this.onPressed,
     this.backgroundColor = Colors.deepOrange,
     this.foregroundColor = Colors.white,
@@ -20,8 +20,9 @@ class Button {
     this.key,
   });
 
-  FloatingActionButton build() {
-    return FloatingActionButton.extended(
+@override
+  Widget build(BuildContext context) {
+    return  FloatingActionButton.extended(
       key: key,
       onPressed: onPressed,
       backgroundColor: backgroundColor,

@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/orders/delivery_location.dart';
 import 'package:get/get.dart';
 import '../../controller/orders/get_addresses_controller.dart';
-import '../../model/home_page_model.dart';
-import '../services/address_service.dart'; // Assuming Address and AddressInShort are here
-// Import your create address page here, for example:
-// import 'create_address_page.dart';
+import '../services/address_service.dart';
+
 
 class AddressesPage extends StatefulWidget {
   const AddressesPage({super.key});

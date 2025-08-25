@@ -13,7 +13,6 @@ import '../controller/favourite_controller.dart';
 import '../controller/home_controller.dart';
 import '../model/category_model.dart';
 import '../model/home_page_model.dart';
-import '../navigation_bar.dart';
 import 'cart.dart';
 import 'orders/delivery_location.dart';
 import 'dish_details.dart';
@@ -25,7 +24,7 @@ class Homepage extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
   final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
   final List<Map<String, dynamic>> deliveryCategories = [
-    {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>DeliveryLocationPage()},
+    {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>const DeliveryLocationPage()},
     const {'title': 'take away', 'icon': Icons.takeout_dining_outlined},
     {'title': 'in restaurant', 'icon': Icons.table_bar_sharp,'page':const ReservationsView()},
   ];
@@ -127,9 +126,8 @@ class Homepage extends StatelessWidget {
                 icon: Icons.person,
                 title: 'Profile',
                 onTap: () {
-                  // Navigate to the profile page
-                  Navigator.pop(context); // Close the drawer
-                  Get.to(() =>  ProfilePage()); // Placeholder for profile page
+                  Navigator.pop(context); 
+                  Get.to(() => const ProfilePage());
                 },
               ),
               _buildDrawerItem(
@@ -137,7 +135,7 @@ class Homepage extends StatelessWidget {
                 title: 'My Addresses',
                 onTap: () {
                   // Navigate to the addresses page
-               Get.to(AddressesPage());
+               Get.to(const AddressesPage());
                   // We're already here, so no navigation needed.
                 },
               ),
@@ -332,7 +330,7 @@ class Homepage extends StatelessWidget {
                 const SizedBox(height: 20),
                 InkWell(
                   onTap: () {
-                    Get.to(() => CartScreen());
+                    Get.to(() =>const CartScreen());
                   },
                   child: sectionTitle("Menu"),
                 ),
@@ -463,6 +461,8 @@ class Homepage extends StatelessWidget {
       onTap: onTap,
     );
   }
+
+
   Widget ProductCard(BuildContext context,ProductHome product) {
     final WishlistController wishlistController = Get.put(WishlistController());
 

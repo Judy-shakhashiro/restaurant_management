@@ -181,9 +181,6 @@ class Register extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
                     GetBuilder<RegisterControllerImp>(
-                      // Key Change: The variable name `cont` has been changed to `controller`
-                      // to match the standard GetX builder pattern and avoid a potential
-                      // runtime error. All uses of `cont` have been updated.
                         builder: (controller) => Textformlogin(
                           text: 'Password',
                           iconData: controller.isshowpassword ? Icons.visibility_off : Icons.visibility,
@@ -199,14 +196,13 @@ class Register extends StatelessWidget {
                         )),
                     const SizedBox(height: 40),
                     GetBuilder<RegisterControllerImp>(
-                      // Key Change: The variable name `cont` has been changed to `controller`.
                       builder: (controller) => Textformlogin(
                         text: 'Confirm Password',
                         iconData: controller.isshowpassword1 ? Icons.visibility_off : Icons.visibility,
                         mycontoller: controller.password_confirmation,
                         isNumber: false,
                         validator: (val) {
-                          return validInput(val!, 8, 30, "password");
+                          return validInput(val!, 8, 30, "password1");
                         },
                         obscureText: controller.isshowpassword1,
                         onTapIcon: () {

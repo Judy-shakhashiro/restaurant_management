@@ -7,52 +7,50 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class ForgetServ{
-
+class ForgetServ {
   static Future<bool> forget(String email) async {
-  try {
-    final response = await http.post(
-      Uri.parse(Linkapi.ForgetPasswordApi),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({'email': email}),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(Linkapi.ForgetPasswordApi),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'email': email}),
+      );
 
-    print('Status Code: ${response.statusCode}');
-    print('Body: ${response.body}');
+      print('Status Code: ${response.statusCode}');
+      print('Body: ${response.body}');
 
-    final data = jsonDecode(response.body);
+      final data = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      ForgetModel model = ForgetModel.fromJson(data);
-      GlobalServ myServices = Get.put(GlobalServ());
-      print('Success: ${model.message}');
-    //  myServices.removeToken();
-      Get.snackbar(
-          'Success',
-          '${model.message}',
-          backgroundGradient: LinearGradient(colors: [Colors.yellow , Colors.white]),
-          snackPosition: SnackPosition.TOP,
-          icon: Icon(Icons.face_retouching_natural_sharp,color: Colors.black,)
-    );
-      return true;
-    } else {
-      print('Error Message: ${data['message']}');
-      Get.snackbar(
-          'Failed',
+      if (response.statusCode == 200) {
+        final String? token = data['token'];
+
+        if (token != null) {
+          final myServices = Get.find<GlobalServ>();
+          await myServices.saveToken(token);
+          print('Token saved successfully!');
+        } else {
+          print('Error: Token not found in response.');
+        }
+
+        ForgetModel model = ForgetModel.fromJson(data);
+        print('Success: ${model.message}');
+        return true;
+      } else {
+        print('Error Message: ${data['message']}');
+        Get.snackbar(
+          'Alert',
           '${data['message']}',
-          backgroundGradient: LinearGradient(colors: [Colors.red, Colors.white]),
+          backgroundColor: Colors.red.shade500,
           snackPosition: SnackPosition.BOTTOM,
-    );
+        );
+        return false;
+      }
+    } catch (e) {
+      print('Exception: $e');
       return false;
     }
-  } catch (e) {
-    print('Exception: $e');
-    return false;
   }
-}
-
-  
 }

@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:flutter_application_restaurant/core/static/global_service.dart';
+import 'package:flutter_application_restaurant/navigation_bar.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../main.dart';
 
 class ReservationConfirmationScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class _ReservationConfirmationScreenState
     super.initState();
     _remainingTime = widget.confirmationTime * 60; 
     _startTimer();
-    _showInitialSnackBar();
+   // _showInitialSnackBar();
   }
 
   void _startTimer() {
@@ -68,24 +68,24 @@ class _ReservationConfirmationScreenState
         });
       } else {
         _timer.cancel();
-        _showSnackBar(context, 'انتهت مدة التأكيد، تم الغاء الحجز');
+        _showSnackBar(context, 'Confirmation period has expired. Reservation has been cancelled.');
       }
     });
   }
 
-  void _showInitialSnackBar() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showSnackBar(context, 'تم تأكيد الحجز مؤقتًا، يرجى التأكيد خلال ${widget.confirmationTime} دقائق');
-    });
-  }
+  // void _showInitialSnackBar() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     _showSnackBar(context, 'The reservation has been provisionally confirmed. Please confirm within ${widget.confirmationTime} minutes');
+  //   });
+  // }
 
   void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: const TextStyle(color: Colors.white)),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 4),
+        content: Text(message, ),
+        backgroundColor: Colors.red[500],
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -120,13 +120,16 @@ class _ReservationConfirmationScreenState
       }
 
       if (response.statusCode == 200) {
-        _showSnackBar(context, 'تم حفظ الملاحظات بنجاح');
+      //  _showSnackBar(context, 'تم حفظ الملاحظات بنجاح');
+      print(' نجااااااح:   ${response.body}');
         _notesController.clear();
       } else {
-        _showSnackBar(context, 'فشل حفظ الملاحظات: ${response.statusCode} - ${response.body}');
+        _showSnackBar(context, ' Alert : ${response.body}');
+        print(' فششششششل:   ${response.body}');
       }
     } catch (e) {
-      _showSnackBar(context, 'خطأ في الاتصال: $e');
+      _showSnackBar(context, ' Alert : $e');
+      print(' فششششششل:   $e');
     }
   }
 
@@ -160,12 +163,12 @@ class _ReservationConfirmationScreenState
         ),
         _buildSummaryItem(
           icon: Icons.table_restaurant,
-          label: 'طاولة ${widget.tablesCount}',
+          label: '${widget.tablesCount} table ',
           value: ' ',
         ),
         _buildSummaryItem(
           icon: Icons.person,
-          label: 'أشخاص ${widget.guestsCount}',
+          label: '${widget.guestsCount} guests ',
           value: ' ',
         ),
       ],
@@ -199,7 +202,7 @@ class _ReservationConfirmationScreenState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(Icons.hourglass_bottom, color: Colors.deepOrange),
+           const Icon(Icons.hourglass_bottom, color: Colors.deepOrange),
             const Text(
               'Confirmation time',
               style: TextStyle(
@@ -228,6 +231,8 @@ class _ReservationConfirmationScreenState
       ),
     );
   }
+
+
 Widget _buildReservationDetailsCard() {
   return Padding(
     padding: const EdgeInsets.all(16.0),
@@ -241,7 +246,7 @@ Widget _buildReservationDetailsCard() {
              onTap: () {
                Navigator.of(context).pop();
              },  
-            child: Icon(Icons.mode_edit_outline_outlined,color: Colors.deepOrange),),
+            child:const Icon(Icons.mode_edit_outline_outlined,color: Colors.deepOrange),),
             const Text(
               ' Modification time',
               style: TextStyle(
@@ -274,18 +279,18 @@ Widget _buildReservationDetailsCard() {
             ),
           ],
         ),
-        SizedBox(height: 15,),
-        Divider(height: 1,),
-        SizedBox(height: 15,),
+       const SizedBox(height: 15,),
+       const Divider(height: 1,),
+       const SizedBox(height: 15,),
         _buildDetailItem(
           icon: Icons.monetization_on,
           label: 'Deposit value',
           value: '${widget.depositValue}',
           
         ),
-        SizedBox(height: 15,),
-        Divider(height: 1,),
-        SizedBox(height: 15,),
+       const SizedBox(height: 15,),
+       const Divider(height: 1,),
+      const  SizedBox(height: 15,),
         _buildDetailItem(
           icon: Icons.cancel_outlined,
           label: 'Cancellation time',
@@ -295,6 +300,8 @@ Widget _buildReservationDetailsCard() {
     ),
   );
 }
+
+
 Widget _buildDetailItem({required String label, required String value,required IconData icon}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -323,7 +330,9 @@ Widget _buildDetailItem({required String label, required String value,required I
     ],
   );
 }
-  Widget _buildPoliciesSection() {
+
+
+Widget _buildPoliciesSection() {
     return Card(
       color: Colors.white60,
       elevation: 8,
@@ -342,15 +351,15 @@ Widget _buildDetailItem({required String label, required String value,required I
                 color: Colors.deepOrange
               ),
             ),
-            SizedBox(height: 15,),
-        Divider(height: 1,color: Colors.deepOrange),
-        SizedBox(height: 15,),
+          const  SizedBox(height: 15,),
+       const Divider(height: 1,color: Colors.deepOrange),
+      const  SizedBox(height: 15,),
             Text(
               widget.explanatoryNotes,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: Colors.black87,
                 fontFamily: 'Georgia',
                  fontWeight: FontWeight.bold,
               ),
@@ -373,11 +382,11 @@ Widget _buildDetailItem({required String label, required String value,required I
           children: [
             TextField(
               controller: _notesController,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.center,
               maxLines: 4,
               decoration: InputDecoration(
-                hintText: 'إضافة ملاحظة هنا (اختياري)',
-                hintStyle: TextStyle(color: Colors.grey.shade400),
+                hintText: 'Adding your comment here (optional) .',
+                hintStyle:const TextStyle(color: Colors.black45),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
@@ -394,32 +403,29 @@ Widget _buildDetailItem({required String label, required String value,required I
   }
 
   Widget _buildAcceptanceSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Text(
-            'لقد قرأت ووافقت على الشروط والأحكام',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              decoration: TextDecoration.underline,
-              fontFamily: 'Georgia'
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+         'I have read and agree to all Conditions.',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            decoration: TextDecoration.underline,
+            fontFamily: 'Georgia'
           ),
-          Checkbox(
-            value: _isAgreed,
-            onChanged: (value) {
-              setState(() {
-                _isAgreed = value!;
-              });
-            },
-            activeColor: Colors.deepOrange,
-          ),
-        ],
-      ),
+        ),
+        Checkbox(
+          value: _isAgreed,
+          onChanged: (value) {
+            setState(() {
+              _isAgreed = value!;
+            });
+          },
+          activeColor: Colors.deepOrange,
+        ),
+      ],
     );
   }
 
@@ -430,17 +436,18 @@ Widget _buildDetailItem({required String label, required String value,required I
         onPressed: _isAgreed
             ? () async {
                 await _saveNotes();
+                Get.to(const MyHomePageScreen());
               }
             : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepOrange,
-          minimumSize: const Size(double.infinity, 50),
+          minimumSize: const Size(200, 50),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(50),
           ),
         ),
         child: const Text(
-          'إحجز',
+          'Book',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -483,7 +490,7 @@ Widget _buildDetailItem({required String label, required String value,required I
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 30,),
+           const SizedBox(height: 30,),
             _buildBookingSummaryRow(),
             //Divider(height: 1,color: Colors.deepOrange),
             const SizedBox(height: 16),

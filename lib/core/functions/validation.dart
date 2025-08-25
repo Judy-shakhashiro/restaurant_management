@@ -27,6 +27,12 @@ String? validInput(String val, int min, int max, String type) {
       return passwordError;
     }
   }
+  if (type == "password1") {
+    String? passwordError = _confirmPasswordValidator(val); 
+    if (passwordError != null) {
+      return passwordError;
+    }
+  }
 
   if (val.isEmpty) {
     return "can't be Empty";

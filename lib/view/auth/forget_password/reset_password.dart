@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/navigation_bar.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/button_login.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
 import '../../../controller/auth/reset_controller.dart';
@@ -31,7 +32,7 @@ class _ResetpasswordState extends State<Resetpassword> {
              fontFamily: 'Georgia'
         ),),
         centerTitle: true,
-        backgroundColor: Colors.orange.shade100,
+        backgroundColor: Colors.deepOrange.shade500,
       ),
         body: ListView(
           children: [
@@ -78,34 +79,34 @@ class _ResetpasswordState extends State<Resetpassword> {
                 children: [
               
              GetBuilder<ResetControllerImp>(
-               builder: (controller) => Textformlogin( 
-                text: 'Password',
-                iconData:cont.isshowpassword ? Icons.visibility_off : Icons.visibility,
-                mycontoller: cont.password,
-                isNumber: false,
-                validator:  (val) {
-                  return validInput(val!, 5, 30, "password");
-                            },
-                 obscureText: cont.isshowpassword,
-                onTapIcon: () {
-                cont.showPassword();
-                           },     
-                        ),),
-               const SizedBox(height: 40),
-            GetBuilder<ResetControllerImp>(
-               builder: (controller) => Textformlogin(
-                text: 'Confirm Password',
-                iconData: cont.isshowpassword1 ? Icons.visibility_off : Icons.visibility,
-                mycontoller: cont.password_confirmation,
-                isNumber: false,
-              validator:  (val) {
-              return validInput(val!, 5, 30, "password");
-                            },
-               obscureText: cont.isshowpassword1,
-                onTapIcon: () {
-                cont.showPassword1();
-                           }, 
-                          ),),
+                        builder: (controller) => Textformlogin(
+                          text: 'Password',
+                          iconData: controller.isshowpassword ? Icons.visibility_off : Icons.visibility,
+                          mycontoller: controller.password,
+                          isNumber: false,
+                          validator: (val) {
+                            return validInput(val!, 8, 30, "password");
+                          },
+                          obscureText: controller.isshowpassword,
+                          onTapIcon: () {
+                            controller.showPassword();
+                          },
+                        )),
+                    const SizedBox(height: 40),
+                    GetBuilder<ResetControllerImp>(
+                      builder: (controller) => Textformlogin(
+                        text: 'Confirm Password',
+                        iconData: controller.isshowpassword1 ? Icons.visibility_off : Icons.visibility,
+                        mycontoller: controller.password_confirmation,
+                        isNumber: false,
+                        validator: (val) {
+                          return validInput(val!, 8, 30, "password");
+                        },
+                        obscureText: controller.isshowpassword1,
+                        onTapIcon: () {
+                          controller.showPassword1();
+                        },
+                      ),),
                         const SizedBox(height: 25),
                         Padding(
                          padding: const EdgeInsets.only(right: 30),
@@ -141,9 +142,9 @@ class _ResetpasswordState extends State<Resetpassword> {
                                               ),
                         ),
                          const SizedBox(height:30),
-                         Buttonlogin(
-                          text: 'Save  ',
-                         onPressed: () async{
+                        Center(
+             child: ElevatedButton.icon(
+              onPressed: () async{
                       if(cont.formstate.currentState!.validate()){
                     ResetServ resetFuncs = ResetServ();
                       bool success = await resetFuncs.reset(
@@ -152,13 +153,25 @@ class _ResetpasswordState extends State<Resetpassword> {
                       cont.logout_oth_dev,
                                     );
                       if (success) {
-                      //  Get.to(Login());
+                        Get.to(MyHomePageScreen());
                       } 
                       }
                         },
-              // color: Color(0xFFF5D64C),
-                        )
-                        ,
+             // icon: const Icon(Icons.shopping_cart, color: Colors.black),
+              label: const Text(
+                'Save',
+                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepOrange,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ),
+                       ),
+           ),
+                        
                         ]),
             )
           ]

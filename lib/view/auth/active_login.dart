@@ -1,16 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/navigation_bar.dart';
 import 'package:flutter_application_restaurant/view/auth/register.dart' show Register;
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/button_login.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
-import 'package:flutter_application_restaurant/view/homepage_screen.dart';
 import '../../controller/auth/login_controller.dart';
 import '../../core/functions/validation.dart';
-import '../../core/static/global_service.dart';
 import '../../services/auth/login/login_serv.dart';
 import 'forget_password/forget_password.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 
 class ActiveLogin extends StatefulWidget {
    ActiveLogin({super.key});
@@ -141,9 +139,9 @@ class _ActiveLoginState extends State<ActiveLogin> {
                     text: 'Go ',
                     onPressed: () async {
                       if(controller1.formstate.currentState!.validate()){
-                      bool Success= await LoginServ.login( controller1.email.text,cont. password.text);
+                      bool Success= await LoginServ.login( controller1.email.text,controller1.password.text);
                       if(Success){
-                      Get.to(Homepage());
+                      Get.to(MyHomePageScreen());
                       }
                       }
                     },

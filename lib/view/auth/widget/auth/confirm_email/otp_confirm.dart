@@ -30,7 +30,7 @@ class Otp_confirm extends StatelessWidget {
           bool success = await ConfirmEmailServ.confirm(controller2.email.text,verificationCode);
             if (success) {
               print('kkkkkkkkkkkkkobject');
-             Get.off(MyHomePage());
+             Get.off(MyHomePageScreen());
             } 
   }
            // Get.to(Resetpassword());

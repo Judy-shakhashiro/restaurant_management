@@ -125,7 +125,7 @@ class AddressService extends GetxService {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
-    if (token.isNotEmpty) {
+    if (token!.isNotEmpty) {
       headers['Authorization'] = 'Bearer ${token}';
     }
     try{

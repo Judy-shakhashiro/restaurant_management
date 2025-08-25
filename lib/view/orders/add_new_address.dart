@@ -115,7 +115,7 @@ class _AddNewAddressPageState extends State<AddNewAddressPage> {
 
       if (success) {
         await _saveAddressLocally(addressData);
-        Get.offAll(() => const MyHomePage());
+        Get.offAll(() => const MyHomePageScreen());
       } else {
         setState(() {
           _isSaving = false; // Stop loading on failure

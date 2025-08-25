@@ -76,25 +76,32 @@ class CartService extends GetxService {
 
 
   Future<ShowCart> getCartItems() async {
-      final url = Uri.parse('${Linkapi.backUrl}/carts');
-      final response = await http.get(url, headers: {
-        'Accept': 'application/json',
-        'Authorization' : 'Bearer ${token}',
-        'guest_token':'$guest_token'
-      });
+  final url = Uri.parse('${Linkapi.backUrl}/carts');
+  final response = await http.get(url, headers: {
+    'Accept': 'application/json',
+    'Authorization': 'Bearer ${token}',
+    'guest_token': '$guest_token'
+  });
 
-     if (response.statusCode == 200|| response.statusCode==201) {
-  print('>>> Full API Response for Cart: ${response.body}'); 
-  final Map<String, dynamic> jsonResponse = json.decode(response.body);
-  return ShowCart.fromJson(jsonResponse);
-}else {
-        print('Failed to load cart: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        throw Exception(
-            'Failed to load cart: ${response.statusCode} - ${response.body}');
-      }
-
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    print('>>> Full API Response for Cart: ${response.body}');
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    return ShowCart.fromJson(jsonResponse);
+  } else if (response.statusCode == 404) { 
+    print('Cart is empty, returning an empty cart object.');
+    return ShowCart(
+        status: false,
+        statusCode: 404,
+        message: "No items found in cart",
+        cart: Cart(items: [], cartTotalPrice: 0.0, itemsCount: 0)
+    );
+  } else {
+    print('Failed to load cart: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    throw Exception(
+        'Failed to load cart: ${response.statusCode} - ${response.body}');
   }
+}
 
  
   Future<String> deleteCartItem(int itemId) async {

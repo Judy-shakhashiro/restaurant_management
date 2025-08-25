@@ -4,14 +4,14 @@ import 'package:flutter_application_restaurant/view/widgets/home/nav.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class MyHomePageScreen extends StatefulWidget {
+  const MyHomePageScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePageScreen> createState() => _MyHomePageScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageScreenState extends State<MyHomePageScreen> {
 
   final List<Widget> _pages =ListPages.pages;
 

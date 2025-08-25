@@ -10,18 +10,18 @@ class ResetServ {
   GlobalServ myServices = Get.put(GlobalServ());
 
   Future<bool> reset(
-    final String password,
-    final String password_confirmation,
-    final bool logout_oth_dev,
-  ) async {
+      final String password,
+      final String password_confirmation,
+      final bool logout_oth_dev,
+      ) async {
     try {
-      
       String? token = await myServices.getToken();
+
       final response = await http.post(
         Uri.parse(Linkapi.ResetPasswordApi),
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json; charset=UTF-8',
+          'Content-Type': 'application/json',
           if (token != null) 'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
@@ -39,25 +39,15 @@ class ResetServ {
       if (response.statusCode == 200) {
         ResetModel model = ResetModel.fromJson(data);
         print('Success: ${model.message}');
-        myServices.removeToken();
-        myServices.saveToken(token!);
-        myServices.getToken();
-        Get.snackbar(
-          'Success',
-          '${model.message}',
-          backgroundGradient: LinearGradient(colors: [Colors.yellow , Colors.white]),
-          snackPosition: SnackPosition.TOP,
-          icon: Icon(Icons.face_retouching_natural_sharp,color: Colors.black,)
-    );
         return true;
       } else {
         print('Error Message: ${data['message']}');
         Get.snackbar(
-          'Failed',
+          'Alert',
           '${data['message']}',
-          backgroundGradient: LinearGradient(colors: [Colors.red, Colors.white]),
+          backgroundColor: Colors.red.shade500,
           snackPosition: SnackPosition.BOTTOM,
-    );
+        );
         return false;
       }
     } catch (e) {

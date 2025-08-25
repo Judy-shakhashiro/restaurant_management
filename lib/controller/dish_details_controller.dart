@@ -38,6 +38,12 @@ class DishDetailsController extends GetxController {
       _initializeSelectionsAndPrice();
     } catch (e) {
       errorMessage.value = 'Failed to load dish details: $e';
+      Get.snackbar(
+        'Alert',
+        ' ${errorMessage.value}',
+        backgroundColor: Colors.red[500],
+       snackPosition: SnackPosition.BOTTOM,
+      );
       print(e);
     } finally {
       isLoading.value = false;
@@ -45,39 +51,42 @@ class DishDetailsController extends GetxController {
   }
 
   void _initializeSelectionsAndPrice() {
-    if (dishDetails.value == null) return;
+  if (dishDetails.value == null) return;
 
-    final product = dishDetails.value!.product;
-    final basicAttributes = product?.attributes.basic;
-    final additionalAttributes = product?.attributes.additional;
+  final product = dishDetails.value!.product;
+  final basicAttributes = product?.attributes.basic;
+  final additionalAttributes = product?.attributes.additional;
 
-    if (basicAttributes?.size != null && basicAttributes!.size!.isNotEmpty) {
-      selectedSize.value = basicAttributes.size!.firstWhereOrNull((item) => item.isDefault) ??
-          basicAttributes.size!.first;
-    } else {
-      selectedSize.value = null;
-    }
-
-    if (basicAttributes?.piecesNumber != null && basicAttributes!.piecesNumber!.isNotEmpty) {
-      selectedPiecesNumber.value = basicAttributes.piecesNumber!.firstWhereOrNull((item) => item.isDefault) ??
-          basicAttributes.piecesNumber!.first;
-    } else {
-      selectedPiecesNumber.value = null;
-    }
-
-    if (additionalAttributes?.addons != null) {
-      selectedAddons.assignAll(additionalAttributes!.addons!.where((item) => item.isDefault).toList());
-    } else {
-      selectedAddons.clear();
-    }
-
-    if (additionalAttributes?.sauce != null) {
-      selectedSauces.assignAll(additionalAttributes!.sauce!.where((item) => item.isDefault).toList());
-    } else {
-      selectedSauces.clear();
-    }
+  // 1. تحديد الخيار الافتراضي للحجم
+  if (basicAttributes?.size != null && basicAttributes!.size!.isNotEmpty) {
+    selectedSize.value = basicAttributes.size!.firstWhereOrNull((item) => item.isDefault) ??
+        basicAttributes.size!.first;
+  } else {
+    selectedSize.value = null;
   }
 
+  // 2. تحديد الخيار الافتراضي لعدد القطع
+  if (basicAttributes?.piecesNumber != null && basicAttributes!.piecesNumber!.isNotEmpty) {
+    selectedPiecesNumber.value = basicAttributes.piecesNumber!.firstWhereOrNull((item) => item.isDefault) ??
+        basicAttributes.piecesNumber!.first;
+  } else {
+    selectedPiecesNumber.value = null;
+  }
+
+  // 3. تحديد الإضافات الافتراضية (Addons)
+  if (additionalAttributes?.addons != null) {
+    selectedAddons.assignAll(additionalAttributes!.addons!.where((item) => item.isDefault).toList());
+  } else {
+    selectedAddons.clear();
+  }
+
+  // 4. تحديد الصلصات الافتراضية (Sauces)
+  if (additionalAttributes?.sauce != null) {
+    selectedSauces.assignAll(additionalAttributes!.sauce!.where((item) => item.isDefault).toList());
+  } else {
+    selectedSauces.clear();
+  }
+}
   void updateSelectedSize(AttributeItem? size) {
     if (selectedSize.value != size) {
       selectedSize.value = size;
@@ -110,25 +119,34 @@ class DishDetailsController extends GetxController {
     }
   }
 
-  void _updatePrice() {
-    if (dishDetails.value == null) return;
-    double calculatedPrice = double.parse(dishDetails.value!.product!.price);
+void _updatePrice() {
+  if (dishDetails.value == null) return;
 
-    if (selectedSize.value != null) {
-      calculatedPrice += double.parse(selectedSize.value!.price);
-    }
-    if (selectedPiecesNumber.value != null) {
-      calculatedPrice += double.parse(selectedPiecesNumber.value!.price);
-    }
-    for (var addon in selectedAddons) {
-      calculatedPrice += double.parse(addon.price);
-    }
-    for (var sauce in selectedSauces) {
-      calculatedPrice += double.parse(sauce.price);
-    }
-    totalPrice.value = calculatedPrice * quantity.value;
+  // ✅ 1. حساب السعر الأساسي بناءً على الخيارات المحددة (size or piecesNumber)
+  double calculatedPrice = 0.0;
+  
+  if (selectedSize.value != null) {
+    calculatedPrice = double.parse(selectedSize.value!.price);
+  } else if (selectedPiecesNumber.value != null) {
+    calculatedPrice = double.parse(selectedPiecesNumber.value!.price);
+  } else {
+    // إذا لم يكن هناك أي خيار أساسي، نستخدم السعر الأساسي للمنتج
+    calculatedPrice = double.parse(dishDetails.value!.product!.price);
   }
 
+  // ✅ 2. إضافة أسعار الإضافات (Addons)
+  for (var addon in selectedAddons) {
+    calculatedPrice += double.parse(addon.price);
+  }
+
+  // ✅ 3. إضافة أسعار الصلصات (Sauces)
+  for (var sauce in selectedSauces) {
+    calculatedPrice += double.parse(sauce.price);
+  }
+
+  // ✅ 4. ضرب المجموع بالكمية
+  totalPrice.value = calculatedPrice * quantity.value;
+}
   void resetSelections() {
     _initializeSelectionsAndPrice();
   }
@@ -152,14 +170,6 @@ class DishDetailsController extends GetxController {
         basicOptionId: basicOptionId,
         additionalOptionIds: additionalOptions,
       );
-
-      Get.snackbar(
-        'تم بنجاح',
-        'تمت إضافة المنتج إلى السلة بنجاح!',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-
       print('Added to cart! Total: ${totalPrice.value} EGP');
       print('Selected Size: ${selectedSize.value?.name}');
       print('Selected Pieces Number: ${selectedPiecesNumber.value?.name}');
@@ -167,10 +177,10 @@ class DishDetailsController extends GetxController {
       print('Selected Sauces: ${selectedSauces.map((e) => e.name).join(', ')}');
     } catch (e) {
       Get.snackbar(
-        'خطأ',
-        'فشل إضافة المنتج إلى السلة: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        'Alert',
+        ' $e',
+        backgroundColor: Colors.red[500],
+       snackPosition: SnackPosition.BOTTOM,
       );
       print('Error adding to cart: $e');
     }

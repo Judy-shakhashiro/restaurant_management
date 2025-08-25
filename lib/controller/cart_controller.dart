@@ -43,13 +43,15 @@ class CartController extends GetxController {
     try {
       await _cartService.deleteCartItem(itemId);
       await fetchCartItems(); 
+      print('نجاح الحذفففففففففف');
     } catch (e) {
-      Get.snackbar(
-        'تنبيه',
-        'فشل حذف العنصر: $e',
+     Get.snackbar(
+        'Alert',
+        ' $e',
         backgroundColor: Colors.red[500],
-        snackPosition: SnackPosition.BOTTOM,
+       snackPosition: SnackPosition.BOTTOM,
       );
+      print('فشل : $e');
     }
   }
 
@@ -57,21 +59,7 @@ class CartController extends GetxController {
     try {
       await _cartService.incrementCartItem(itemId);
       await fetchCartItems(); 
-    } catch (e) {
-      Get.snackbar(
-        'Alert',
-        ' $e',
-        backgroundColor: Colors.red[500],
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
-  }
-
- 
-  Future<void> decrementQuantity(int itemId) async {
-    try {
-      await _cartService.decrementCartItem(itemId);
-      await fetchCartItems();  
+      print('نجاح الزيادةةةةةةةةة');
     } catch (e) {
       Get.snackbar(
         'Alert',
@@ -79,6 +67,24 @@ class CartController extends GetxController {
         backgroundColor: Colors.red[500],
        snackPosition: SnackPosition.BOTTOM,
       );
+      print('فشل : $e');
+    }
+  }
+
+ 
+  Future<void> decrementQuantity(int itemId) async {
+    try {
+      await _cartService.decrementCartItem(itemId);
+      await fetchCartItems();
+      print('نجاح النقصاننننننننننن');  
+    } catch (e) {
+      Get.snackbar(
+        'Alert',
+        ' $e',
+        backgroundColor: Colors.red[500],
+       snackPosition: SnackPosition.BOTTOM,
+      );
+      print('فشل : $e');
     }
   }
 }

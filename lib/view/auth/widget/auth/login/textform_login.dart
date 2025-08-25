@@ -49,6 +49,7 @@ class Textformlogin extends StatelessWidget {
           color: Colors.black,
              ),)),
           suffixIcon:InkWell(
+            onTap: onTapIcon,
           child: Icon(iconData,color:  Colors.black,size: 22,) ,
                     ),
           border: OutlineInputBorder(

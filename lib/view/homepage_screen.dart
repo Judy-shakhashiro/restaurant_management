@@ -26,7 +26,7 @@ class Homepage extends StatelessWidget {
   final WishlistController favoriteController = Get.put(WishlistController());
   final HomeController controller = Get.put(HomeController());
 final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
-final MyMenuController menuController=Get.put(MyMenuController(),);
+final MyMenuController menuController=Get.put(MyMenuController(),permanent: true);
 
 
   @override

@@ -243,7 +243,7 @@ class _AddNewAddressPageState extends State<AddNewAddressPage> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(50),
                         ),
                         elevation: 5,
                       ),

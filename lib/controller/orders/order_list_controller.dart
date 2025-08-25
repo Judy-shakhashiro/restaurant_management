@@ -59,7 +59,7 @@ class OrderController extends GetxController {
               }
               isLoading.value = false;
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange, foregroundColor: Colors.white),
             child: const Text('Yes, Cancel'),
           ),
         ],
@@ -87,7 +87,7 @@ class OrderController extends GetxController {
               }
               isLoading.value = false;
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange, foregroundColor: Colors.white),
             child: const Text('Yes, Delete'),
           ),
         ],
@@ -95,5 +95,31 @@ class OrderController extends GetxController {
     );
   }
 
-
+  Future<void> reorder(int orderId) async {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Confirm Reorder'),
+        content: const Text('Are you sure you want to add this dish to cart?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('No'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              isLoading.value = true;
+              final bool success = await _orderService.reorder(orderId);
+              if (success) {
+                await fetchOrders();
+              }
+              isLoading.value = false;
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange, foregroundColor: Colors.white),
+            child: const Text('Yes, Add to cart'),
+          ),
+        ],
+      ),
+    );
+  }
 }

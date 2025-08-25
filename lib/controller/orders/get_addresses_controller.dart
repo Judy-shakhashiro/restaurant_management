@@ -23,12 +23,14 @@ class GetAddressesController extends GetxController {
     loadAddresses();
   }
   Future<void> loadAddresses() async{
-    addresses.value=(await service.getAddresses())!;
+    addresses.value=(await service.getAddresses())??[];
     if(addresses.value.isNotEmpty){
       addressesIsEmpty=false;
     }
-    selectedAddress.value=addresses[addresses.length-1];
-    fetchSelectedAddressDetails(selectedAddress.value!.id);
+    if(addresses.isNotEmpty) {
+      selectedAddress.value = addresses[addresses.length - 1];
+      fetchSelectedAddressDetails(selectedAddress.value!.id);
+    }
   }
   // Asynchronous function to load addresses from SharedPreferences
   Future<void> loadSavedAddresses() async {

@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 import '../model/category_model.dart';
 import '../model/home_page_model.dart';
-import '../services/home_service.dart'; // Import for video controller
-
+import '../services/home_service.dart';
+import '../view/orders/delivery_location.dart';
+import '../view/reservation/reservations_screen.dart';
+import '../view/takeAwayPage.dart'; // Import for video controller
+var selectedDeliveryIndex = (0).obs;
 class HomeController extends GetxController {
   // Reactive variables for UI state
   var isLoading = true.obs;
@@ -15,14 +19,18 @@ class HomeController extends GetxController {
   var categoriesData = Rx<CategoriesResponse?>(null);
 
   // UI related state
-  var selectedDeliveryIndex = (-1).obs; // For the delivery/takeaway/in-restaurant categories
+   // For the delivery/takeaway/in-restaurant categories
   var selectedCategoryId = Rx<int?>(null); // For the food categories below the video
 
   // Video Player Controller
   late VideoPlayerController videoController;
   var isVideoInitialized = false.obs;
   var isVideoPlaying = false.obs;
-
+  final List<Map<String, dynamic>> deliveryCategories = [
+    {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>DeliveryLocationPage()},
+    {'title': 'take away', 'icon': Icons.takeout_dining_outlined,'page':()=>const TakeawayAndMapPage()},
+    {'title': 'in restaurant', 'icon': Icons.table_bar_sharp,'page':const ReservationsView()},
+  ];
   @override
   void onInit() {
     super.onInit();

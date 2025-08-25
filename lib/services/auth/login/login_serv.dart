@@ -15,9 +15,14 @@ class LoginServ{
       final response = await http.post(
         Uri.parse(Linkapi.LoginApi) ,
         headers: <String, String>{
+<<<<<<< HEAD
           'Accept': 'application/json',
           'guest_token' : 'dfsgdfgdfsgerg',
           'Content-Type': 'application/json'
+=======
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+>>>>>>> ae903d2a6fd5356e29e10c15c1e345e48ea0405f
         },
         body: jsonEncode(<String, String>{
           'email': email,
@@ -36,11 +41,36 @@ class LoginServ{
         myServices.removeToken();
         await myServices.saveToken(token); 
         print(myServices.getToken());
+<<<<<<< HEAD
         print("نجاحححححح : ${response.body}");
         return true;
       } else {
         print('Error: Token not found in response');
         return false;
+=======
+    return true;
+      } 
+      else if (response.statusCode == 401) {
+        final data = jsonDecode(response.body);
+        print('Error: ${data['message']}');
+        Get.snackbar(
+          'Failed',
+          '${data['message']}',
+          backgroundGradient: LinearGradient(colors: [Colors.red, Colors.white]),
+          snackPosition: SnackPosition.BOTTOM,
+    ); return false;
+      } 
+      else {
+        final data = jsonDecode(response.body);
+        print('Unexpected error: ${response.statusCode}');
+        print('message: ${data['message']}');
+        Get.snackbar(
+          'Failed',
+          '${data['message']}',
+          backgroundGradient: LinearGradient(colors: [Colors.red, Colors.white]),
+          snackPosition: SnackPosition.BOTTOM,
+    ); return false;
+>>>>>>> ae903d2a6fd5356e29e10c15c1e345e48ea0405f
       }
     } 
     else if (response.statusCode == 401) {

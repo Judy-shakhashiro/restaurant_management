@@ -16,7 +16,8 @@ class SearchService {
 
   final resp = await http.get(
     uri,
-    headers: {'Accept': 'application/json'},
+    headers: {'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',},
   );
 print(resp.body);
   if (resp.statusCode == 200) {

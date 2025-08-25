@@ -35,7 +35,6 @@ class RegisterServ {
 
       print('Status Code: ${response.statusCode}');
       print('Body: ${response.body}');
-
       if (response.statusCode == 201 || response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final registerModel = RegisterModel.fromJson(data);

@@ -26,7 +26,6 @@ class ConfirmEmailServ{
 
       print('Status Code: ${response.statusCode}');
       print('Body: ${response.body}');
-
       final data = jsonDecode(response.body);
       print(OTP);
 

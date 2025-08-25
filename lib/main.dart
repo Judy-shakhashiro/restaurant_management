@@ -55,6 +55,9 @@ class MyApp extends StatelessWidget {
        //   ReservationsListView()
        MyHomePageScreen()
    //    hasToken==true? const MyHomePageScreen():SliderBeg()
+
+      // Homepage()
+      //  hasToken==true? const MyHomePage():SliderBeg()
     );
   }
 }

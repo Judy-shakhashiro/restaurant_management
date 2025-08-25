@@ -65,19 +65,20 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         value: controller.selectedOrderType.value,
                         underline: const SizedBox(),
                         isExpanded: true,
-                        hint: const Text('Delivery', style: TextStyle(fontSize: 20)),
+                        hint: Obx(()=> Text(controller.selectedOrderType.value, style: const TextStyle(fontSize: 20))),
                         items: controller.orderTypes.map<DropdownMenuItem<String>>((String type) {
                           return DropdownMenuItem<String>(
                             value: type,
                             child: Text(
                               type,
-                              style: TextStyle(fontSize: 20, color:  Colors.black87),
+                              style: const TextStyle(fontSize: 20, color:  Colors.black87),
                             ),
                           );
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
                             controller.selectedOrderType.value = newValue!;
+
                           });
                           // You can add additional logic here
                         },
@@ -346,7 +347,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   ),
                 );
               }),
-              SizedBox(height: 50,),
+              SizedBox(height: 100,),
             ],
           ),
         ),

@@ -29,6 +29,7 @@ class OrderDetailController extends GetxController {
     try {
       final OrderDetail? fetchedDetail = await _orderService.getOrderDetail(id);
       if (fetchedDetail != null) {
+
         orderDetail.value = fetchedDetail;
       } else {
         hasError.value = true;

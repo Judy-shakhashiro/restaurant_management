@@ -115,7 +115,8 @@ class _AddNewAddressPageState extends State<AddNewAddressPage> {
 
       if (success) {
         await _saveAddressLocally(addressData);
-        Get.offAll(() => const MyHomePageScreen());
+        Get.back();
+        Get.back();
       } else {
         setState(() {
           _isSaving = false; // Stop loading on failure
@@ -242,7 +243,7 @@ class _AddNewAddressPageState extends State<AddNewAddressPage> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(50),
                         ),
                         elevation: 5,
                       ),

@@ -11,7 +11,8 @@ class CategoryService extends GetConnect {
   Future<List<CategoryR>> fetchCategories() async {
     print(('${Linkapi.backUrl}/categories'));
     final response = await http.get(Uri.parse('${Linkapi.backUrl}/categories'),
-    headers: {'Accept': 'application/json'});
+    headers: {'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',});
     final parsed=jsonDecode(response.body);
     if (parsed['status'] == true) {
       List data = parsed['categories'];

@@ -5,7 +5,6 @@ import '../../../../core/static/routes.dart';
 import '../../../../model/auth/login/forget_password/forget_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class ForgetServ {
   static Future<bool> forget(String email) async {
@@ -23,7 +22,6 @@ class ForgetServ {
       print('Body: ${response.body}');
 
       final data = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
         final String? token = data['token'];
 

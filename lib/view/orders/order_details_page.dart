@@ -20,8 +20,6 @@ class OrderDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order Details'),
-        backgroundColor: Colors.deepOrange,
-        foregroundColor: Colors.white,
       ),
       body: Obx(() {
         if (orderDetailController.isLoading.value) {

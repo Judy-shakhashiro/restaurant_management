@@ -3,8 +3,6 @@ import 'package:flutter_application_restaurant/view/widgets/dish_item.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shimmer/shimmer.dart';
-
-
 import '../core/static/routes.dart';
 import '../controller/menu_controller.dart';
 import '../globals.dart';
@@ -20,7 +18,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  final MyMenuController c = Get.put(MyMenuController());
+  final MyMenuController c = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +47,7 @@ class _MenuPageState extends State<MenuPage> {
                           borderRadius: BorderRadius.circular(38),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.orange.withAlpha(80),
+                              color: Colors.deepOrange.withAlpha(80),
                               offset: const Offset(3, 3),
                               blurRadius: 4,
                               spreadRadius: 3,
@@ -58,7 +56,7 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                         child: const CircleAvatar(
                           radius: 32,
-                          backgroundColor: Colors.orange,
+                          backgroundColor: Colors.deepOrange,
                           child: Icon(Icons.list_alt_outlined,
                               size: 30, color: Colors.white),
                         ),
@@ -82,6 +80,7 @@ class _MenuPageState extends State<MenuPage> {
                         return GestureDetector(
                           onTap: () {
                             c.selectedCat.value = cat;
+                            // Trigger the scroll using the controller's logic
                             c.scrollToCategory(cat);
                           },
                           child: Obx(() {
@@ -92,7 +91,7 @@ class _MenuPageState extends State<MenuPage> {
                                 border: isSelected
                                     ? const Border(
                                   bottom: BorderSide(
-                                    color: Colors.orange,
+                                    color: Colors.deepOrange,
                                     width: 3,
                                   ),
                                 )
@@ -105,11 +104,11 @@ class _MenuPageState extends State<MenuPage> {
                                       borderRadius: BorderRadius.circular(38),
                                       border: isSelected
                                           ? Border.all(
-                                          color: Colors.orange, width: 2)
+                                          color: Colors.deepOrange, width: 2)
                                           : null,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.orange.withAlpha(50),
+                                          color: Colors.deepOrange.withAlpha(50),
                                           offset: const Offset(3, 3),
                                           blurRadius: 4,
                                           spreadRadius: 3,
@@ -119,36 +118,17 @@ class _MenuPageState extends State<MenuPage> {
                                     child: CircleAvatar(
                                       radius: isSelected ? 34 : 32,
                                       backgroundColor: isSelected
-                                          ? Colors.orange[100]
+                                          ? Colors.deepOrange[100]
                                           : Colors.grey[200],
                                       child: ClipRRect(
-                          borderRadius: BorderRadius.circular(38),
-                          child: Image.network(
-                            '${Linkapi.bacUrlImage}${cat.image}',
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                             return const SizedBox(
-                                child:  Center(
-                                  child: CircularProgressIndicator(
-                                     color: Colors.deepOrange,
-                                                        ),
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              print('Failed to load image: $error'); 
-                              return Container(
-                                color: Colors.grey[200],
-                                child: const Icon(
-                                  Icons.image_not_supported, 
-                                  color: Colors.grey,
-                                  size: 30,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                          borderRadius: BorderRadius.circular(38),
+                                          // Ensure backUrl is correctly provided by config.dart
+                                          child: Image.network(
+                                            "${Linkapi.backUrl}/images/${cat.image}j",
+                                            fit: BoxFit.cover, // Ensure image covers the circle
+                                            errorBuilder: (context, error, stackTrace) =>
+                                            const Icon(Icons.broken_image, color: Colors.grey), // Fallback for image load error
+                                          )),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -157,7 +137,7 @@ class _MenuPageState extends State<MenuPage> {
                                     style: TextStyle(
                                       fontSize: isSelected ? 17 : 16,
                                       color: isSelected
-                                          ? Colors.orange
+                                          ? Colors.deepOrange
                                           : Colors.black54,
                                       fontWeight: isSelected
                                           ? FontWeight.bold
@@ -176,7 +156,6 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
 
-            // --- Tag selector ──────────────────────────────────────
             Container(
               height: 50,
               margin: const EdgeInsets.all(8),
@@ -201,7 +180,7 @@ class _MenuPageState extends State<MenuPage> {
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: active
-                              ? Colors.orange
+                              ? Colors.deepOrange
                               : tagColors[i % tagColors.length], // Assuming tagColors is accessible
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -219,8 +198,7 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
 
-            // --- The interleaved ScrollablePositionedList ──────────────────────────
-            Expanded(
+           Expanded(
             child:  ScrollablePositionedList.builder(
                   itemScrollController: c.itemScrollController,
                 itemPositionsListener: c.itemPositionsListener,
@@ -230,7 +208,7 @@ class _MenuPageState extends State<MenuPage> {
                   if (item is CategoryHeaderItem) {
                     return Container(
                       decoration: BoxDecoration(
-                          color: Colors.orange.withAlpha(40),
+                          color: Colors.deepOrange.withAlpha(40),
                           borderRadius: BorderRadius.circular(30)),
                       padding: const EdgeInsets.symmetric(
                           vertical: 12, horizontal: 16),
@@ -238,20 +216,20 @@ class _MenuPageState extends State<MenuPage> {
                       child:  Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         const Padding(
+                          Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.circle, color: Colors.orange, size: 13),
+                            child: Icon(Icons.circle, color: Colors.deepOrange, size: 13),
                           ),
                           Text(
                             item.title,
-                            style:const TextStyle(
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        const  Padding(
+                          Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.circle, color: Colors.orange, size: 13),
+                            child: Icon(Icons.circle, color: Colors.deepOrange, size: 13),
                           ),
                         ],
                       ),
@@ -259,13 +237,13 @@ class _MenuPageState extends State<MenuPage> {
                   }
 
                   if (item is LoadingItem) {
-                    return Container(
+                   return Container(
                       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                       child: Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
+                        highlightColor: Colors.grey[300]!,
                         child: Container(
-                          height: 250, 
+                          height: 250, // Shimmer height matching DishItemTile approximate height
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.white,
@@ -308,6 +286,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     );
                   }
+
                   return const SizedBox.shrink();
                 },
               )
@@ -317,8 +296,6 @@ class _MenuPageState extends State<MenuPage> {
       }),
     );
   }
-
-  // --- Shimmer Builders ---
   Widget _buildFullShimmer() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
@@ -330,7 +307,7 @@ class _MenuPageState extends State<MenuPage> {
             height: 120, // Match the height of your actual category selector
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5, // Number of shimmer items for categories
+              itemCount: 5,
               itemBuilder: (_, __) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -354,7 +331,6 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
           ),
-          // Tags shimmer
           SizedBox(
             height: 50, // Match height of actual tag selector
             child: ListView.builder(
@@ -371,7 +347,6 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
           ),
-          // Dishes shimmer
           Expanded(
             child: ListView.builder(
               itemCount: 3, // Show a few shimmer dish items

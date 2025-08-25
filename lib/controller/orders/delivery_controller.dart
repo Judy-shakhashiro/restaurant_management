@@ -1,3 +1,4 @@
+import 'package:flutter_application_restaurant/controller/home_controller.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,7 @@ const String googlePlacesApiKey = 'AIzaSyD9zQQNoowad3i_Fycd6YrfbR2mfysHtnQ';
 const double minZoomLevelForAddress = 16.0;
 
 class DeliveryController extends GetxController {
-  final RxInt selectedDeliveryIndex = 0.obs;
+HomeController homeController =Get.put(HomeController());
   final Rx<LatLng?> currentLocation = Rx<LatLng?>(null);
   final Rx<LatLng?> selectedMapLocation = Rx<LatLng?>(null);
   final RxString selectedAddress = 'Fetching location...'.obs;
@@ -32,11 +33,6 @@ class DeliveryController extends GetxController {
     checkZoomLevel();
   }
 
-  final List<Map<String, dynamic>> deliveryCategories = [
-    {'icon': Icons.delivery_dining, 'title': 'Delivery'},
-    {'icon': Icons.takeout_dining_outlined, 'title': 'Pickup'},
-    {'icon': Icons.table_bar, 'title': 'Dine-in'},
-  ];
 
   late List<List<LatLng>> _serviceAreaBoundaries ;
   Set<Polygon> get serviceAreaPolygons {
@@ -57,7 +53,7 @@ class DeliveryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _determinePosition();
+    determinePosition();
     checkLocationCoverage(currentLocation.value);
     getDeliveryZones();
   }
@@ -87,21 +83,19 @@ class DeliveryController extends GetxController {
       throw Exception('Failed to load dishes');
     }
   }
-  void selectDeliveryCategory(int index) {
-    selectedDeliveryIndex.value = index;
-    if (deliveryCategories[index]['title'] != 'Delivery') {
-      Get.back();
-    }
-  }
 
-  Future<void> _determinePosition() async {
+
+  Future<void> determinePosition() async {
     isLoadingLocation.value = true;
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      Get.snackbar('Location Services Disabled', 'Please enable location services for the app.');
+
+      Get.snackbar(
+        snackPosition: SnackPosition.BOTTOM,
+          'Location Services Disabled', 'Please enable location services for the app.');
       isLoadingLocation.value = false;
       return Future.error('Location services are disabled.');
     }
@@ -119,7 +113,8 @@ class DeliveryController extends GetxController {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      Get.snackbar('Location Permission Permanently Denied', 'Location permissions are permanently denied, we cannot request permissions. Please enable in app settings.');
+      Get.snackbar(snackPosition: SnackPosition.BOTTOM,
+          'Location Permission Permanently Denied', 'Location permissions are permanently denied, we cannot request permissions. Please enable in app settings.');
       isLoadingLocation.value = false;
       return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
@@ -137,7 +132,8 @@ class DeliveryController extends GetxController {
         }
       });
     } catch (e) {
-      Get.snackbar('Error', 'Failed to get current location: $e');
+      Get.snackbar(snackPosition: SnackPosition.BOTTOM,
+          'Error', 'Failed to get current location: $e');
       selectedAddress.value = 'Could not get current location';
       coverageMessage.value = 'Could not determine coverage.';
       zoomLevelMessage.value = 'Cannot fetch address.';
@@ -236,7 +232,6 @@ class DeliveryController extends GetxController {
         'Zoom In Required',
         'Please zoom in closer on the map to get precise address details.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
       return;
@@ -254,7 +249,8 @@ class DeliveryController extends GetxController {
     }
 
     if (selectedMapLocation.value == null) {
-      Get.snackbar('Error', 'Please select a valid location first.');
+      Get.snackbar(snackPosition: SnackPosition.BOTTOM,
+          'Error', 'Please select a valid location first.');
       return;
     }
 
@@ -265,7 +261,6 @@ class DeliveryController extends GetxController {
         'Address Details Missing',
         'Could not get precise address details automatically. Please fill them manually.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
     }
@@ -338,15 +333,19 @@ class DeliveryController extends GetxController {
           autocompletePredictions.clear();
           _searchController.text = prediction['description'] ?? '';
         } else {
-          Get.snackbar('Error', 'Could not get details for selected place.');
+          Get.snackbar(snackPosition: SnackPosition.BOTTOM,
+              'Error', 'Could not get details for selected place.');
           print("Place Details Error: ${data['status']} - ${data['error_message']}");
         }
       } else {
-        Get.snackbar('Error', 'Failed to fetch place details.');
+        Get.snackbar(snackPosition: SnackPosition.BOTTOM,
+            'Error', 'Failed to fetch place details.');
         print("HTTP Error fetching details: ${response.statusCode}");
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to set location from search: $e');
+      Get.snackbar(
+          snackPosition: SnackPosition.BOTTOM,
+          'Error', 'Failed to set location from search: $e');
       print("Error fetching place details: $e");
     }
   }

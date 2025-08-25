@@ -5,7 +5,7 @@ import '../../../../core/static/routes.dart';
 import '../../../../model/auth/login/forget_password/verify_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 // The corrected `VerifyServ` class
 class VerifyServ {
 
@@ -32,13 +32,15 @@ class VerifyServ {
       if (response.statusCode == 200) {
         final myServices = Get.find<GlobalServ>();
         VerifyModel model = VerifyModel.fromJson(data);
+
+        // ✅ Extract the token from the response data
         String? token = data['token'];
 
         if (token != null) {
             print('Success: ${model.message}');
             print('token: ${model.token}');
             await myServices.removeToken();
-            await myServices.saveToken(token); 
+            await myServices.saveToken(token); // ✅ Use the extracted token here
             print(token);
             return true;
         } else {

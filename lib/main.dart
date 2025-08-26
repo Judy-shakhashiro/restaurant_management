@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/model/cart_model.dart';
 import 'package:flutter_application_restaurant/view/auth/active_login.dart';
-import 'package:flutter_application_restaurant/view/auth/forget_password/forget_password.dart';
 import 'package:flutter_application_restaurant/view/auth/register.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/slider/slider.dart';
-import 'package:flutter_application_restaurant/view/cart.dart';
+import 'package:flutter_application_restaurant/view/homepage_screen.dart';
 import 'package:flutter_application_restaurant/view/profile/profile.dart';
 import 'package:flutter_application_restaurant/view/profile/profile_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:flutter_application_restaurant/view/favorite_page.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/main.dart';
 import 'core/static/global_service.dart';
 import 'navigation_bar.dart';
 
 var service;
 bool? hasToken;
-String? token; 
+String? token;
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +24,7 @@ Future <void> main() async {
   } else {
     hasToken = false;
   }
-  
+
 
   runApp(const MyApp());
 }
@@ -52,12 +49,12 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
         home:
         // FavoritesPage()
-        Register()
-       
-    //  hasToken==true? const MyHomePageScreen():SliderBeg()
+       // Register()
 
-      
-     
+      hasToken==true? const MyHomePageScreen():SliderBeg()
+
+
+
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
 import '../controller/menu_controller.dart';
 import '../controller/orders/get_addresses_controller.dart';
+import '../controller/reservations/reservations_list_controller.dart';
 import '../core/static/routes.dart';
 import '../controller/favourite_controller.dart';
 import '../controller/home_controller.dart';
@@ -32,7 +33,7 @@ class Homepage extends StatelessWidget {
     {'title': 'in restaurant', 'icon': Icons.table_bar_sharp,'page':const ReservationsView()},
   ];
 final MyMenuController menuController=Get.put(MyMenuController(),permanent: true);
-
+  ReservationsController reservationsController=Get.put(ReservationsController());
 
   @override
   Widget build(BuildContext context) {

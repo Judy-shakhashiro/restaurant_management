@@ -2,7 +2,7 @@
 class Linkapi{
 static bool useMockApi = false;
 
-static const String backUrl = 'http://192.168.1.100:8000/api';
+static const String backUrl = 'http://192.168.1.39:8000/api';
 static const String bacUrlImage ='$backUrl/images/';
 
   static const String LoginApi ='$backUrl/login';

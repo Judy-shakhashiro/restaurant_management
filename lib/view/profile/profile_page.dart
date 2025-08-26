@@ -27,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage>
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Get.back(),
         ),
+        backgroundColor: Colors.grey.shade300,
       ),
       body: AnimatedBackground(
         vsync: this,

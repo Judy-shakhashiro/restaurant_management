@@ -32,7 +32,7 @@ class _ResetpasswordState extends State<Resetpassword> {
              fontFamily: 'Georgia'
         ),),
         centerTitle: true,
-        backgroundColor: Colors.deepOrange.shade500,
+        backgroundColor: Colors.grey.shade300,
       ),
         body: ListView(
           children: [

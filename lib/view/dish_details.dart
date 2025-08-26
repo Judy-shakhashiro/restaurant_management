@@ -197,7 +197,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
               Get.back();
             },
           ),
-          title:const Text('Details',),
+          title:const Text('Details',style: TextStyle(fontSize: 22),),
           centerTitle: false,
           actions: [
             TextButton(
@@ -298,7 +298,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                     const SizedBox(height: 24),
 
                     if (basicAttributes?.size != null && basicAttributes!.size!.isNotEmpty) ...[
-                      _buildSectionHeader('Choose Size', _sizeSectionKey),
+                      _buildSectionHeader(' Choose Size :', _sizeSectionKey),
                       const SizedBox(height: 16),
                       Obx(() => Row( 
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -310,7 +310,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                     ],
 
                     if (basicAttributes?.piecesNumber != null && basicAttributes!.piecesNumber!.isNotEmpty) ...[
-                      _buildSectionHeader('Choose Pieces Number', _piecesNumberSectionKey),
+                      _buildSectionHeader(' Choose Pieces Number :', _piecesNumberSectionKey),
                       const SizedBox(height: 16),
                       Obx(() => Column( // Use Obx here
                         children: basicAttributes.piecesNumber!
@@ -321,7 +321,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                     ],
 
                     if (additionalAttributes?.addons != null && additionalAttributes!.addons!.isNotEmpty) ...[
-                      _buildSectionHeader('Choose Addons', _addonsSectionKey),
+                      _buildSectionHeader(' Choose Addons :', _addonsSectionKey),
                       const SizedBox(height: 16),
                       Obx(() => Column( // Use Obx here
                         children: additionalAttributes.addons!
@@ -332,7 +332,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                     ],
 
                     if (additionalAttributes?.sauce != null && additionalAttributes!.sauce!.isNotEmpty) ...[
-                      _buildSectionHeader('Choose Sauces', _saucesSectionKey),
+                      _buildSectionHeader(' Choose Sauces :', _saucesSectionKey),
                       const SizedBox(height: 16),
                       Obx(() => Column( // Use Obx here
                         children: additionalAttributes.sauce!
@@ -356,9 +356,14 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
     return Align(
       key: key,
       alignment: Alignment.centerLeft,
-      child: Text(
-        title,
-        style:const  TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color:  Colors.black),
+      child: Row(
+        children: [
+          Icon(Icons.arrow_forward,color: Colors.black,),
+          Text(
+            title,
+            style:const  TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color:  Colors.black),
+          ),
+        ],
       ),
     );
   }

@@ -52,12 +52,12 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
         home:
         // FavoritesPage()
-       //   ReservationsListView()
-       MyHomePageScreen()
-   //    hasToken==true? const MyHomePageScreen():SliderBeg()
+        Register()
+       
+    //  hasToken==true? const MyHomePageScreen():SliderBeg()
 
-      // Homepage()
-      //  hasToken==true? const MyHomePage():SliderBeg()
+      
+     
     );
   }
 }

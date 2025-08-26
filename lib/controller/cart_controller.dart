@@ -31,7 +31,7 @@ class CartController extends GetxController {
         'Alert',
         ' $e',
         backgroundColor: Colors.red[500],
-        colorText: Colors.white,
+         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
       isLoading.value = false;

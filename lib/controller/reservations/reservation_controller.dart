@@ -82,6 +82,12 @@ class ReserveController extends GetxController {
       print('Controller initialized with modification data.');
     } catch (e) {
       errorMessage.value = 'خطأ في تهيئة البيانات الأولية: $e';
+      Get.snackbar(
+        'Alert',
+        ' $e',
+        backgroundColor: Colors.red[500],
+         snackPosition: SnackPosition.BOTTOM,
+      );
       print('Error initializing with modification data: $e');
       isLoading(false);
     }
@@ -115,11 +121,24 @@ class ReserveController extends GetxController {
         print('Initialized guests: ${selectedGuests.value}, maxPeople: ${reservationData.value!.data.maxPeople}');
         errorMessage.value = null;
       } else {
-        errorMessage.value = 'فشل تحميل الأيام المتاحة: ${response.statusCode} - ${response.body}';
+        errorMessage.value = 'failed to load available days :  ${response.body}';
+        Get.snackbar(
+        'Alert',
+        ' ${errorMessage.value}',
+        backgroundColor: Colors.red[500],
+        colorText: Colors.white,
+         snackPosition: SnackPosition.BOTTOM,
+      );
         print('Failed to fetch available dates: ${response.statusCode}');
       }
     } catch (e) {
       errorMessage.value = 'خطأ في جلب الأيام: $e';
+      Get.snackbar(
+        'Alert',
+        ' $e',
+        backgroundColor: Colors.red[500],
+        colorText: Colors.white,
+      );
       print('Error fetching available dates: $e');
     } finally {
       isLoading(false);
@@ -271,11 +290,11 @@ print('id is ${reservationId }');
 
     if (newGuests > maxAllowedGuests) {
       Get.snackbar(
-        'تنبيه',
-        'عدد الأشخاص لا يمكن أن يتجاوز $maxAllowedGuests',
+        'Alert',
+        'The number of people cannot exceed  $maxAllowedGuests',
         backgroundColor: Colors.red,
         snackPosition: SnackPosition.BOTTOM,
-        icon: const Icon(Icons.info_outline, color: Colors.white),
+        icon: const Icon(Icons.info_outline, color: Colors.black),
       );
       return;
     }
@@ -304,25 +323,14 @@ print('id is ${reservationId }');
     errorMessage.value = null;
   }
 
-  void updateSelectedDay(DateTime newSelectedDay, DateTime newFocusedDay) {
-    if (!isDayAvailable(newSelectedDay)) {
-      Get.snackbar(
-        'تنبيه',
-        'هذا اليوم غير متاح للحجز',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      return;
-    }
-
-    selectedDay.value = newSelectedDay;
-    focusedDay.value = newFocusedDay;
-    resetTimeSlots();
-    if (selectedGuests.value != null && selectedDuration.value != null) {
-      fetchTimeSlots();
-    }
+void updateSelectedDay(DateTime newSelectedDay, DateTime newFocusedDay) {
+  selectedDay.value = newSelectedDay;
+  focusedDay.value = newFocusedDay;
+  resetTimeSlots();
+  if (selectedGuests.value != null && selectedDuration.value != null) {
+    fetchTimeSlots();
   }
+}
 
   void updateSelectedDuration(String? newDuration) {
     selectedDuration.value = newDuration;

@@ -69,6 +69,7 @@ class _ReservationConfirmationScreenState
       } else {
         _timer.cancel();
         _showSnackBar(context, 'Confirmation period has expired. Reservation has been cancelled.');
+        Get.back();
       }
     });
   }
@@ -194,9 +195,9 @@ class _ReservationConfirmationScreenState
 
   Widget _buildRemainingTimeCard() {
     return Card(
-      color: Colors.white60,
+      color: Colors.white,
       elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),side: const BorderSide(color: Colors.black54, width: 2),),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -268,7 +269,7 @@ Widget _buildReservationDetailsCard() {
                   border: Border.all(color: Colors.deepOrange, width: 1.5),
                 ),
                 child: Text(
-                  '${widget.modificationInabilityHours}',
+                  '${widget.modificationInabilityHours} hours',
                   style: const TextStyle(
                     color: Colors.deepOrange,
                     fontWeight: FontWeight.bold,
@@ -283,16 +284,16 @@ Widget _buildReservationDetailsCard() {
        const Divider(height: 1,),
        const SizedBox(height: 15,),
         _buildDetailItem(
-          icon: Icons.monetization_on,
+          icon: Icons.attach_money_rounded,
           label: 'Deposit value',
-          value: '${widget.depositValue}',
+          value: '${widget.depositValue} EGP ',
           
         ),
        const SizedBox(height: 15,),
        const Divider(height: 1,),
       const  SizedBox(height: 15,),
         _buildDetailItem(
-          icon: Icons.cancel_outlined,
+          icon: Icons.cancel_presentation_rounded,
           label: 'Cancellation time',
           value: '${widget.cancellationInabilityHours.toInt()} hours',
         ),
@@ -304,7 +305,7 @@ Widget _buildReservationDetailsCard() {
 
 Widget _buildDetailItem({required String label, required String value,required IconData icon}) {
   return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Icon(icon,size: 25,color: Colors.deepOrange),
       Text(
@@ -320,7 +321,7 @@ Widget _buildDetailItem({required String label, required String value,required I
       Text(
         value,
         style: const TextStyle(
-          fontSize: 13,
+          fontSize: 15,
           color: Colors.deepOrange,
           fontWeight: FontWeight.bold,
           fontFamily: 'Georgia'
@@ -334,9 +335,10 @@ Widget _buildDetailItem({required String label, required String value,required I
 
 Widget _buildPoliciesSection() {
     return Card(
-      color: Colors.white60,
-      elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      color: Colors.white,
+      elevation: 10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),side: const BorderSide(color: Colors.black54, width: 2),),
+      
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -374,7 +376,7 @@ Widget _buildPoliciesSection() {
     return Card(
       elevation: 5,
       color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),side: const BorderSide(color: Colors.black12, width: 2),),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -464,27 +466,14 @@ Widget _buildPoliciesSection() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade300,
   title:const Text(
     'Details',
     style: TextStyle(
-      color: Colors.white, 
       fontWeight: FontWeight.bold,
-      fontSize: 25,
-      fontFamily: 'Georgia',
+      fontSize: 22,
     ),
   ),
-  centerTitle: true,
-  flexibleSpace: Container(
-    decoration:const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Color(0xFFFF6200), Color(0xFFE53935)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    ),
-  ),
-  elevation: 10, 
-  iconTheme: IconThemeData(color: Colors.white), 
 ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -504,6 +493,14 @@ Widget _buildPoliciesSection() {
                   _buildReservationDetailsCard(),
                   const SizedBox(height: 16),
                   _buildPoliciesSection(),
+                  const SizedBox(height: 16),
+                 const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.arrow_forward,color: Colors.black,),
+                      Text(' Your notes :',textAlign: TextAlign.left,style: TextStyle(fontSize: 20),),
+                    ],
+                  ),
                   const SizedBox(height: 16),
                   _buildSpecialRequestSection(),
                   const SizedBox(height: 16),

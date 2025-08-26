@@ -30,7 +30,7 @@ class CartScreen extends StatelessWidget {
           'My Cart',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 22,
           ),
         ),
         actions: [
@@ -525,7 +525,12 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('--> Size', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                            const  Row(
+                                children: [
+                                  Icon(Icons.arrow_forward,color: Colors.black54,),
+                                   Text(' Size', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                                ],
+                              ),
                               const SizedBox(height: 8),
                               Wrap(
                                 spacing: 10,
@@ -566,8 +571,13 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('--> Pieces Number', 
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                             const  Row(
+                                 children: [
+                                  Icon(Icons.arrow_forward,color: Colors.black54,),
+                                   Text(' Pieces Number', 
+                                                                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                                 ],
+                               ),
                               const SizedBox(height: 8),
                               Wrap(
                                 spacing: 10,
@@ -618,7 +628,12 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('--> Sauces', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                             const  Row(
+                                 children: [
+                                  Icon(Icons.arrow_forward,color: Colors.black54,),
+                                   Text(' Sauces', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                                 ],
+                               ),
                               const SizedBox(height: 8),
                               Wrap(
                                 spacing: 10,
@@ -654,7 +669,12 @@ Future<void> showProductDetailsBottomSheet(CartItem cartItem) async {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('--> Addons', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                              const Row(
+                                 children: [
+                                  Icon(Icons.arrow_forward,color: Colors.black54,),
+                                   Text(' Addons', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600,color: Colors.deepOrange)),
+                                 ],
+                               ),
                               const SizedBox(height: 8),
                               Wrap(
                                 spacing: 10,

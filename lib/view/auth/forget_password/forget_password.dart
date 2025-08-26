@@ -88,7 +88,7 @@ class Forgetpassword extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepOrange.shade500,
+        backgroundColor: Colors.grey.shade400,
       ),
       body: Form( 
         key: controller3.formstate_forget, 

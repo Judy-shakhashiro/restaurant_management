@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/reservation/confirm_reservation_screen.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:get/get.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart'; // A dependency for a nice loading spinner
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import '../../controller/reservations/reservations_list_controller.dart';
 import '../../core/static/routes.dart';

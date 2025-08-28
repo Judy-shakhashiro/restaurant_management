@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/view/reservation/confirm_reservation_screen.dart';
@@ -331,9 +332,9 @@ print(' link is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepOrange,
                               foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(vertical: 16)
+                             // padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 8)
                             ),
-                            child: const Text('Modify',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),),
+                            child: const Text('Modify',style: TextStyle(color: Colors.white, fontFamily: 'Georgia'),),
                           ),
                         if (reservation.acceptedCancellability == true)
                           ElevatedButton(
@@ -376,9 +377,9 @@ print(' link is ${Linkapi.backUrl}/api/reservations/$reservationId/edit');
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white38,
                               foregroundColor: Colors.black54,
-                              padding: const EdgeInsets.symmetric(vertical: 16)
+                             // padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 8)
                             ),
-                            child: const Text('Cancel',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontFamily: 'Georgia',fontSize: 20),),
+                            child: const Text('Cancel',style: TextStyle(color: Colors.white, fontFamily: 'Georgia'),),
                           ),
                         if (reservation.status == 'not_confirmed')
                           ElevatedButton(
@@ -430,7 +431,6 @@ class ReservationDetailsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reservation Details'),
-        backgroundColor: Colors.deepOrange,
       ),
       body: Obx(() {
         final reservation = controller.selectedReservation.value;
@@ -526,26 +526,6 @@ class ReservationDetailsView extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Reservations',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Roboto',
-      ),
-      home: ReservationsView(),
     );
   }
 }

@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:flutter_application_restaurant/core/static/global_service.dart';
 import 'package:flutter_application_restaurant/navigation_bar.dart';
+import 'package:flutter_application_restaurant/navigation_bar.dart';
+import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import '../../controller/reservations/reservations_list_controller.dart';
 import '../../main.dart';
 
 class ReservationConfirmationScreen extends StatefulWidget {
@@ -338,7 +342,7 @@ Widget _buildPoliciesSection() {
       color: Colors.white,
       elevation: 10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),side: const BorderSide(color: Colors.black54, width: 2),),
-      
+
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -438,8 +442,10 @@ Widget _buildPoliciesSection() {
         onPressed: _isAgreed
             ? () async {
                 await _saveNotes();
-                Get.to(const MyHomePageScreen());
-              }
+                controller.fetchReservations();
+                Get.close(1);
+                Get.off(ReservationsListView());
+        }
             : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepOrange,
@@ -461,6 +467,7 @@ Widget _buildPoliciesSection() {
   }
 
 
+  final ReservationsController controller = Get.find<ReservationsController>() ;
 
   @override
   Widget build(BuildContext context) {
@@ -470,6 +477,7 @@ Widget _buildPoliciesSection() {
   title:const Text(
     'Details',
     style: TextStyle(
+      color: Colors.white, 
       fontWeight: FontWeight.bold,
       fontSize: 22,
     ),

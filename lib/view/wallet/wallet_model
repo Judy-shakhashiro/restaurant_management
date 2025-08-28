@@ -1,0 +1,45 @@
+// import 'package:flutter_application_restaurant/core/static/routes.dart';
+// import 'package:get/get.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+
+
+// class Wallet {
+//   final double balance;
+//   final List<Transaction> transactions;
+
+//   Wallet({required this.balance, required this.transactions});
+
+//   factory Wallet.fromJson(Map<String, dynamic> json) {
+//     var transactionsList = json['transactions'] as List;
+//     List<Transaction> transactions =
+//         transactionsList.map((i) => Transaction.fromJson(i)).toList();
+//     return Wallet(
+//       balance: double.parse(json['balance']),
+//       transactions: transactions,
+//     );
+//   }
+// }
+
+// class Transaction {
+//   final String type;
+//   final String amount;
+//   final String description;
+//   final String createdAt;
+
+//   Transaction({
+//     required this.type,
+//     required this.amount,
+//     required this.description,
+//     required this.createdAt,
+//   });
+
+//   factory Transaction.fromJson(Map<String, dynamic> json) {
+//     return Transaction(
+//       type: json['type'],
+//       amount: json['amount'],
+//       description: json['description'],
+//       createdAt: json['created_at'],
+//     );
+//   }
+// }

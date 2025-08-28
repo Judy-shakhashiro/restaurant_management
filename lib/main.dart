@@ -9,6 +9,7 @@ import 'package:flutter_application_restaurant/view/profile/profile.dart';
 import 'package:flutter_application_restaurant/view/profile/profile_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:flutter_application_restaurant/view/favorite_page.dart';
+import 'package:flutter_application_restaurant/view/wallet/test_wallet.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/main.dart';
 import 'core/static/global_service.dart';
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
         home:
         // FavoritesPage()
-        Register()
+        WalletView()
        
     //  hasToken==true? const MyHomePageScreen():SliderBeg()
 

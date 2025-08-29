@@ -69,6 +69,7 @@ class AddressService extends GetxService {
     }
     try{
       final response=await http.get(url,headers:headers);
+      print(response.body);
       if(response.statusCode==200) {
         final parsed = jsonDecode(response.body);
         final List<dynamic>addressesJson=parsed['addresses'];

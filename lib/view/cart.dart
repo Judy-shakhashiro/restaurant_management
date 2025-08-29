@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/cart_irem_updat_controller.dart';
+import 'package:flutter_application_restaurant/controller/home_controller.dart';
 import 'package:flutter_application_restaurant/model/cart_details_model.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -86,7 +87,7 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
-  } else if (controller.cartItems.isEmpty) {
+  } else if (controller.cartItems.value.isEmpty) {
     // حالة السلة فارغة                         لا تنسي اللوتي هون
     return Center(
       child: Column(
@@ -353,7 +354,7 @@ class CartItemCard extends StatelessWidget {
   }
 }
   
- Widget _buildCheckoutBar(CartController controller) {
+ Widget _buildCheckoutBar(CartController controller,) {
   final adController=Get.put(GetAddressesController());
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -392,7 +393,7 @@ class CartItemCard extends StatelessWidget {
           
          ElevatedButton.icon(
              onPressed: () {
-                  if(adController.addresses.value.isNotEmpty) {
+                  if(adController.addresses.value.isNotEmpty||selectedDeliveryIndex.value!=0) {
                     Get.to(() => const CreateOrderPage());
                   }
 

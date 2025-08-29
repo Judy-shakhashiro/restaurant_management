@@ -7,8 +7,6 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../controller/reservations/reservation_controller.dart';
 import '../../controller/reservations/reservations_list_controller.dart';
-import '../../controller/reservations/reservations_list_controller.dart';
-import '../../navigation_bar.dart';
 
 
 class ReservationsView extends StatelessWidget {

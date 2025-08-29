@@ -8,7 +8,7 @@ import '../services/home_service.dart';
 import '../view/orders/delivery_location.dart';
 import '../view/reservation/reservations_screen.dart';
 import '../view/takeAwayPage.dart'; // Import for video controller
-var selectedDeliveryIndex = (0).obs;
+var selectedDeliveryIndex = (1).obs;
 class HomeController extends GetxController {
   // Reactive variables for UI state
   var isLoading = true.obs;

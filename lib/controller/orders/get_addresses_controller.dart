@@ -32,7 +32,6 @@ class GetAddressesController extends GetxController {
       fetchSelectedAddressDetails(selectedAddress.value!.id);
     }
   }
-  // Asynchronous function to load addresses from SharedPreferences
   Future<void> loadSavedAddresses() async {
     try {
       final prefs = await SharedPreferences.getInstance();

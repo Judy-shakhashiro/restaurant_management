@@ -6,7 +6,7 @@ class LoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope( // Prevent dismissing with back button
+    return PopScope(
       canPop: false,
       child: Dialog(
         backgroundColor: Colors.transparent,

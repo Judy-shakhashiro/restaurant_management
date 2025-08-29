@@ -118,7 +118,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                           value: controller.adController.selectedAddress.value, // Use reactive value from controller
                           underline: const SizedBox(),
                           isExpanded: true,
-                          hint:  Text('${controller.adController.selectedAddress.value?.name ?? 'Select Address'}', style: TextStyle(fontSize: 20)), // Safely access name
+                          hint:  Text(controller.adController.selectedAddress.value?.name ?? 'Select Address', style: TextStyle(fontSize: 20)), // Safely access name
                           items: controller.adController.addresses.map<DropdownMenuItem<AddressInShort>>((AddressInShort address) {
                             return DropdownMenuItem<AddressInShort>(
                               value: address,

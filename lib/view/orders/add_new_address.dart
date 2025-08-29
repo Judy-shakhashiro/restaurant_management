@@ -152,7 +152,6 @@ class _AddNewAddressPageState extends State<AddNewAddressPage> {
                   _buildTextField(
                     controller: _addressController,
                     labelText: 'Full Address',
-                    readOnly: true,
                     validator: (value) {
                       if (value == null || value.isEmpty || value == 'Unknown Location' || value == 'Error fetching address' || value == 'Zoom in for address details.') {
                         return 'Please select a valid location on the map.';

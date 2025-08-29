@@ -16,7 +16,7 @@ class Order {
   final String orderNumber;
   final String status;
   final String receivingMethod;
-  final String finalPrice; // Keep as String as per your JSON, convert to double if needed for calculations
+  final String finalPrice; 
   final String createdAt;
   final int itemsCount;
 
@@ -38,7 +38,7 @@ class Order {
       orderNumber: json['order_number'],
       status: json['status'],
       receivingMethod: json['receiving_method'],
-      finalPrice: json['final_price'].toString(), // Ensure it's a string
+      finalPrice: json['final_price'].toString(), 
       createdAt: json['created_at'],
       itemsCount: json['items_count'],
     );
@@ -65,7 +65,7 @@ class OrderItem {
   final String basePrice;
   final String extraPrice;
   final String totalPrice;
-  final String? selectedAdditionalOptions; // Nullable
+  final String? selectedAdditionalOptions; 
 
   OrderItem({
     required this.name,
@@ -83,7 +83,7 @@ class OrderItem {
       basePrice: json['base_price'].toString(),
       extraPrice: json['extra_price'].toString(),
       totalPrice: json['total_price'].toString(),
-      selectedAdditionalOptions: json['selected_additional_options']?.toString(), // Handle potential null
+      selectedAdditionalOptions: json['selected_additional_options']?.toString(),
     );
   }
 
@@ -113,7 +113,7 @@ class OrderDetail {
   final double discount;
   final double finalPrice;
   final List<OrderItem> items;
-  final OrderAddress? address; // Made nullable
+  final OrderAddress? address; 
 
   OrderDetail({
     required this.id,
@@ -150,7 +150,7 @@ class OrderDetail {
       discount: double.parse(json['discount'].toString()),
       finalPrice: double.parse(json['final_price'].toString()),
       items: orderItems,
-      address:  OrderAddress.fromJson(json['address']), // Handle null address
+      address:  OrderAddress.fromJson(json['address']), 
     );
   }
 }
@@ -158,8 +158,8 @@ class OrderAddress {
   final String name;
   final String? latitude;
   final String? longitude;
-  final String? driverLatitude; // Nullable as it might not always be present
-  final String? driverLongitude; // Nullable
+  final String? driverLatitude;
+  final String? driverLongitude; 
 
   OrderAddress({
     required this.name,
@@ -174,8 +174,8 @@ class OrderAddress {
       name: json['name'],
       latitude: json['latitude']??null,
       longitude: json['longitude']??null,
-      driverLatitude: json['driver_latitude']?.toString(), // Handle potential null
-      driverLongitude: json['driver_longitude']?.toString(), // Handle potential null
+      driverLatitude: json['driver_latitude']?.toString(), 
+      driverLongitude: json['driver_longitude']?.toString(), 
     );
   }
 
@@ -244,7 +244,7 @@ class OrderService {
     // Add multiple order_notes[] fields
     if (orderNotes != null) {
       for (var note in orderNotes) {
-        request.fields.addAll({'order_notes[]': note}); // Use addAll to handle multiple entries
+        request.fields.addAll({'order_notes[]': note}); 
       }
     }
 
@@ -295,7 +295,7 @@ class OrderService {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${token}', // Add the Bearer Token
+          'Authorization': 'Bearer ${token}', 
         },
       );
 
@@ -306,7 +306,7 @@ class OrderService {
           return ordersJson.map((json) => Order.fromJson(json)).toList();
         } else {
           print('API returned success: ${jsonResponse['status']} but no orders or unexpected structure.');
-          return []; // Return an empty list if no orders or unexpected structure
+          return []; 
         }
       } else {
         print('Failed to load orders. Status code: ${response.statusCode}');

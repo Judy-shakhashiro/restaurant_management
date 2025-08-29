@@ -11,20 +11,13 @@ class Buttonlogin extends StatelessWidget {
   padding: const EdgeInsets.symmetric(horizontal: 120),
   child: Container(
     decoration: BoxDecoration(
-      gradient:LinearGradient(
-        colors: [
-          Colors.orange[300]!, // Teal-400
-          Colors.orange[700]!, // Teal-600
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.circular(10),
+      color: Colors.deepOrange,
+      borderRadius: BorderRadius.circular(50),
     ),
     child: MaterialButton(
       padding: const EdgeInsets.symmetric(vertical: 10),
       onPressed: onPressed,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -32,11 +25,11 @@ class Buttonlogin extends StatelessWidget {
             text,
             style: const TextStyle(
               fontSize: 20,
-              fontFamily: 'Georgia',
               fontWeight: FontWeight.bold,
+              color: Colors.white
             ),
           ),
-          Icon(Icons.run_circle_outlined, color: Colors.black)
+        const Icon(Icons.run_circle_outlined, color: Colors.white)
         ],
       ),
     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/controller/auth/forget_password_controller.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/forget_password/otp_verify.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/button_login.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
@@ -74,8 +75,13 @@ class Forgetpassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    LoginControllerImp controller3 = Get.put(LoginControllerImp());
-
+   final controller = Get.put(ForgetPasswordController());
+   final String? passedEmail = Get.arguments?['email'];
+    if (passedEmail != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.email.text = passedEmail;
+      });
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -91,7 +97,7 @@ class Forgetpassword extends StatelessWidget {
         backgroundColor: Colors.grey.shade400,
       ),
       body: Form( 
-        key: controller3.formstate_forget, 
+        key: controller.formstate, 
         child: ListView(
           children: [
             SizedBox(height: size.height * 0.04),
@@ -128,8 +134,9 @@ class Forgetpassword extends StatelessWidget {
             Textformlogin(
               text: 'Email',
               iconData: Icons.email_outlined,
-              mycontoller: controller3.email,
+              mycontoller: controller.email,
               isNumber: false,
+              readOnly: passedEmail != null,
               validator: (val) {
                 return validInput(val!, 5, 100, "email");
               },
@@ -138,8 +145,8 @@ class Forgetpassword extends StatelessWidget {
            Center(
              child: ElevatedButton.icon(
               onPressed: () async {
-                  if (controller3.formstate_forget.currentState!.validate()) {
-                    bool success = await ForgetServ.forget(controller3.email.text);
+                  if (controller.formstate.currentState!.validate()) {
+                    bool success = await ForgetServ.forget(controller.email.text);
                     if (success) {
                       showDialog(
                         context: context,
@@ -149,7 +156,7 @@ class Forgetpassword extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20), 
                             ),
-                            content: VerifycodeContent(email: controller3.email.text),
+                            content: VerifycodeContent(email: controller.email.text),
                           );
                         },
                       );
@@ -188,7 +195,9 @@ class Forgetpassword extends StatelessWidget {
            ),
           ],
         ),
-      ),
+      )
     );
   }
 }
+
+

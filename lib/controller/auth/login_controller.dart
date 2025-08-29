@@ -11,8 +11,6 @@ abstract class Login_Controller extends GetxController {
 class LoginControllerImp extends Login_Controller {
   
   final GlobalKey<FormState> formstate = GlobalKey<FormState>();
-  //final GlobalKey<FormState> formstate_otp = GlobalKey<FormState>();
-  final GlobalKey<FormState> formstate_forget = GlobalKey<FormState>();
   late TextEditingController password;
   late TextEditingController email;
   late TextEditingController OTP;
@@ -42,8 +40,5 @@ class LoginControllerImp extends Login_Controller {
     OTP.dispose();
     super.dispose();
   }
- 
-  
-
 
    }

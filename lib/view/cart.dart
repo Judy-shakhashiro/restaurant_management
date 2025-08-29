@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/cart_irem_updat_controller.dart';
 import 'package:flutter_application_restaurant/model/cart_details_model.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import '../core/static/routes.dart';
 import '../controller/cart_controller.dart';
 import '../controller/orders/get_addresses_controller.dart';
@@ -17,6 +18,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(CartService());
+    final Size size = MediaQuery.of(context).size;
     final CartController controller = Get.put(CartController());
 
     return Scaffold(
@@ -51,7 +53,11 @@ class CartScreen extends StatelessWidget {
         children: [
           Obx(() {
             if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
+              return   Center(
+            child:  Lottie.asset(
+              'assets/lotti/cat.json',
+              fit: BoxFit.fitHeight, 
+               width: size.width),);
             } else if (controller.isError.value) {
     // حالة وجود خطأ في الاتصال
     return Center(
@@ -215,7 +221,7 @@ class CartItemCard extends StatelessWidget {
                         width: double.infinity,
                         height: 150,
                         color: Colors.grey[200],
-                        child: const Icon(Icons.broken_image, size: 80, color: Colors.grey),
+                        child: const Icon(Icons.image_outlined, size: 80, color: Colors.grey),
                       ),
                     ),
                   ),

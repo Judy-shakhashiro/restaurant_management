@@ -7,11 +7,12 @@ class GlobalServ {
   }
    Future<String?> getToken() async {
      SharedPreferences? sharedPreferences = await SharedPreferences.getInstance();
-     token=sharedPreferences.getString('token')!;
+     token=sharedPreferences.getString('token');
     return sharedPreferences.getString('token');
   }
    Future<bool> removeToken() async {
      SharedPreferences? sharedPreferences= await SharedPreferences.getInstance();
     return await sharedPreferences.remove('token');
   }
+
 }

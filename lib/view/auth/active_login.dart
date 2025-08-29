@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/navigation_bar.dart';
 import 'package:flutter_application_restaurant/view/auth/register.dart' show Register;
+import 'package:flutter_application_restaurant/view/auth/widget/auth/login/alert_exitApp.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/button_login.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
 import '../../controller/auth/login_controller.dart';
@@ -20,13 +21,24 @@ class ActiveLogin extends StatefulWidget {
 class _ActiveLoginState extends State<ActiveLogin> {
 
   bool isChecked = false;
-  LoginControllerImp controller1 = Get.put(LoginControllerImp()); 
+//  final controller1 = Get.find<LoginControllerImp>();
+
+   @override
+  void initState() {
+  //  Get.put(LoginControllerImp());
+    super.initState();
+  }
+//  final controller1 = Get.find<LoginControllerImp>();
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: SingleChildScrollView(
+      body:WillPopScope(onWillPop: alertExitApp,child:
+      GetBuilder<LoginControllerImp>(
+      init: LoginControllerImp(),
+      builder: (controller1) {
+        return  SingleChildScrollView(
         child: Column(
           children: [
            Container(
@@ -112,12 +124,19 @@ class _ActiveLoginState extends State<ActiveLogin> {
                           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold,fontFamily: 'Georgia',),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isChecked = !isChecked;
-                               Get.to(Forgetpassword());
-                            });
-                          },
+                     onTap: () {
+                  final controller = Get.find<LoginControllerImp>();
+                  if (controller.email.text.isNotEmpty && validInput(controller.email.text, 5, 100, "email") == null) {
+      Get.to(() => const Forgetpassword(), arguments: {'email': controller.email.text});
+                      } else {
+                        Get.snackbar(
+                          'Error',
+                          'Please enter a valid email first.',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red[500],
+                        );
+                      }
+                    },
                           child: Container(
                             width: 20,
                             height: 20,
@@ -136,7 +155,7 @@ class _ActiveLoginState extends State<ActiveLogin> {
                   ),
                   const SizedBox(height: 30,),
                   Buttonlogin(
-                    text: 'Go ',
+                    text: 'Go  ',
                     onPressed: () async {
                       if(controller1.formstate.currentState!.validate()){
                       bool Success= await LoginServ.login( controller1.email.text,controller1.password.text);
@@ -168,7 +187,9 @@ class _ActiveLoginState extends State<ActiveLogin> {
             )
           ],
         ),
-      ),
-    );
+      );
+      
+   } )
+     ) );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_application_restaurant/core/static/routes.dart';
+import 'package:flutter_application_restaurant/main.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -51,7 +52,7 @@ class WalletController extends GetxController {
 
 
   final String apiUrl = '${Linkapi.backUrl}/wallet';
-  final String userToken = '2|mLa89W0gpGq3akyINXE63zBy4e2DKeOV1WcB7QGOc4d75bfc'; 
+  final String userToken = '$token'; 
 
   @override
   void onInit() {

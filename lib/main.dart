@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/controller/auth/login_controller.dart';
 import 'package:flutter_application_restaurant/view/auth/active_login.dart';
 import 'package:flutter_application_restaurant/view/auth/register.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/slider/slider.dart';
@@ -18,6 +19,7 @@ String? token;
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Get.put(LoginControllerImp(), permanent: true);
   service = Get.put(GlobalServ());
   if (await service.getToken() != null) {
     hasToken = true;
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
         home:
         // FavoritesPage()
-        WalletView()
+        ActiveLogin()
        
     //  hasToken==true? const MyHomePageScreen():SliderBeg()
 

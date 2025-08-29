@@ -211,8 +211,8 @@ class Register extends StatelessWidget {
                       ),),
                     const SizedBox(height: 20),
                     Buttonlogin(
-                        text: "Let's go",
-                        color: const Color(0xFFFFFEE58), // Changed to const
+                        text: "Let's go  ",
+                     //   color: const Color(0xFFFFFEE58), // Changed to const
                         onPressed: () async{
 
                           if (controller1.formstate.currentState!.validate()) {

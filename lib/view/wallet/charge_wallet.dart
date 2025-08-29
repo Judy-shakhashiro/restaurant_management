@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
+import 'package:flutter_application_restaurant/main.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +16,7 @@ class ChargeController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   final String apiUrl = '${Linkapi.backUrl}/wallet/charge';
-  final String userToken = '2|mLa89W0gpGq3akyINXE63zBy4e2DKeOV1WcB7QGOc4d75bfc';
+  final String userToken = '$token';
 
   Future<void> pickProofImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -48,19 +49,17 @@ class ChargeController extends GetxController {
 
       if (response.statusCode == 201) {
         Get.snackbar(
-          'تم بنجاح',
+          'Success ',
           'تم إرسال طلب الشحن بنجاح، بانتظار الموافقة.',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
-          colorText: Colors.white,
         );
       } else {
         Get.snackbar(
-          'خطأ',
-          'فشل إرسال الطلب. رمز الخطأ: ${response.statusCode}',
+          'Alert',
+          ' ${response.statusCode}',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: Colors.red[500],
         );
       }
     } catch (e) {

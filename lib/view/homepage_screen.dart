@@ -1,5 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/controller/profile_controller.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
+import 'package:flutter_application_restaurant/services/log_out_service.dart';
 import 'package:flutter_application_restaurant/view/faq_page.dart';
 import 'package:flutter_application_restaurant/view/menu_page.dart';
 import 'package:flutter_application_restaurant/view/my_addresses.dart';
@@ -7,6 +10,8 @@ import 'package:flutter_application_restaurant/view/profile/profile_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:flutter_application_restaurant/view/favorite_page.dart';
+import 'package:flutter_application_restaurant/view/wallet/test_wallet.dart';
+import 'package:lottie/lottie.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
 import '../controller/menu_controller.dart';
@@ -26,6 +31,7 @@ class Homepage extends StatelessWidget {
   Homepage({super.key});
   final WishlistController favoriteController = Get.put(WishlistController());
   final HomeController controller = Get.put(HomeController());
+  final ProfileController cont = Get.put(ProfileController());
   final GetAddressesController adController=Get.put(GetAddressesController(),permanent: true);
   final List<Map<String, dynamic>> deliveryCategories = [
     {'title': 'delivery', 'icon': Icons.delivery_dining_sharp,'page':()=>const DeliveryLocationPage()},
@@ -37,6 +43,11 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    final profile = cont.profile.value;
+          final String? fullImageUrl = profile?.image != null
+              ? "${Linkapi.bacUrlImage}${profile?.image}"
+              : null;
     return Scaffold(
       backgroundColor: Colors.white,
         appBar: AppBar(
@@ -90,7 +101,7 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
                       child: Text(
                         adController.selectedAddressDetails.value?.label ?? '',
                         style: const TextStyle(color: Colors.grey, fontSize: 18),
-                        overflow: TextOverflow.ellipsis, // Prevents text overflow in the title
+                        overflow: TextOverflow.ellipsis, 
                       ),
                     );
                   }),
@@ -99,35 +110,58 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
             ),
           ),
         ),
-        endDrawer: Drawer(
-          backgroundColor: Colors.white,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.deepOrange,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 40, color: Colors.deepOrange),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'User Profile',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                endDrawer: Drawer(
+                  backgroundColor: Colors.white,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      DrawerHeader(
+                      decoration: const BoxDecoration(
+                        color: Colors.deepOrange,
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                      child: Obx(() {
+                        final profileData = cont.profile.value; 
+                        final fullImageUrl = profileData?.image != null
+                            ? "${Linkapi.bacUrlImage}${profileData?.image}"
+                            : null;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipOval(
+                            child: Container(
+                              color: Colors.white,
+                              width: 80,
+                              height: 80,
+                              child: fullImageUrl != null
+                                  ? Image.network(
+                                      fullImageUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) =>
+                                        const  Icon(Icons.person,
+                                              size: 60, color: Colors.deepOrange),
+                                    )
+                                  : const Icon(
+                                      Icons.person,
+                                      size: 60,
+                                      color: Colors.deepOrange,
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            '${profileData?.firstName ?? ""} ${profileData?.lastName ?? ""}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+
               _buildDrawerItem(
                 icon: Icons.person,
                 title: 'Profile',
@@ -142,17 +176,14 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
                 icon: Icons.location_on,
                 title: 'My Addresses',
                 onTap: () {
-                  // Navigate to the addresses page
                Get.to(const AddressesPage());
-                  // We're already here, so no navigation needed.
                 },
               ),
               _buildDrawerItem(
                 icon: Icons.favorite,
                 title: 'Favourites',
                 onTap: () {
-                  // Navigate to the favourites page
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.pop(context); 
                   Get.to(() => FavoritesPage());
                 },
               ),
@@ -160,34 +191,69 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
                 icon: Icons.bookmark,
                 title: 'Reservations',
                 onTap: () {
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.pop(context);
                   Get.to(() => ReservationsListView());
+                },
+              ),
+              _buildDrawerItem(
+                icon: Icons.wallet_outlined,
+                title: 'My Wallet',
+                onTap: () {
+                  Navigator.pop(context); 
+                  Get.to(() => const WalletView());
                 },
               ),
               _buildDrawerItem(
                 icon: Icons.help,
                 title: 'FAQ',
                 onTap: () {
-
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.pop(context); 
                 Get.to(()=>const FaqView());
                 },
+              ),
+              _buildDrawerItem(
+                icon: Icons.logout_rounded,
+                title: 'Log Out ',
+                onTap: () {
+                  Navigator.pop(context); 
+                  logout_service() ;
+                  
+                }
               ),
             ],
           ),
         ),
       body: Obx(() {
-        // This outer Obx only reacts to isLoading and errorMessage
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return  MyLottiNodata();
         }
         if (controller.errorMessage.value != null) {
           return Center(
-            child: Text(
-              controller.errorMessage.value!,
-              style: const TextStyle(color: Colors.red, fontSize: 16),
-            ),
-          );
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Please try again.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18, color: Colors.red)
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                   onPressed: () {
+                      controller.fetchInitialData();
+                        }, // Retry fetch
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Retry'),
+                  
+                ),
+                    ],
+                  ),
+                );
         }
 
         final HomeModel? homeData = controller.homeData.value;
@@ -435,12 +501,12 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
       ),
     );
   }
-  // Helper function to build a drawer item
   Widget _buildDrawerItem({
     required IconData icon,
     required String title,
     required VoidCallback onTap,
-  }) {
+  }) 
+  {
     return ListTile(
       leading: Icon(icon, color: Colors.deepOrange),
       title: Text(title),
@@ -452,17 +518,16 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
   Widget ProductCard(BuildContext context,ProductHome product) {
     bool isExpanded = false;
     bool isFavorite = false;
-    // Get the existing controller instance instead of creating a new one
     final WishlistController wishlistController = Get.find<WishlistController>();
 
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
         width: 260,
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        margin:const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          boxShadow:  [BoxShadow(color: Colors.grey, blurRadius: 8,)],
+          boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 8,)],
           color: Colors.white,
         ),
         child: InkWell(
@@ -473,17 +538,25 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  '${Linkapi.backUrl}/images/${product.image}',
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+             Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: Image.network(
+                      '${Linkapi.bacUrlImage}${product.image}',
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: double.infinity,
+                        height: 190,
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.image_outlined, size: 80, color: Colors.grey),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
               Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5  ),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -504,7 +577,6 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
                               color: isFav ? Colors.red : Colors.grey,
                             ),
                             onPressed: () async {
-                              // Use the fetched instance
                               await wishlistController.toggleFavorite(product.id);
                             },
                           );

@@ -2,6 +2,7 @@ import 'package:animated_background/animated_background.dart';
 import 'package:animated_background/particles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/profile_controller.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/auth/login/textform_login.dart';
 import 'package:get/get.dart';
@@ -44,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage>
         ),
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return const MyLottiLoading();
           }
           if (controller.errorMessage.isNotEmpty) {
             return Center(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/favourite_controller.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/view/dish_details.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_restaurant/model/favorite_model.dart';
@@ -99,12 +100,11 @@ class _FavoritesPageState extends State<FavoritesPage> with SingleTickerProvider
           ),
           Expanded(
             child: Obx(() {
-              // 1. حالة التحميل
+
               if (wishlistController.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
+                return MyLottiFavorite();
               }
-            
-              // 2. حالة الخطأ
+
               if (wishlistController.hasError.value) {
                 return Center(
                   child: Column(
@@ -134,12 +134,10 @@ class _FavoritesPageState extends State<FavoritesPage> with SingleTickerProvider
                 );
               }
 
-              // 3. حالة القائمة الفارغة
               if (wishlistController.favoriteProducts.isEmpty) {
-                return const Center(child: Text('لا يوجد منتجات في المفضلة '));
+                return MyLottiNodata();
               }
 
-              // 4. حالة عرض البيانات
               List<ProductFavorite> favorites = wishlistController.favoriteProducts.toList();
               if (sortByPrice) {
                 favorites.sort((a, b) => a.price.compareTo(b.price));
@@ -208,9 +206,7 @@ class _FavoritesPageState extends State<FavoritesPage> with SingleTickerProvider
                                 height: 120,
                                 width: 120,
                                 child:  Center(
-                                  child: CircularProgressIndicator(
-                                     color: Colors.deepOrange,
-                                                        ),
+                                  child: MyLottiMario()
                                 ),
                               );
                                   },

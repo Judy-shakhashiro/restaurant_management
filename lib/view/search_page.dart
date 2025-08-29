@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/view/widgets/dish_item.dart';
 import 'package:get/get.dart';
 
@@ -96,7 +97,7 @@ class SearchPage extends StatelessWidget {
                   child: Obx(() {
                     // 1) No query yet → show center animation
                     if (ctrl.query.value.isEmpty|| ctrl.query.value.length<3) {
-                      return Center(
+                      return const Center(
                         child: Icon(Icons.search,size: 50,),
                         // child: Lottie.asset(
                         //   'assets/animations/search.json',
@@ -110,7 +111,7 @@ class SearchPage extends StatelessWidget {
                     // 2) Searching → spinner
                     if (ctrl.isLoading.value) {
                       return const Center(
-                        child: CircularProgressIndicator(),
+                        child: MyLottiLoading(),
                       );
                     }
                     // 3) Show results (or “no results”)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/view/orders/delivery_location.dart';
 import 'package:get/get.dart';
 import '../../controller/orders/get_addresses_controller.dart';
@@ -30,7 +31,13 @@ class _AddressesPageState extends State<AddressesPage> {
       ),
       body: Obx(() {
         if (adController.addresses.isEmpty) {
-          return const Center(child: Text('No addresses found. Add a new one!'));
+          return const Column(
+            children: [
+              MyLottiNodata(),
+              Text('No addresses found. Add a new one!')
+            ],
+          )
+          ;
         } else {
           return ListView.builder(
             itemCount: adController.addresses.length,

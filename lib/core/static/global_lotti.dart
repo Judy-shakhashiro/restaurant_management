@@ -16,21 +16,25 @@ class MyLottiHumb extends StatelessWidget {
     );
   }
 }
-class MyLottiCat extends StatelessWidget {
-  const MyLottiCat({Key? key}) : super(key: key);
+
+
+class MyLottiLoading extends StatelessWidget {
+  const MyLottiLoading({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Lottie.asset(
-        'assets/lotti/cat.json',
+        'assets/lotti/Potato.json',
         fit: BoxFit.cover,
-        width: 150,
-        height: 160,
+        width: 200,
+        height: 200,
       ),
     );
   }
 }
+
+
 class MyLottiNodata extends StatelessWidget {
   const MyLottiNodata({Key? key}) : super(key: key);
 
@@ -38,7 +42,39 @@ class MyLottiNodata extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Lottie.asset(
-        'assets/lotti/sad.json',
+        'assets/lotti/Empty State.json',
+        fit: BoxFit.cover,
+        width: 250,
+        height: 250,
+      ),
+    );
+  }
+}
+
+class MyLottiFavorite extends StatelessWidget {
+  const MyLottiFavorite({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Lottie.asset(
+        'assets/lotti/favorite.json',
+        fit: BoxFit.cover,
+        width: 250,
+        height: 250,
+      ),
+    );
+  }
+}
+
+class MyLottiMario extends StatelessWidget {
+  const MyLottiMario({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Lottie.asset(
+        'assets/lotti/mario.json',
         fit: BoxFit.cover,
         width: 250,
         height: 250,

@@ -19,7 +19,7 @@ class CreateOrderPage extends StatefulWidget {
 
 class _CreateOrderPageState extends State<CreateOrderPage> {
 
-  final CheckoutController controller = Get.put(CheckoutController()); // Initialize or find the controller
+  final CheckoutController controller = Get.put(CheckoutController()); 
 
   @override
   void initState() {
@@ -152,7 +152,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded( // Use Expanded to prevent overflow
+                            Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 16.0),
                                 child: Text(

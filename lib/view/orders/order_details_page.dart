@@ -1,5 +1,6 @@
 // lib/view/order_detail_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_map/flutter_map.dart' as lat_long2;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,13 +24,13 @@ class OrderDetailPage extends StatelessWidget {
       ),
       body: Obx(() {
         if (orderDetailController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator(color: Colors.deepOrange));
+          return const MyLottiLoading();
         } else if (orderDetailController.hasError.value) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Failed to load order details.', style: TextStyle(fontSize: 18, color: Colors.red)),
+                const Text('Please try again', style: TextStyle(fontSize: 18, color: Colors.red)),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () => orderDetailController.fetchOrderDetail(orderId),
@@ -43,12 +44,7 @@ class OrderDetailPage extends StatelessWidget {
             ),
           );
         } else if (orderDetailController.orderDetail.value == null) {
-          return const Center(
-            child: Text(
-              'No order details found.',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-          );
+          return const MyLottiNodata();
         } else {
           final OrderDetail order = orderDetailController.orderDetail.value!;
           bool isCancelled =orderDetailController.orderDetail.value!.status=='cancelled'?true:false;

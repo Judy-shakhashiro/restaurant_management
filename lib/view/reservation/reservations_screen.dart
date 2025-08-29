@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/core/static/routes.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/view/reservation/confirm_reservation_screen.dart';
-import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../../controller/reservations/reservation_controller.dart';
 import '../../controller/reservations/reservations_list_controller.dart';
-import '../../controller/reservations/reservations_list_controller.dart';
-import '../../navigation_bar.dart';
+
 
 
 class ReservationsView extends StatelessWidget {
@@ -44,17 +41,38 @@ class ReservationsView extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Obx(() {
-          // The UI rebuilds automatically when any observable in the controller changes.
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (controller.errorMessage.value != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    controller.errorMessage.value!,
-                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                  child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Please try again.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18, color: Colors.red)
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                   onPressed: () {
+                      controller.fetchAvailableDates();
+                        }, // Retry fetch
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
                   ),
+                  child: const Text('Retry'),
+                  
+                ),
+                    ],
+                  ),
+                )
                 ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,38 +136,37 @@ class ReservationsView extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               if (controller.isLoading.value)
-                const Center(child: CircularProgressIndicator(color: Color(0xFFFF6200)))
+                const MyLottiLoading()
               else
 
-  Card(
-    elevation: 10,
-    //Theme.of(context).cardColor
-    color: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
-      side: const BorderSide(color: Colors.black54, width: 2),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-      child: TableCalendar(
-        firstDay: DateTime.utc(2020, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: controller.focusedDay.value,
-        selectedDayPredicate: (day) => isSameDay(controller.selectedDay.value, day),
-      onDaySelected: (selectedDay, focusedDay) {
+          Card(
+            elevation: 10,
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: const BorderSide(color: Colors.black54, width: 2),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+              child: TableCalendar(
+                firstDay: DateTime.utc(2020, 1, 1),
+                lastDay: DateTime.utc(2030, 12, 31),
+                focusedDay: controller.focusedDay.value,
+                selectedDayPredicate: (day) => isSameDay(controller.selectedDay.value, day),
+              onDaySelected: (selectedDay, focusedDay) {
 
-  if (controller.isDayAvailable(selectedDay)) {
-    controller.updateSelectedDay(selectedDay, focusedDay);
-  } else {
-    Get.snackbar(
-      'Alert',
-      'This day is not available for booking.',
-      backgroundColor: Colors.red,
-      snackPosition: SnackPosition.BOTTOM,
-      icon: const Icon(Icons.info_outline, color: Colors.white),
-    );
-  }
-},
+          if (controller.isDayAvailable(selectedDay)) {
+            controller.updateSelectedDay(selectedDay, focusedDay);
+          } else {
+            Get.snackbar(
+              'Alert',
+              'This day is not available for booking.',
+              backgroundColor: Colors.red,
+              snackPosition: SnackPosition.BOTTOM,
+              icon: const Icon(Icons.info_outline, color: Colors.white),
+            );
+          }
+        },
         onPageChanged: (focusedDay) {
           controller.focusedDay.value = focusedDay;
           controller.resetSelectionsIfNeeded(focusedDay);
@@ -291,7 +308,7 @@ class ReservationsView extends StatelessWidget {
                 ),
               if (controller.selectedDay.value != null && controller.selectedGuests.value != null && controller.selectedDuration.value != null)
                 if (controller.timeSlots.value == null)
-                  const Center(child: CircularProgressIndicator(color: Color(0xFFFF6200)))
+                  const MyLottiLoading()
                 else
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

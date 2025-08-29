@@ -37,13 +37,13 @@ class _ResetpasswordState extends State<Resetpassword> {
         body: ListView(
           children: [
             // SizedBox(height: size.height * 0.02),
-            Lottie.asset('assets/lotti/reserpass.json',
+            Lottie.asset('assets/lotti/login with account.json',
                 fit: BoxFit.fitHeight, height: size.height * 0.3, width: size.width),
             // Image.asset('assets/new-password/reset.jpg',
             //   height: size.height*0.22,
             //   width: size.width*0.22,               
             //     ),
-            const SizedBox(height: 10),
+           // const SizedBox(height: 10),
             const Text(
               'Enter New Password',
               textAlign: TextAlign.center,
@@ -62,7 +62,7 @@ class _ResetpasswordState extends State<Resetpassword> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Your new password must be differnt \n from previously used password',
+              'Your new password must be differnt from previously used password',
               textAlign: TextAlign.center,
               style: TextStyle(
               color:Colors.black54,

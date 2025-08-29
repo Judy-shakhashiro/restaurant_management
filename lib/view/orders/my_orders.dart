@@ -1,5 +1,6 @@
 // lib/view/my_orders.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:get/get.dart';
 import '../../controller/orders/order_list_controller.dart';
 import '../../services/order_service.dart';
@@ -18,7 +19,7 @@ class OrdersPage extends StatelessWidget {
       ),
       body: Obx(() {
         if (orderController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator(color: Colors.deepOrange));
+          return const MyLottiLoading();
         } else if (orderController.hasError.value) {
           return Center(
             child: Column(
@@ -40,15 +41,10 @@ class OrdersPage extends StatelessWidget {
             ),
           );
         } else if (orderController.orders.isEmpty) {
-          return const Center(
-            child: Text(
-              'You have no orders yet.',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-          );
+          return const MyLottiNodata();
         } else {
           return RefreshIndicator(
-            onRefresh: () => orderController.refreshOrders(), // Pull to refresh
+            onRefresh: () => orderController.refreshOrders(), 
             color: Colors.deepOrange,
             child: ListView.builder(
               itemCount: orderController.orders.length,
@@ -60,7 +56,7 @@ class OrdersPage extends StatelessWidget {
                 bool isPending = order.status.toLowerCase() == 'pending';
                 return GestureDetector(
                   onTap: () {
-                    Get.to(() => OrderDetailPage(orderId: order.id)); // Pass the order ID
+                    Get.to(() => OrderDetailPage(orderId: order.id)); 
                   },
                   child: Card(
                     margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

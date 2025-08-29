@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/cart_irem_updat_controller.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/model/cart_details_model.dart';
+import 'package:flutter_application_restaurant/view/menu_page.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../core/static/routes.dart';
@@ -14,13 +16,11 @@ import 'orders/delivery_location.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
-    Get.put(CartService());
     final Size size = MediaQuery.of(context).size;
     final CartController controller = Get.put(CartController());
-
+    //controller.fetchCartItems();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -49,22 +49,18 @@ class CartScreen extends StatelessWidget {
         centerTitle: false,
       ),
       body: Stack(
-        alignment: Alignment.center, // Align children to the center
+        alignment: Alignment.center, 
         children: [
           Obx(() {
             if (controller.isLoading.value) {
-              return   Center(
-            child:  Lottie.asset(
-              'assets/lotti/cat.json',
-              fit: BoxFit.fitHeight, 
-               width: size.width),);
-            } else if (controller.isError.value) {
-    // حالة وجود خطأ في الاتصال
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, color: Colors.red, size: 60),
+              return   MyLottiLoading();
+            } 
+            else if (controller.isError.value) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, color: Colors.red, size: 60),
                       const SizedBox(height: 20),
                       const Text(
                         'Please try again.',
@@ -87,28 +83,28 @@ class CartScreen extends StatelessWidget {
       ),
     );
   } else if (controller.cartItems.isEmpty) {
-    // حالة السلة فارغة                         لا تنسي اللوتي هون
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.shopping_cart_outlined,
-            color: Colors.deepOrange,
-            size: 60,
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'سلتك فارغة!',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: Colors.grey),
-          ),
-          const SizedBox(height: 20),
+        const  MyLottiNodata(),
+          //const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              Get.back();
+            onPressed: () async{
+              await Get.to(() => MenuPage()); 
+    final controller = Get.find<CartController>();
+    controller.fetchCartItems();
             },
-            child: const Text('ابدأ بالتسوق'),
+            style: ElevatedButton.styleFrom(
+             backgroundColor:  Colors.deepOrange,
+             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            shape: RoundedRectangleBorder(
+             borderRadius: BorderRadius.circular(50),
+                              ),
+                            foregroundColor: Colors.white,
+                             side:const BorderSide(color: Colors.deepOrange,width: 1.5)
+                          ),
+            child: const Text('start shopping '),
           ),
         ],
       ),
@@ -391,13 +387,15 @@ class CartItemCard extends StatelessWidget {
                       
           
          ElevatedButton.icon(
-             onPressed: () {
-                  if(adController.addresses.value.isNotEmpty) {
-                    Get.to(() => const CreateOrderPage());
+             onPressed: () async {
+                  if(adController.addresses.value.isNotEmpty)  {
+                   await  Get.to(() => const CreateOrderPage());
+                    controller.fetchCartItems();
                   }
 
                   else{
                     Get.to( ()=>const DeliveryLocationPage());
+                    controller.fetchCartItems();
                   }
                 },
             icon: const Icon(Icons.shopping_cart, color: Colors.black),

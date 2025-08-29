@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:get/get.dart';
 import '../controller/faq_controller.dart';
 import '../model/faq_model.dart';
@@ -136,11 +137,7 @@ class FaqView extends StatelessWidget {
       body: Obx(() {
         // Check for loading state.
         if (faqController.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-            ),
-          );
+          return MyLottiLoading();
         }
 
         if (faqController.errorMessage.isNotEmpty) {
@@ -162,7 +159,7 @@ class FaqView extends StatelessWidget {
                   icon: const Icon(Icons.refresh),
                   label: const Text('Try Again'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE74C3C), // A bold red color
+                    backgroundColor: const Color(0xFFE74C3C), 
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -177,12 +174,7 @@ class FaqView extends StatelessWidget {
 
         // Check if the list of FAQs is empty.
         if (faqController.faqs.isEmpty) {
-          return const Center(
-            child: Text(
-              'No FAQs available at the moment.',
-              style: TextStyle( fontSize: 16),
-            ),
-          );
+          return MyLottiNodata();
         }
 
         // Wrap the ListView in a RefreshIndicator for pull-to-refresh functionality.

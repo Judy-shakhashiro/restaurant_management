@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../controller/orders/delivery_controller.dart';
@@ -62,14 +63,10 @@ class _DeliveryLocationPageState extends State<DeliveryLocationPage> {
               children: [
                 Obx(() {
                   if (controller.isLoadingLocation.value) {
-                    return const Center(child: CircularProgressIndicator(color: Colors.deepOrange,));
+                    return const MyLottiLoading();
                   }
                   if (controller.selectedMapLocation.value == null) {
-                    return const Center(
-                      child: Text(
-                        'Could not load map. Please check location permissions.',
-                      ),
-                    );
+                    return const MyLottiNodata();
                   }
                   return GoogleMap(
                     mapType: MapType.normal,

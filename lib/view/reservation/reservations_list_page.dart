@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/view/reservation/confirm_reservation_screen.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:get/get.dart';
@@ -38,25 +39,38 @@ class ReservationsListView extends StatelessWidget {
         body: Obx(() {
           if (controller.isLoading.value) {
             // Show a loading spinner while data is being fetched.
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.deepOrange,),
-            );
+            return const MyLottiLoading();
           } else if (controller.errorMessage.isNotEmpty) {
 
             return Center(
-              child: Text(
-                controller.errorMessage.value,
-                style: const TextStyle(color: Colors.red, fontSize: 16),
-              ),
-            );
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Please try again.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18, color: Colors.red)
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                   onPressed: () {
+                      controller.fetchReservations();
+                        }, // Retry fetch
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Retry'),
+                  
+                ),
+                    ],
+                  ),
+                );
           } else if (controller.categorizedReservations.isEmpty) {
             // Handle the case where there are no reservations.
-            return const Center(
-              child: Text(
-                'No reservations found.',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-            );
+            return MyLottiNodata();
           } else {
             // Display the list of reservations using a TabBarView
             return TabBarView(

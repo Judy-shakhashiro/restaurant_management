@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_restaurant/controller/cart_controller.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/core/static/routes.dart';
 import 'package:get/get.dart';
 
@@ -130,7 +132,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
     return Obx(() {
       if (controller.isLoading.value) {
         return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
+          body: Center(child: MyLottiLoading()),
         );
       }
 
@@ -166,7 +168,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
       final dishDetails = controller.dishDetails.value;
       if (dishDetails == null || _tabController == null) {
         return const Scaffold(
-          body: Center(child: Text('Dish details not available or still initializing.')),
+          body: MyLottiNodata()
         );
       }
 
@@ -238,7 +240,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
                                   width: 400, 
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) => const Icon(
-                                    Icons.image_not_supported,
+                                    Icons.image_outlined,
                                     size: 120,
                                     color: Colors.grey,
                                   ),
@@ -358,7 +360,7 @@ class _DetailsState extends State<DishDetailsPage> with TickerProviderStateMixin
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          Icon(Icons.arrow_forward,color: Colors.black,),
+         const Icon(Icons.arrow_forward,color: Colors.black,),
           Text(
             title,
             style:const  TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color:  Colors.black),
@@ -754,7 +756,9 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
           ),
          ElevatedButton.icon(
             onPressed: () async { 
+              final cartController = Get.find<CartController>();
               await controller.addToCart(); 
+              cartController.fetchCartItems();
             },
             icon: const Icon(Icons.shopping_cart, color: Colors.black),
             label: const Text(

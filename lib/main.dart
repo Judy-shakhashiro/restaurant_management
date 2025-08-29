@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/auth/login_controller.dart';
 import 'package:flutter_application_restaurant/view/auth/active_login.dart';
+import 'package:flutter_application_restaurant/view/auth/forget_password/reset_password.dart';
 import 'package:flutter_application_restaurant/view/auth/register.dart';
 import 'package:flutter_application_restaurant/view/auth/widget/slider/slider.dart';
 import 'package:flutter_application_restaurant/view/homepage_screen.dart';
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
         home:
         // FavoritesPage()
-        ActiveLogin()
+        MyHomePageScreen()
        
     //  hasToken==true? const MyHomePageScreen():SliderBeg()
 

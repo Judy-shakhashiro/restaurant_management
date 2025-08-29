@@ -225,7 +225,7 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
         ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return  MyLottiNodata();
+          return MyLottiLoading();
         }
         if (controller.errorMessage.value != null) {
           return Center(
@@ -260,7 +260,7 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
         final CategoriesResponse? categoriesResponse = controller.categoriesData.value;
 
         if (homeData == null || categoriesResponse == null) {
-          return const Center(child: Text('No data available.'));
+          return MyLottiNodata();
         }
     return SingleChildScrollView(
           child: Padding(
@@ -377,7 +377,7 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
                   )
                       : const SizedBox(
                     height: 200,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(child: MyLottiMario()),
                   );
                 }),
 
@@ -455,20 +455,29 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
             child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 4)],
-                    border: Border.all(
-                        color: isSelected ? Colors.deepOrange : Colors.transparent, width: 3),
-                    color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
-                  ),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: NetworkImage('${Linkapi.backUrl}/images/${c.image}'),
-                    backgroundColor: Colors.transparent,
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 4)],
+                  border: Border.all(
+                    color: isSelected ? Colors.deepOrange : Colors.transparent, width: 3),
+                  color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
+                ),
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: Image.network(
+                      "${Linkapi.bacUrlImage}${c.image}",
+                      fit: BoxFit.cover,
+                      width: 80, 
+                      height: 80, 
+                      errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.image_outlined, color: Colors.grey),
+                    ),
                   ),
                 ),
+              ),
                 const SizedBox(height: 6),
                 SizedBox(
                   width: 80,
@@ -540,20 +549,33 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
             children: [
              Center(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: Image.network(
-                      '${Linkapi.bacUrlImage}${product.image}',
-                      width: double.infinity,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                ),
+                                child: Image.network(
+                                  '${Linkapi.bacUrlImage}${product.image}',
+                                  width: double.infinity,
                       height: 200,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const SizedBox(
+                                height: 120,
+                                width: 120,
+                                child:  Center(
+                                  child: MyLottiMario()
+                                ),
+                              );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) => Container(
                         width: double.infinity,
                         height: 190,
                         color: Colors.grey[200],
                         child: const Icon(Icons.image_outlined, size: 80, color: Colors.grey),
                       ),
-                    ),
-                  ),
+                                ),
+                              ),
                 ),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5  ),

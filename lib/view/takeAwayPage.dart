@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_restaurant/controller/home_controller.dart';
+import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/view/widgets/top_categories.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -212,7 +213,7 @@ class _TakeawayAndMapPageState extends State<TakeawayAndMapPage> {
               child:
               Obx(() {
                 if (controller.deliveryController.isLoadingLocation.value) {
-                  return const Center(child: CircularProgressIndicator(color: Colors.deepOrange,));
+                  return MyLottiLoading();
                 }
                 if (controller.deliveryController.selectedMapLocation.value == null) {
                   return const Center(

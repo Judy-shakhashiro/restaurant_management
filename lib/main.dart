@@ -19,7 +19,7 @@ String? token;
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(LoginControllerImp(), permanent: true);
+  Get.put(LoginControllerImp());
   service = Get.put(GlobalServ());
   if (await service.getToken() != null) {
     hasToken = true;
@@ -50,15 +50,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
             useMaterial3: true,
             scaffoldBackgroundColor: Colors.white, dialogTheme: const DialogThemeData(backgroundColor: Colors.white,)),
-        home:
-        // FavoritesPage()
-        ActiveLogin()
-       
-    //  hasToken==true? const MyHomePageScreen():SliderBeg()
-
-       // Register()
-
-     
+        home: hasToken==true? const MyHomePageScreen():SliderBeg()
 
     );
   }

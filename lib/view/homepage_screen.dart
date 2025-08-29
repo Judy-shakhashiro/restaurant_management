@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/profile_controller.dart';
 import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/services/log_out_service.dart';
+import 'package:flutter_application_restaurant/view/auth/active_login.dart';
 import 'package:flutter_application_restaurant/view/faq_page.dart';
 import 'package:flutter_application_restaurant/view/menu_page.dart';
 import 'package:flutter_application_restaurant/view/my_addresses.dart';
@@ -22,6 +23,7 @@ import '../controller/favourite_controller.dart';
 import '../controller/home_controller.dart';
 import '../model/category_model.dart';
 import '../model/home_page_model.dart';
+import 'auth/widget/slider/slider.dart';
 import 'cart.dart';
 import 'orders/delivery_location.dart';
 import 'dish_details.dart';
@@ -215,8 +217,8 @@ final MyMenuController menuController=Get.put(MyMenuController(),permanent: true
                 icon: Icons.logout_rounded,
                 title: 'Log Out ',
                 onTap: () {
-                  Navigator.pop(context); 
-                  logout_service() ;
+                  logout_service();
+                  //Get.off(()=>SliderBeg());
                   
                 }
               ),

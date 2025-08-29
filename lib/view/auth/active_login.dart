@@ -28,6 +28,11 @@ class _ActiveLoginState extends State<ActiveLogin> {
   //  Get.put(LoginControllerImp());
     super.initState();
   }
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
 //  final controller1 = Get.find<LoginControllerImp>();
 
   @override
@@ -99,6 +104,7 @@ class _ActiveLoginState extends State<ActiveLogin> {
                   ),
                   const SizedBox(height: 40,),
                   GetBuilder<LoginControllerImp>(
+                    init: LoginControllerImp(),
                     builder: (controller) => Textformlogin(
                       validator: (val) {
                         return validInput(val!, 8, 30, "password");
@@ -160,7 +166,7 @@ class _ActiveLoginState extends State<ActiveLogin> {
                       if(controller1.formstate.currentState!.validate()){
                       bool Success= await LoginServ.login( controller1.email.text,controller1.password.text);
                       if(Success){
-                      Get.to(MyHomePageScreen());
+                      Get.offAll(const MyHomePageScreen());
                       }
                       }
                     },

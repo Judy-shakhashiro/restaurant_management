@@ -12,7 +12,7 @@ class CheckoutController extends GetxController{
   final RxMap deliveryInstructions = {}.obs;
   final List<String> orderTypes = [
     'Delivery',
-    'Pick Up',
+    'Pick_Up',
   ];
   // Make selectedOrderType reactive
   RxString selectedOrderType=RxString('');
@@ -22,7 +22,7 @@ class CheckoutController extends GetxController{
       selectedOrderType = 'Delivery'.obs;
     }
     else{
-      selectedOrderType = 'Pick Up'.obs;
+      selectedOrderType = 'Pick_Up'.obs;
     }
     getCheckoutDetails();
     ever(selectedOrderType, (_) {
@@ -63,14 +63,15 @@ class CheckoutController extends GetxController{
     }
 
     bool success = await service.createOrder(
-      receivingMethod: receivingMethod.toLowerCase(), // Ensure 'delivery' or 'pick_up'
+      receivingMethod: receivingMethod.toLowerCase(),
       paymentMethod: paymentMethod,
-      orderNotes: notes.isEmpty ? null : notes, // Pass null if no notes, or the list
-      addressId: addressId!, // Ensure it's not null if receivingMethod is 'delivery'
+      orderNotes: notes.isEmpty ? null : notes,
+      addressId: addressId!,
     );
 
     if (success) {
     } else {
+      print('paye $receivingMethod');
       Get.snackbar('Error', 'Failed to create order. Please try again.', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
     }
   }

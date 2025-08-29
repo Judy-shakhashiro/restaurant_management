@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class Otp_verify extends StatelessWidget {
   
    Otp_verify({super.key});
-  LoginControllerImp controller2 = Get.put(LoginControllerImp());
+ // LoginControllerImp controller2 = Get.put(LoginControllerImp());
   @override
   Widget build(BuildContext context) {
     return  OtpTextField(
@@ -24,7 +24,7 @@ class Otp_verify extends StatelessWidget {
               //handle validation or checks here           
           },
       onSubmit: (String verificationCode)async{
-          bool success = await VerifyServ.verify(controller2.email.text,verificationCode);
+          bool success = await VerifyServ.verify('controller2.email.text',verificationCode);
           if (success) {
             print('kkkkkkkkkkkkkobject');
               Get.to(Resetpassword());

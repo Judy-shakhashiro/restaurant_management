@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_restaurant/controller/cart_irem_updat_controller.dart';
 import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
+import 'package:flutter_application_restaurant/controller/home_controller.dart';
 import 'package:flutter_application_restaurant/model/cart_details_model.dart';
 import 'package:flutter_application_restaurant/view/menu_page.dart';
 import 'package:get/get.dart';
@@ -349,7 +350,7 @@ class CartItemCard extends StatelessWidget {
   }
 }
   
- Widget _buildCheckoutBar(CartController controller) {
+ Widget _buildCheckoutBar(CartController controller,) {
   final adController=Get.put(GetAddressesController());
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -388,9 +389,8 @@ class CartItemCard extends StatelessWidget {
           
          ElevatedButton.icon(
              onPressed: () async {
-                  if(adController.addresses.value.isNotEmpty)  {
+                  if(adController.addresses.value.isNotEmpty||selectedDeliveryIndex.value!=0)  {
                    await  Get.to(() => const CreateOrderPage());
-                    controller.fetchCartItems();
                   }
 
                   else{

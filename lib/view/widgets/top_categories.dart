@@ -51,7 +51,10 @@ Widget buildCategoryRow(BuildContext context,HomeController controller) {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: GestureDetector(
-                    onTap: () => controller.selectDeliveryCategory(index),
+                    onTap: () {
+                      controller.selectDeliveryCategory(index);
+                      Get.to(controller.deliveryCategories[index]['page']);
+                    },
                     child: Column(
                       children: [
                         Container(

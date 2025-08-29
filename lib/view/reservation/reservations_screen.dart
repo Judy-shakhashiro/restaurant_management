@@ -7,7 +7,6 @@ import '../../controller/reservations/reservation_controller.dart';
 import '../../controller/reservations/reservations_list_controller.dart';
 
 
-
 class ReservationsView extends StatelessWidget {
   final dynamic initialData;
   const ReservationsView({Key? key, this.initialData}) : super(key: key);

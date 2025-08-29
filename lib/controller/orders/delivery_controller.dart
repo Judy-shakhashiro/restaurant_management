@@ -159,7 +159,6 @@ HomeController homeController =Get.put(HomeController());
     }
   }
 
-  // New `getAddressFromLatLng` using the Google Geocoding API.
   Future<void> getAddressFromLatLng(LatLng latLng) async {
     isFetchingAddress.value = true;
     hasDetailedAddress.value = false;
@@ -168,7 +167,6 @@ HomeController homeController =Get.put(HomeController());
     _fetchedArea = '';
     _fetchedLocality = '';
 
-    // Construct the API URL with the provided latLng and API key.
     final url =
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.latitude},${latLng.longitude}&key=$googlePlacesApiKey';
 

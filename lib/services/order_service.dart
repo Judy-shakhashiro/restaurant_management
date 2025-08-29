@@ -527,7 +527,7 @@ class OrderService {
       receivingMethod='delivery';
       url='${Linkapi.backUrl}/orders/creating-details?receiving_method=$receivingMethod&address_id=$addressId';
     }
-    else if (receivingMethod=='Pick Up'){
+    else if (receivingMethod=='Pick_Up'){
       receivingMethod='pick_up';
       url='${Linkapi.backUrl}/orders/creating-details?receiving_method=$receivingMethod';
 

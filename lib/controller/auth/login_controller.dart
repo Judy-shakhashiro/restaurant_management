@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-abstract class Login_Controller extends GetxController {
-  
-  
-}
-class LoginControllerImp extends Login_Controller {
-  
-  final GlobalKey<FormState> formstate = GlobalKey<FormState>();
+
+class LoginControllerImp extends GetxController {
+
+  GlobalKey<FormState> formstate = GlobalKey<FormState>();
   late TextEditingController password;
   late TextEditingController email;
   late TextEditingController OTP;

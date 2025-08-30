@@ -521,7 +521,7 @@ class OrderService {
       return false;
     }
   }
-  Future<CheckoutDetails?> getCheckoutDetails(String receivingMethod,int addressId) async {
+  Future<CheckoutDetails?> getCheckoutDetails(String receivingMethod,int? addressId) async {
     String url='';
     if(receivingMethod=='Delivery'){
       receivingMethod='delivery';

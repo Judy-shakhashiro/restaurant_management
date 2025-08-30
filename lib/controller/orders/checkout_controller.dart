@@ -5,7 +5,7 @@ import '../home_controller.dart';
 import 'get_addresses_controller.dart';
 
 class CheckoutController extends GetxController{
-  final GetAddressesController adController = Get.find();
+  final GetAddressesController adController = Get.put(GetAddressesController());
   Rxn<CheckoutDetails> checkoutDetails=Rxn<CheckoutDetails>(null);
   OrderService service=Get.put(OrderService());
   RxBool isCash=true.obs;
@@ -38,7 +38,7 @@ class CheckoutController extends GetxController{
       checkoutDetails.value = null;
       return;
     }
-    checkoutDetails.value=await service.getCheckoutDetails(selectedOrderType.value, adController.selectedAddress.value!.id);
+    checkoutDetails.value=await service.getCheckoutDetails(selectedOrderType.value, adController.selectedAddress.value?.id);
   }
   Future<void> placeOrder() async {
     // You'll need to gather the actual values from your UI state

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/view/wallet/charge_wallet.dart';
+import 'package:flutter_application_restaurant/view/wallet/charge_controller.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 
@@ -48,24 +48,24 @@ class ChargeView extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              const Text(
-                'Amount :',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                onChanged: (value) => controller.amount.value = value,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Enter the amount ',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
+              // const SizedBox(height: 24),
+              // const Text(
+              //   'Amount :',
+              //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              // ),
+              // const SizedBox(height: 12),
+              // TextField(
+              //   onChanged: (value) => controller.amount.value = value,
+              //   keyboardType: TextInputType.number,
+              //   decoration: InputDecoration(
+              //     hintText: 'Enter the amount ',
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(15),
+              //     ),
+              //     filled: true,
+              //     fillColor: Colors.white,
+              //   ),
+              // ),
               const SizedBox(height: 24),
               const Text(
                 'Receipt image :',

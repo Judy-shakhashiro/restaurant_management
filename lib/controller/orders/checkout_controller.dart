@@ -41,10 +41,9 @@ class CheckoutController extends GetxController{
     checkoutDetails.value=await service.getCheckoutDetails(selectedOrderType.value, adController.selectedAddress.value!.id);
   }
   Future<void> placeOrder() async {
-    // You'll need to gather the actual values from your UI state
-    final String receivingMethod = selectedOrderType.value; // 'Delivery' or 'Pick Up'
-    final String paymentMethod = isCash.value ? 'cash' : 'wallet'; // Based on your RxBool
-    final int? addressId = adController.selectedAddress.value?.id; // Get ID from selected address
+    final String receivingMethod = selectedOrderType.value; 
+    final String paymentMethod = isCash.value ? 'cash' : 'wallet'; 
+    final int? addressId = adController.selectedAddress.value?.id;
 
     List<String> notes = [];
     if (deliveryInstructions['call_me_when_reach'] == true) {

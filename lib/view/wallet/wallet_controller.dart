@@ -50,7 +50,6 @@ class WalletController extends GetxController {
   final RxBool isLoading = true.obs;
   final RxString errorMessage = ''.obs;
 
-
   final String apiUrl = '${Linkapi.backUrl}/wallet';
   final String userToken = '$token'; 
 
@@ -72,6 +71,8 @@ class WalletController extends GetxController {
           'Authorization': 'Bearer $userToken', 
         },
       );
+
+      print('نجاااح Response from backend: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedData = json.decode(response.body);

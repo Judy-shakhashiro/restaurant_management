@@ -94,7 +94,7 @@ class Forgetpassword extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.grey.shade400,
+        backgroundColor: Colors.grey.shade300,
       ),
       body: Form( 
         key: controller.formstate, 
@@ -127,7 +127,7 @@ class Forgetpassword extends StatelessWidget {
               style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: 13,
                   fontFamily: 'Georgia'),
             ),
             const SizedBox(height: 50),
@@ -136,7 +136,7 @@ class Forgetpassword extends StatelessWidget {
               iconData: Icons.email_outlined,
               mycontoller: controller.email,
               isNumber: false,
-              readOnly: passedEmail != null,
+             // readOnly: passedEmail != null,
               validator: (val) {
                 return validInput(val!, 5, 100, "email");
               },

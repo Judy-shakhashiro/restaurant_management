@@ -11,7 +11,7 @@ import 'package:flutter_application_restaurant/view/profile/profile_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_list_page.dart';
 import 'package:flutter_application_restaurant/view/reservation/reservations_screen.dart';
 import 'package:flutter_application_restaurant/view/favorite_page.dart';
-import 'package:flutter_application_restaurant/view/wallet/test_wallet.dart';
+import 'package:flutter_application_restaurant/view/wallet/wallet_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';

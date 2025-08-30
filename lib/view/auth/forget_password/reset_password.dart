@@ -68,7 +68,7 @@ class _ResetpasswordState extends State<Resetpassword> {
               color:Colors.black54,
               fontWeight: FontWeight.bold,
               fontFamily: 'Georgia',
-              fontSize: 15
+              fontSize: 13
              
               ),),
             const SizedBox(height: 40),

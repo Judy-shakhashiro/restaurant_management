@@ -477,7 +477,6 @@ Widget _buildPoliciesSection() {
   title:const Text(
     'Details',
     style: TextStyle(
-      color: Colors.white, 
       fontWeight: FontWeight.bold,
       fontSize: 22,
     ),

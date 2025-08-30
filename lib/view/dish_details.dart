@@ -510,7 +510,6 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
           elevation: 5,
           child: Container(
             decoration: BoxDecoration(
-              // ✅ تغيير لون الخلفية بناءً على isSelected
               color: isSelected ? Colors.deepOrange.shade50 : Colors.white, 
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
@@ -523,7 +522,6 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
               ],
               border: Border.all(
                 width: 3,
-                // ✅ تغيير لون الحدود بناءً على isSelected
                 color: isSelected ? Colors.deepOrange : Colors.grey[300]!, 
               ),
             ),
@@ -541,7 +539,6 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          // ✅ تغيير لون النص بناءً على isSelected
                           color: isSelected ? Colors.deepOrange : Colors.black, 
                         ),
                       ),
@@ -549,7 +546,6 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
                         children: [
                           Checkbox(
                             value: isSelected,
-                            // ✅ السماح بتعديل القيمة دائماً
                             onChanged: (bool? value) {
                               controller.toggleAddonSelection(item, value ?? false);
                             },
@@ -557,14 +553,13 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
                           ),
                           Text(
                             'Extra (+ ${double.parse(item.price).toStringAsFixed(2)}EGP)',
-                            style: const TextStyle(fontSize: 15, color: Colors.black87),
+                            style: const TextStyle(fontSize: 13, color: Colors.black87),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                // ✅ جعل زر الحذف مرئياً وقابلاً للضغط فقط إذا كان العنصر محدداً
                 IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.red, size: 30),
                   onPressed: isSelected ? () => controller.toggleAddonSelection(item, false) : null,
@@ -573,7 +568,6 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
             ),
           ),
         ),
-        // ✅ عرض علامة "Default" إذا كان العنصر افتراضياً
         if (isDefault)
           Positioned(
             top: 0,
@@ -756,7 +750,7 @@ Widget _buildAddonItem(AttributeItem item, DishDetailsController controller) {
           ),
          ElevatedButton.icon(
             onPressed: () async { 
-              final cartController = Get.find<CartController>();
+              final cartController = Get.put(CartController());
               await controller.addToCart(); 
               cartController.fetchCartItems();
             },

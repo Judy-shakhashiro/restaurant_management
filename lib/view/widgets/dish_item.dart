@@ -29,7 +29,7 @@ class DishItemTile extends StatelessWidget {
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 child: FadeInImage.assetNetwork(
-                 image: 'fullUrl',
+                 image: fullUrl,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,

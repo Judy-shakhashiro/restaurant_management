@@ -30,7 +30,7 @@ class _AddressesPageState extends State<AddressesPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () async{
-          adController.loadAddresses(); },
+          await adController.loadAddresses();},
         child: Obx(() {
           if (adController.addresses.isEmpty) {
             return const Center(child: Text('No addresses found. Add a new one!'));

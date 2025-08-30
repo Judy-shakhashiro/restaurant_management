@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/controller/cart_controller.dart';
 import 'package:flutter_application_restaurant/view/widgets/dish_item.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -20,7 +19,7 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   final MyMenuController c = Get.find();
-  final CartController controller = Get.put(CartController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +80,7 @@ class _MenuPageState extends State<MenuPage> {
                         return GestureDetector(
                           onTap: () {
                             c.selectedCat.value = cat;
+                            // Trigger the scroll using the controller's logic
                             c.scrollToCategory(cat);
                           },
                           child: Obx(() {
@@ -99,29 +99,38 @@ class _MenuPageState extends State<MenuPage> {
                               ),
                               child: Column(
                                 children: [
-                                   Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 4)],
-                  border: Border.all(
-                    color: isSelected ? Colors.deepOrange : Colors.transparent, width: 3),
-                  color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
-                ),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.transparent,
-                  child: ClipOval(
-                    child: Image.network(
-                      "${Linkapi.bacUrlImage}${cat.image}",
-                      fit: BoxFit.cover,
-                      width: 90, 
-                      height: 90, 
-                      errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.image_outlined, color: Colors.grey),
-                    ),
-                  ),
-                ),
-              ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(38),
+                                      border: isSelected
+                                          ? Border.all(
+                                          color: Colors.deepOrange, width: 2)
+                                          : null,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.deepOrange.withAlpha(50),
+                                          offset: const Offset(3, 3),
+                                          blurRadius: 4,
+                                          spreadRadius: 3,
+                                        )
+                                      ],
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: isSelected ? 34 : 32,
+                                      backgroundColor: isSelected
+                                          ? Colors.deepOrange[100]
+                                          : Colors.grey[200],
+                                      child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(38),
+                                          // Ensure backUrl is correctly provided by config.dart
+                                          child: Image.network(
+                                            "${Linkapi.backUrl}/images/${cat.image}",
+                                            fit: BoxFit.cover, // Ensure image covers the circle
+                                            errorBuilder: (context, error, stackTrace) =>
+                                            const Icon(Icons.broken_image, color: Colors.grey), // Fallback for image load error
+                                          )),
+                                    ),
+                                  ),
                                   const SizedBox(height: 4),
                                   Text(
                                     cat.name,
@@ -207,18 +216,18 @@ class _MenuPageState extends State<MenuPage> {
                       child:  Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         const Padding(
+                          Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(Icons.circle, color: Colors.deepOrange, size: 13),
                           ),
                           Text(
                             item.title,
-                            style:const TextStyle(
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                         const Padding(
+                          Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(Icons.circle, color: Colors.deepOrange, size: 13),
                           ),

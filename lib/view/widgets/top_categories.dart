@@ -53,7 +53,7 @@ Widget buildCategoryRow(BuildContext context,HomeController controller) {
                   child: GestureDetector(
                     onTap: () {
                       controller.selectDeliveryCategory(index);
-                      Get.to(controller.deliveryCategories[index]['page']);
+                      Get.off(controller.deliveryCategories[index]['page']);
                     },
                     child: Column(
                       children: [

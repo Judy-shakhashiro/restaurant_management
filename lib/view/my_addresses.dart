@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_restaurant/core/static/global_lotti.dart';
 import 'package:flutter_application_restaurant/view/orders/delivery_location.dart';
 import 'package:get/get.dart';
 import '../../controller/orders/get_addresses_controller.dart';
@@ -20,7 +19,7 @@ class _AddressesPageState extends State<AddressesPage> {
   @override
   void initState() {
     super.initState();
-  //  adController.loadAddresses();
+   adController.loadAddresses();
   }
 
   @override
@@ -29,81 +28,79 @@ class _AddressesPageState extends State<AddressesPage> {
       appBar: AppBar(
         title: const Text('My Addresses'),
       ),
-      body: Obx(() {
-        if (adController.addresses.isEmpty) {
-          return const Column(
-            children: [
-              MyLottiNodata(),
-              Text('No addresses found. Add a new one!')
-            ],
-          )
-          ;
-        } else {
-          return ListView.builder(
-            itemCount: adController.addresses.length,
-            itemBuilder: (context, index) {
-              final address = adController.addresses[index];
-              final isExpanded = index == _expandedIndex;
+      body: RefreshIndicator(
+        onRefresh: () async{
+          await adController.loadAddresses();},
+        child: Obx(() {
+          if (adController.addresses.isEmpty) {
+            return const Center(child: Text('No addresses found. Add a new one!'));
+          } else {
+            return ListView.builder(
+              itemCount: adController.addresses.length,
+              itemBuilder: (context, index) {
+                final address = adController.addresses[index];
+                final isExpanded = index == _expandedIndex;
 
-              return Card(
-                elevation: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      if (_expandedIndex == index) {
-                        _expandedIndex = null;
-                      } else {
-                        _expandedIndex = index;
-                        adController.fetchSelectedAddressDetails(address.id);
-                      }
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                address.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                return Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        if (_expandedIndex == index) {
+                          _expandedIndex = null;
+                        } else {
+                          _expandedIndex = index;
+                          adController.fetchSelectedAddressDetails(address.id);
+                        }
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  address.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.grey),
-                              onPressed: () {
-                                _deleteAddress(context, address.id);
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${address.street}, ${address.area}, ${address.city}',
-                          style: const TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        if (isExpanded)
-                          _buildExpandedDetails(address),
-                      ],
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.grey),
+                                onPressed: () {
+                                  _deleteAddress(context, address.id);
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${address.street}, ${address.area}, ${address.city}',
+                            style: const TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                          if (isExpanded)
+                            _buildExpandedDetails(address),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        }
-      }),
+                );
+              },
+            );
+          }
+        }),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         onPressed: () {
